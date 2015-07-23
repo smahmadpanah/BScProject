@@ -1,0 +1,34 @@
+	 x -> IDENTIFIER 
+	 x -> IDENTIFIER 
+	 varlist -> x 
+	 varlist -> x , varlist 
+	 c -> INL_KW varlist 
+	 clist -> c 
+	 x -> IDENTIFIER 
+	 varlist -> x 
+	 c -> INH_KW varlist 
+	 clist -> clist ; M c 
+	 x -> IDENTIFIER 
+	 exp -> x 
+	 n -> INTEGER_NUMBER 
+	 exp -> n 
+	 exp -> exp EQ_KW exp 
+	 x -> IDENTIFIER 
+	 x -> IDENTIFIER 
+	 exp -> x 
+	 c -> x ASSIGN_KW exp 
+	 clist -> c 
+	 x -> IDENTIFIER 
+	 x -> IDENTIFIER 
+	 exp -> x 
+	 c -> x ASSIGN_KW exp 
+	 clist -> clist ; M c 
+	 c -> NOP_KW 
+	 clist -> c 
+	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
+	 clist -> clist ; M c 
+	 x -> IDENTIFIER 
+	 c -> OUTL_KW x 
+	 clist -> clist ; M c 
+	 program -> PROGRAM_KW IDENTIFIER ';' clist 
+###Hooray! - Your program is syntactically correct###

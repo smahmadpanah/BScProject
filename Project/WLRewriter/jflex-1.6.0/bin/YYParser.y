@@ -4,6 +4,7 @@
   import java.io.*;
   import java.lang.*;
   import java.util.Vector; 
+
 %}
 
 %type <eval> program exp c clist varlist b n x M N
@@ -36,6 +37,8 @@ public static void main(String args[]) throws IOException, FileNotFoundException
 	output = new PrintStream (new File("result.c"));
 	lexer = new Yylex(new InputStreamReader(new FileInputStream("input.wl")));
 
+	
+	
 	yyparser = new YYParser(new Lexer() {
 	
 	@Override
@@ -280,31 +283,36 @@ public static void main(String args[]) throws IOException, FileNotFoundException
 
 program : PROGRAM_KW ';' clist
 	{
-	writer.print("\t program -> PROGRAM_KW ';' clist \n") ;
-	writer.print("###Hooray! - Your program is syntactically correct### \n");
-	System.out.println("###Hooray! - Your program is syntactically correct###");
+		writer.print("\t program -> PROGRAM_KW ';' clist \n") ;
+		writer.print("###Hooray! - Your program is syntactically correct### \n");
+		System.out.println("###Hooray! - Your program is syntactically correct###");
 	
 		$$ = new eval();
 		((eval)$$).stmt += "program; " + ((eval)$3).stmt;
 		writer.print(((eval)$$).stmt+ "\n");
+		((eval)$$).node = new Node(nodeCounter++, "Start");
+		((eval)$$).list = new LinkedList(((eval)$$).node);
+		((eval)$$).list.merge(((eval)$3).list);
 
 	};
 
 clist: c
 	{
-	
-	writer.print("\t clist -> c \n") ;
+		writer.print("\t clist -> c \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt;
-	writer.print(((eval)$$).stmt+ "\n");
+		writer.print(((eval)$$).stmt+ "\n");
+		((eval)$$).list = ((eval)$1).list;
 	};
 	| clist ';' M c
 	{
-	
-	writer.print("\t clist -> clist ; M c \n") ;
+		writer.print("\t clist -> clist ; M c \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + "; " + ((eval)$4).stmt;
-	writer.print(((eval)$$).stmt+ "\n");
+		writer.print(((eval)$$).stmt+ "\n");
+		((eval)$$).list = ((eval)$1).list;
+		((eval)$$).list.merge(((eval)$4).list);
+		
 	};
 		
 exp : b
@@ -406,9 +414,10 @@ c : NOP_KW
 	{
 		writer.print("\t c -> NOP_KW \n") ;
 		$$=new eval();
-		((eval)$$).stmt += " NOP ";
+		((eval)$$).stmt += "NOP";
 		writer.print(((eval)$$).stmt+ "\n");	
-		Node node = new Node(nodeCounter++, "");
+		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
+		((eval)$$).list = new LinkedList(((eval)$$).node);
 
 	};
 	| x ASSIGN_KW exp
@@ -417,37 +426,38 @@ c : NOP_KW
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " = " + ((eval)$3).stmt;
 		writer.print(((eval)$$).stmt+ "\n");	
-		Node node = new Node(nodeCounter++, "");
+		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
+		((eval)$$).list = new LinkedList(((eval)$$).node);
 
 	};
 	| INL_KW varlist
 	{
 		writer.print("\t c -> INL_KW varlist \n") ;
-				$$=new eval();
-		((eval)$$).stmt += "inL "+((eval)$2).stmt;
-	
-writer.print(((eval)$$).stmt+ "\n");	
-		Node node = new Node(nodeCounter++, "");
+		$$=new eval();
+		((eval)$$).stmt += "inL "+((eval)$2).stmt;	
+		writer.print(((eval)$$).stmt+ "\n");	
+		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
+		((eval)$$).list = new LinkedList(((eval)$$).node);
 
-		};
+	};
 	| INH_KW varlist
 	{
 		writer.print("\t c -> INH_KW varlist \n") ;
-				$$=new eval();
+		$$=new eval();
 		((eval)$$).stmt += "inH "+((eval)$2).stmt;
-	
-writer.print(((eval)$$).stmt+ "\n");	
-		Node node = new Node(nodeCounter++, "");
+		writer.print(((eval)$$).stmt+ "\n");	
+		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
+		((eval)$$).list = new LinkedList(((eval)$$).node);
 
 	};
 	| OUTL_KW x
 	{
 		writer.print("\t c -> OUTL_KW x \n") ;
-				$$=new eval();
+		$$=new eval();
 		((eval)$$).stmt += "outL " + ((eval)$2).stmt;
-	
-writer.print(((eval)$$).stmt+ "\n");	
-		Node node = new Node(nodeCounter++, "");
+		writer.print(((eval)$$).stmt+ "\n");	
+		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
+		((eval)$$).list = new LinkedList(((eval)$$).node);
 
 	};
 	| OUTH_KW x
@@ -455,32 +465,29 @@ writer.print(((eval)$$).stmt+ "\n");
 		writer.print("\t c -> OUTH_KW x \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "outH " + ((eval)$2).stmt;
-	
-writer.print(((eval)$$).stmt+ "\n");	
-		Node node = new Node(nodeCounter++, "");
+		writer.print(((eval)$$).stmt+ "\n");	
+		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
+		((eval)$$).list = new LinkedList(((eval)$$).node);
 
 	};
 	| OUTL_KW BOT_KW
 	{
 		writer.print("\t c -> OUTL_KW BOT_KW \n") ;
-		
 		$$=new eval();
 		((eval)$$).stmt += "outL BOT";
-	
-writer.print(((eval)$$).stmt+ "\n");	
-		Node node = new Node(nodeCounter++, "");
-	
+		writer.print(((eval)$$).stmt+ "\n");	
+		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
+		((eval)$$).list = new LinkedList(((eval)$$).node);
 	
 	};
 	| OUTH_KW BOT_KW
 	{
-		writer.print("\t c -> OUTH_KW BOT_KW \n") ;
-		
+		writer.print("\t c -> OUTH_KW BOT_KW \n") ;	
 		$$=new eval();
 		((eval)$$).stmt += "outH BOT";
 		writer.print(((eval)$$).stmt+ "\n");	
-		Node node = new Node(nodeCounter++, "");
-	
+		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
+		((eval)$$).list = new LinkedList(((eval)$$).node);
 	
 	};
 	| IF_KW exp THEN_KW M clist ENDIF_KW %prec p
@@ -488,8 +495,14 @@ writer.print(((eval)$$).stmt+ "\n");
 		writer.print("\t c -> IF_KW exp THEN_KW M clist ENDIF_KW \n") ;
 		$$=new eval();
 		((eval)$$).stmt += " if " + ((eval)$2).stmt + " then " + ((eval)$5).stmt + " endif";
-		
 		writer.print(((eval)$$).stmt+ "\n");
+		
+		((eval)$$).node = new Node(nodeCounter++, ((eval)$2).stmt);//condition expression node
+		Node dummy = new Node(nodeCounter++, "dummy");//dummy node for last node of if
+		((eval)$$).list = new LinkedList(((eval)$$).node);
+		((eval)$$).list.getLast().setNextPointer2(dummy);//if false
+		((eval)$$).list.merge(((eval)$5).list);//if true
+		((eval)$$).list.merge(new LinkedList(dummy));	
 	};
 	| IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW
 	{
@@ -497,13 +510,31 @@ writer.print(((eval)$$).stmt+ "\n");
 		$$=new eval();
 		((eval)$$).stmt += " if " + ((eval)$2).stmt + " then " + ((eval)$5).stmt + " else " + ((eval)$9).stmt + " endif ";
 		writer.print(((eval)$$).stmt+ "\n");
+
+		((eval)$$).node = new Node(nodeCounter++, ((eval)$2).stmt);//condition expression node
+		Node dummy = new Node(nodeCounter++, "dummy");//dummy node for last node of if
+		LinkedList dummyList = new LinkedList(dummy);
+		((eval)$$).list = new LinkedList(((eval)$$).node);
+		((eval)$$).list.getLast().setNextPointer2(((eval)$9).list.getFirst());//if false - else section
+		((eval)$9).list.merge(dummyList);
+		((eval)$$).list.merge(((eval)$5).list);//if true
+		((eval)$$).list.merge(dummyList);	
 	};
 	| WHILE_KW exp DO_KW M clist DONE_KW
 	{
 		writer.print("\t c -> WHILE_KW exp DO_KW M clist DONE_KW \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "while " + ((eval)$2).stmt + " do " + ((eval)$5).stmt + " done ";
-	writer.print(((eval)$$).stmt+ "\n");	
+		writer.print(((eval)$$).stmt+ "\n");	
+	
+		((eval)$$).node = new Node(nodeCounter++, ((eval)$2).stmt);//condition expression node
+		Node dummy = new Node(nodeCounter++, "dummy");//dummy node for last node of if
+		LinkedList dummyList = new LinkedList(dummy);
+		((eval)$$).list = new LinkedList(((eval)$$).node);
+		((eval)$$).list.getLast().setNextPointer2(dummy);//while condition false
+		((eval)$$).list.getLast().setNextPointer1(((eval)$5).list.getFirst()); //while condition true (loop)
+		((eval)$5).list.getLast().setNextPointer1(((eval)$$).list.getFirst());
+		((eval)$$).list.setLast(dummy);
 	};
 	
 varlist : x
@@ -571,6 +602,9 @@ class eval {
 	public String ids="";
 	
 	public String stmt="";
+	
+	public Node node;
+	public LinkedList list;
 
 	public Vector<Integer> true_list=new Vector<Integer>();
 	public Vector<Integer> false_list=new Vector<Integer>();

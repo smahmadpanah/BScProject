@@ -15,22 +15,15 @@ public class Node {
 
     private int nodeID;
     private String statement;
-    private ArrayList<Node> nextPointers, previousPointers;
+    private Node nextPointer1, nextPointer2; // in condition statements: nextPointer1 = true, nextPointer2 = false | in other statments: nextPointer1 = next node, nextPointer2 = null
 
     public Node(int nodeID, String statement) {
         this.nodeID = nodeID;
         this.statement = statement;
-        nextPointers = new ArrayList<>(1);
-        previousPointers = new ArrayList<>(1);
+        nextPointer1 = null;
+        nextPointer2 = null;;
     }
 
-    public ArrayList<Node> getNextPointers() {
-        return nextPointers;
-    }
-
-    public void setNextPointers(ArrayList<Node> nextPointers) {
-        this.nextPointers = nextPointers;
-    }
 
     public int getNodeID() {
         return nodeID;
@@ -38,14 +31,6 @@ public class Node {
 
     public String getStatement() {
         return statement;
-    }
-
-    public void setPreviousPointers(ArrayList<Node> previousPointers) {
-        this.previousPointers = previousPointers;
-    }
-
-    public ArrayList<Node> getPreviousPointers() {
-        return previousPointers;
     }
 
     public void setNodeID(int nodeID) {
@@ -56,4 +41,21 @@ public class Node {
         this.statement = statement;
     }
 
+    public Node getNextPointer1() {
+        return nextPointer1;
+    }
+
+    public Node getNextPointer2() {
+        return nextPointer2;
+    }
+
+    public void setNextPointer1(Node nextPointer1) {
+        this.nextPointer1 = nextPointer1;
+    }
+
+    public void setNextPointer2(Node nextPointer2) {
+        this.nextPointer2 = nextPointer2;
+    }
+
+    
 }

@@ -19,6 +19,14 @@ inH h1
 	 clist -> clist ; M c 
 inL l1, l2; inH h1
 	 x -> IDENTIFIER 
+h2
+	 varlist -> x 
+h2
+	 c -> INH_KW varlist 
+inH h2
+	 clist -> clist ; M c 
+inL l1, l2; inH h1; inH h2
+	 x -> IDENTIFIER 
 l1
 	 exp -> x 
 l1
@@ -39,29 +47,69 @@ l2 = h1
 	 clist -> c 
 l2 = h1
 	 x -> IDENTIFIER 
-l1
+l2
 	 x -> IDENTIFIER 
 l2
 	 exp -> x 
 l2
 	 c -> x ASSIGN_KW exp 
-l1 = l2
-	 clist -> clist ; M c 
-l2 = h1; l1 = l2
-	 c -> NOP_KW 
- NOP 
+l2 = l2
 	 clist -> c 
- NOP 
-	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
- if l1 == 0 then l2 = h1; l1 = l2 else  NOP  endif 
+l2 = l2
+	 x -> IDENTIFIER 
+h1
+	 x -> IDENTIFIER 
+l3
+	 exp -> x 
+l3
+	 c -> x ASSIGN_KW exp 
+h1 = l3
 	 clist -> clist ; M c 
-inL l1, l2; inH h1;  if l1 == 0 then l2 = h1; l1 = l2 else  NOP  endif 
+l2 = l2; h1 = l3
+	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
+ if l1 == 0 then l2 = h1 else l2 = l2; h1 = l3 endif 
+	 clist -> clist ; M c 
+inL l1, l2; inH h1; inH h2;  if l1 == 0 then l2 = h1 else l2 = l2; h1 = l3 endif 
+	 x -> IDENTIFIER 
+l2
+	 exp -> x 
+l2
+	 n -> INTEGER_NUMBER 
+3
+	 exp -> n 
+3
+	 exp -> exp LE_KW exp 
+l2 <= 3
+	 c -> OUTL_KW BOT_KW 
+outL BOT
+	 clist -> c 
+outL BOT
+	 x -> IDENTIFIER 
+l2
+	 x -> IDENTIFIER 
+l2
+	 exp -> x 
+l2
+	 n -> INTEGER_NUMBER 
+3
+	 exp -> n 
+3
+	 exp -> exp PLUS_KW exp 
+l2 + 3
+	 c -> x ASSIGN_KW exp 
+l2 = l2 + 3
+	 clist -> clist ; M c 
+outL BOT; l2 = l2 + 3
+	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
+while l2 <= 3 do outL BOT; l2 = l2 + 3 done 
+	 clist -> clist ; M c 
+inL l1, l2; inH h1; inH h2;  if l1 == 0 then l2 = h1 else l2 = l2; h1 = l3 endif ; while l2 <= 3 do outL BOT; l2 = l2 + 3 done 
 	 x -> IDENTIFIER 
 l2
 	 c -> OUTL_KW x 
 outL l2
 	 clist -> clist ; M c 
-inL l1, l2; inH h1;  if l1 == 0 then l2 = h1; l1 = l2 else  NOP  endif ; outL l2
+inL l1, l2; inH h1; inH h2;  if l1 == 0 then l2 = h1 else l2 = l2; h1 = l3 endif ; while l2 <= 3 do outL BOT; l2 = l2 + 3 done ; outL l2
 	 program -> PROGRAM_KW ';' clist 
 ###Hooray! - Your program is syntactically correct### 
-program; inL l1, l2; inH h1;  if l1 == 0 then l2 = h1; l1 = l2 else  NOP  endif ; outL l2
+program; inL l1, l2; inH h1; inH h2;  if l1 == 0 then l2 = h1 else l2 = l2; h1 = l3 endif ; while l2 <= 3 do outL BOT; l2 = l2 + 3 done ; outL l2

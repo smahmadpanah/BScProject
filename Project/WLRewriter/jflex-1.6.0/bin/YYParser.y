@@ -15,13 +15,16 @@
 
 %code {
 
-	/*************************************** MAIN *****************************************/
+/*************************************** MAIN *****************************************/
 static PrintStream writer, output;
 static int IntValue;
 Vector<Integer> tempIntValue = new Vector<Integer>();
 static double DoubleValue;
 static int BoolValue;
 static String IDvalue;
+static String stmt;
+private int nodeCounter=0;
+
 Vector<String> tempIDValue = new Vector<String>();
 
 public static void main(String args[]) throws IOException, FileNotFoundException {
@@ -60,10 +63,10 @@ public static void main(String args[]) throws IOException, FileNotFoundException
 	public Object getLVal() {
 		return null;
 	}
+
 });
 	yyparser.parse();
 	writer.close();
-	return;
 }
 
 /*-------------------------------------------------------------------------------------------*/
@@ -275,138 +278,271 @@ public static void main(String args[]) throws IOException, FileNotFoundException
 
 %%	
 
-program : PROGRAM_KW IDENTIFIER ';' clist
+program : PROGRAM_KW ';' clist
 	{
-	writer.print("\t program -> PROGRAM_KW IDENTIFIER ';' clist \n") ;
-	writer.print("###Hooray! - Your program is syntactically correct###");
+	writer.print("\t program -> PROGRAM_KW ';' clist \n") ;
+	writer.print("###Hooray! - Your program is syntactically correct### \n");
 	System.out.println("###Hooray! - Your program is syntactically correct###");
+	
+		$$ = new eval();
+		((eval)$$).stmt += "program; " + ((eval)$3).stmt;
+		writer.print(((eval)$$).stmt+ "\n");
+
 	};
 
 clist: c
 	{
+	
 	writer.print("\t clist -> c \n") ;
+		$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt;
+	writer.print(((eval)$$).stmt+ "\n");
 	};
 	| clist ';' M c
 	{
+	
 	writer.print("\t clist -> clist ; M c \n") ;
+		$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt + "; " + ((eval)$4).stmt;
+	writer.print(((eval)$$).stmt+ "\n");
 	};
 		
 exp : b
 	{
+	
 		writer.print("\t exp -> b \n") ;
+		$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt;
+	writer.print(((eval)$$).stmt+ "\n");
 	};
 	| n
 	{
 		writer.print("\t exp -> n \n") ;
+		$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt;
+	writer.print(((eval)$$).stmt+ "\n");
 	};
 	| x
 	{
 		writer.print("\t exp -> x \n") ;
+	$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt;
+
+	writer.print(((eval)$$).stmt+ "\n");
 	};
 	| exp EQ_KW exp
 	{
 		writer.print("\t exp -> exp EQ_KW exp \n") ;
+		$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt + " == "+ ((eval)$3).stmt;
+
+		writer.print(((eval)$$).stmt+ "\n");
 	};
 	| exp LT_KW exp
 	{
 		writer.print("\t exp -> exp LT_KW exp \n") ;
+		$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt + " < "+ ((eval)$3).stmt;
+
+		writer.print(((eval)$$).stmt+ "\n");
 	};
 	| exp LE_KW exp
 	{
 		writer.print("\t exp -> exp LE_KW exp \n") ;
+		$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt + " <= "+ ((eval)$3).stmt;
+
+		writer.print(((eval)$$).stmt+ "\n");
 	};
 	| exp GE_KW exp
 	{
 		writer.print("\t exp -> exp GE_KW exp \n") ;
+		$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt + " >= "+ ((eval)$3).stmt;
+
+		writer.print(((eval)$$).stmt+ "\n");
 	};
 	| exp GT_KW exp
 	{
 		writer.print("\t exp -> exp GT_KW exp \n") ;
+	$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt + " > "+ ((eval)$3).stmt;
+
+	writer.print(((eval)$$).stmt+ "\n");
 	};
 	| exp PLUS_KW exp
 	{
 		writer.print("\t exp -> exp PLUS_KW exp \n") ;
+	$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt + " + "+ ((eval)$3).stmt;
+
+	writer.print(((eval)$$).stmt+ "\n");
 	};
 	| exp MINUS_KW exp
 	{
 		writer.print("\t exp -> exp MINUS_KW exp \n") ;
+		$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt + " - "+ ((eval)$3).stmt;
+	writer.print(((eval)$$).stmt+ "\n");
 	};
 	| exp AND_KW M exp
 	{
 		writer.print("\t exp -> exp AND_KW exp \n") ;
+		$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt + " and "+ ((eval)$4).stmt;
+	writer.print(((eval)$$).stmt+ "\n");
 	};
 	| exp OR_KW M exp
 	{
 		writer.print("\t exp -> exp OR_KW exp \n") ;
+			$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt + " or "+ ((eval)$4).stmt;
+	
+writer.print(((eval)$$).stmt+ "\n");	
+
 	};
 
 c : NOP_KW
 	{
 		writer.print("\t c -> NOP_KW \n") ;
+		$$=new eval();
+		((eval)$$).stmt += " NOP ";
+		writer.print(((eval)$$).stmt+ "\n");	
+		Node node = new Node(nodeCounter++, "");
+
 	};
 	| x ASSIGN_KW exp
 	{
 		writer.print("\t c -> x ASSIGN_KW exp \n") ;
+		$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt + " = " + ((eval)$3).stmt;
+		writer.print(((eval)$$).stmt+ "\n");	
+		Node node = new Node(nodeCounter++, "");
+
 	};
 	| INL_KW varlist
 	{
 		writer.print("\t c -> INL_KW varlist \n") ;
-	};
+				$$=new eval();
+		((eval)$$).stmt += "inL "+((eval)$2).stmt;
+	
+writer.print(((eval)$$).stmt+ "\n");	
+		Node node = new Node(nodeCounter++, "");
+
+		};
 	| INH_KW varlist
 	{
 		writer.print("\t c -> INH_KW varlist \n") ;
+				$$=new eval();
+		((eval)$$).stmt += "inH "+((eval)$2).stmt;
+	
+writer.print(((eval)$$).stmt+ "\n");	
+		Node node = new Node(nodeCounter++, "");
+
 	};
 	| OUTL_KW x
 	{
 		writer.print("\t c -> OUTL_KW x \n") ;
+				$$=new eval();
+		((eval)$$).stmt += "outL " + ((eval)$2).stmt;
+	
+writer.print(((eval)$$).stmt+ "\n");	
+		Node node = new Node(nodeCounter++, "");
+
 	};
 	| OUTH_KW x
 	{
 		writer.print("\t c -> OUTH_KW x \n") ;
+		$$=new eval();
+		((eval)$$).stmt += "outH " + ((eval)$2).stmt;
+	
+writer.print(((eval)$$).stmt+ "\n");	
+		Node node = new Node(nodeCounter++, "");
+
 	};
 	| OUTL_KW BOT_KW
 	{
 		writer.print("\t c -> OUTL_KW BOT_KW \n") ;
+		
+		$$=new eval();
+		((eval)$$).stmt += "outL BOT";
+	
+writer.print(((eval)$$).stmt+ "\n");	
+		Node node = new Node(nodeCounter++, "");
+	
+	
 	};
 	| OUTH_KW BOT_KW
 	{
 		writer.print("\t c -> OUTH_KW BOT_KW \n") ;
+		
+		$$=new eval();
+		((eval)$$).stmt += "outH BOT";
+		writer.print(((eval)$$).stmt+ "\n");	
+		Node node = new Node(nodeCounter++, "");
+	
+	
 	};
 	| IF_KW exp THEN_KW M clist ENDIF_KW %prec p
 	{
 		writer.print("\t c -> IF_KW exp THEN_KW M clist ENDIF_KW \n") ;
+		$$=new eval();
+		((eval)$$).stmt += " if " + ((eval)$2).stmt + " then " + ((eval)$5).stmt + " endif";
+		
+		writer.print(((eval)$$).stmt+ "\n");
 	};
 	| IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW
 	{
 		writer.print("\t c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW \n") ;
+		$$=new eval();
+		((eval)$$).stmt += " if " + ((eval)$2).stmt + " then " + ((eval)$5).stmt + " else " + ((eval)$9).stmt + " endif ";
+		writer.print(((eval)$$).stmt+ "\n");
 	};
 	| WHILE_KW exp DO_KW M clist DONE_KW
 	{
 		writer.print("\t c -> WHILE_KW exp DO_KW M clist DONE_KW \n") ;
+		$$=new eval();
+		((eval)$$).stmt += "while " + ((eval)$2).stmt + " do " + ((eval)$5).stmt + " done ";
+	writer.print(((eval)$$).stmt+ "\n");	
 	};
 	
 varlist : x
 	{
 		writer.print("\t varlist -> x \n") ;
+		$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt;
+		writer.print(((eval)$$).stmt+ "\n");
 	};
 	| x ',' varlist
 	{
 		writer.print("\t varlist -> x , varlist \n") ;
+		$$=new eval();
+		((eval)$$).stmt += ((eval)$1).stmt + ", " + ((eval)$3).stmt;
+		writer.print(((eval)$$).stmt+ "\n");
 	};
 	
 b : BOOL_CONSTANT
 	{
 		writer.print("\t b -> BOOL_CONSTANT \n") ;
+		$$=new eval();
+		((eval)$$).stmt += this.stmt;
+		writer.print(((eval)$$).stmt+ "\n");
 	};
 	
 n : INTEGER_NUMBER
 	{
 		writer.print("\t n -> INTEGER_NUMBER \n") ;
+		$$=new eval();
+		((eval)$$).stmt += this.stmt;
+		writer.print(((eval)$$).stmt+ "\n");
 	};
 
 x : IDENTIFIER
 	{
 		writer.print("\t x -> IDENTIFIER \n") ;
+		$$=new eval();
+		((eval)$$).stmt += this.stmt;
+		writer.print(((eval)$$).stmt+ "\n");
 	};
 	
 M : //lambda
@@ -421,6 +557,7 @@ N : //lambda
 
 
 %%
+
 /*************************************** eval ************************************/
 class eval {
 
@@ -432,6 +569,8 @@ class eval {
 	public String code="";
 	public String type="";
 	public String ids="";
+	
+	public String stmt="";
 
 	public Vector<Integer> true_list=new Vector<Integer>();
 	public Vector<Integer> false_list=new Vector<Integer>();

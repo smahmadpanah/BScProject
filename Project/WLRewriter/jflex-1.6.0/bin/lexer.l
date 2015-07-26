@@ -139,11 +139,13 @@ LineTerminator = \r|\n|\r\n
 
 {INTEGER_NUMBER} {
 	YYParser.IntValue=Integer.parseInt(yytext());
+	YYParser.stmt=yytext();
 	return YYParser.INTEGER_NUMBER;
 }
 {BOOL_CONSTANT} {
      
      String s=yytext();
+	 YYParser.stmt=yytext();
      if(s.compareTo("true")==0)
      	YYParser.BoolValue=1;
      else
@@ -152,7 +154,8 @@ LineTerminator = \r|\n|\r\n
 }
 
 {IDENTIFIER} {
-	YYParser.IDvalue = yytext();	
+	YYParser.IDvalue = yytext();
+	YYParser.stmt=yytext();	
 	return YYParser.IDENTIFIER;
 }
 

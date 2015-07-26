@@ -1,115 +1,55 @@
 	 x -> IDENTIFIER 
-l1
-	 x -> IDENTIFIER 
-l2
+h3
 	 varlist -> x 
-l2
-	 varlist -> x , varlist 
-l1, l2
-	 c -> INL_KW varlist 
-inL l1, l2
+h3
+	 c -> INH_KW varlist 
+inH h3
 	 clist -> c 
-inL l1, l2
+inH h3
 	 x -> IDENTIFIER 
-h1
-	 varlist -> x 
-h1
-	 c -> INH_KW varlist 
-inH h1
-	 clist -> clist ; M c 
-inL l1, l2; inH h1
-	 x -> IDENTIFIER 
-h2
-	 varlist -> x 
-h2
-	 c -> INH_KW varlist 
-inH h2
-	 clist -> clist ; M c 
-inL l1, l2; inH h1; inH h2
-	 x -> IDENTIFIER 
-l1
+h3
 	 exp -> x 
-l1
+h3
 	 n -> INTEGER_NUMBER 
 0
 	 exp -> n 
 0
 	 exp -> exp EQ_KW exp 
-l1 == 0
-	 x -> IDENTIFIER 
-l2
-	 x -> IDENTIFIER 
-h1
-	 exp -> x 
-h1
-	 c -> x ASSIGN_KW exp 
-l2 = h1
-	 clist -> c 
-l2 = h1
-	 x -> IDENTIFIER 
-l2
-	 x -> IDENTIFIER 
-l2
-	 exp -> x 
-l2
-	 c -> x ASSIGN_KW exp 
-l2 = l2
-	 clist -> c 
-l2 = l2
-	 x -> IDENTIFIER 
-h1
-	 x -> IDENTIFIER 
-l3
-	 exp -> x 
-l3
-	 c -> x ASSIGN_KW exp 
-h1 = l3
-	 clist -> clist ; M c 
-l2 = l2; h1 = l3
-	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
- if l1 == 0 then l2 = h1 else l2 = l2; h1 = l3 endif 
-	 clist -> clist ; M c 
-inL l1, l2; inH h1; inH h2;  if l1 == 0 then l2 = h1 else l2 = l2; h1 = l3 endif 
+h3 == 0
 	 x -> IDENTIFIER 
 l2
 	 exp -> x 
 l2
 	 n -> INTEGER_NUMBER 
-3
+0
 	 exp -> n 
-3
-	 exp -> exp LE_KW exp 
-l2 <= 3
-	 c -> OUTL_KW BOT_KW 
-outL BOT
+0
+	 exp -> exp GT_KW exp 
+l2 > 0
+	 x -> IDENTIFIER 
+h3
+	 c -> OUTH_KW x 
+outH h3
 	 clist -> c 
-outL BOT
-	 x -> IDENTIFIER 
-l2
-	 x -> IDENTIFIER 
-l2
-	 exp -> x 
-l2
-	 n -> INTEGER_NUMBER 
-3
-	 exp -> n 
-3
-	 exp -> exp PLUS_KW exp 
-l2 + 3
-	 c -> x ASSIGN_KW exp 
-l2 = l2 + 3
-	 clist -> clist ; M c 
-outL BOT; l2 = l2 + 3
-	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
-while l2 <= 3 do outL BOT; l2 = l2 + 3 done 
-	 clist -> clist ; M c 
-inL l1, l2; inH h1; inH h2;  if l1 == 0 then l2 = h1 else l2 = l2; h1 = l3 endif ; while l2 <= 3 do outL BOT; l2 = l2 + 3 done 
+outH h3
 	 x -> IDENTIFIER 
 l2
 	 c -> OUTL_KW x 
 outL l2
+	 clist -> c 
+outL l2
+	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
+ if l2 > 0 then outH h3 else outL l2 endif 
+	 clist -> c 
+ if l2 > 0 then outH h3 else outL l2 endif 
+	 c -> NOP_KW 
+NOP
+	 clist -> c 
+NOP
+	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
+ if h3 == 0 then  if l2 > 0 then outH h3 else outL l2 endif  else NOP endif 
 	 clist -> clist ; M c 
-inL l1, l2; inH h1; inH h2;  if l1 == 0 then l2 = h1 else l2 = l2; h1 = l3 endif ; while l2 <= 3 do outL BOT; l2 = l2 + 3 done ; outL l2
+inH h3;  if h3 == 0 then  if l2 > 0 then outH h3 else outL l2 endif  else NOP endif 
 	 program -> PROGRAM_KW ';' clist 
 ###Hooray! - Your program is syntactically correct### 
-program; inL l1, l2; inH h1; inH h2;  if l1 == 0 then l2 = h1 else l2 = l2; h1 = l3 endif ; while l2 <= 3 do outL BOT; l2 = l2 + 3 done ; outL l2
+program; inH h3;  if h3 == 0 then  if l2 > 0 then outH h3 else outL l2 endif  else NOP endif 

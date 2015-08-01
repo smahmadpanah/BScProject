@@ -336,7 +336,7 @@ class YYParser
   if (yyn == 2)
     
 /* Line 351 of lalr1.java  */
-/* Line 285 of "YYParser.y"  */
+/* Line 86 of "YYParser.y"  */
     {
 		writer.print("\t program -> PROGRAM_KW ';' clist \n") ;
 		writer.print("###Hooray! - Your program is syntactically correct### \n");
@@ -345,10 +345,12 @@ class YYParser
 		yyval = new eval();
 		((eval)yyval).stmt += "program; " + ((eval)((eval)(yystack.valueAt (3-(3))))).stmt;
 		writer.print(((eval)yyval).stmt+ "\n");
-		((eval)yyval).node = new Node(nodeCounter++, "Start");
+		((eval)yyval).node = new Node(nodeCounter++, "START");
 		((eval)yyval).list = new LinkedList(((eval)yyval).node);
 		((eval)yyval).list.merge(((eval)((eval)(yystack.valueAt (3-(3))))).list);
-        System.out.println("test");
+		((eval)yyval).list.merge(new LinkedList(new Node(nodeCounter++, "STOP")));
+        System.out.println("the CFG is created.");
+
 	};
   break;
     
@@ -357,7 +359,7 @@ class YYParser
   if (yyn == 3)
     
 /* Line 351 of lalr1.java  */
-/* Line 300 of "YYParser.y"  */
+/* Line 103 of "YYParser.y"  */
     {
 		writer.print("\t clist -> c \n") ;
 		yyval=new eval();
@@ -372,7 +374,7 @@ class YYParser
   if (yyn == 4)
     
 /* Line 351 of lalr1.java  */
-/* Line 308 of "YYParser.y"  */
+/* Line 111 of "YYParser.y"  */
     {
 		writer.print("\t clist -> clist ; M c \n") ;
 		yyval=new eval();
@@ -389,7 +391,7 @@ class YYParser
   if (yyn == 5)
     
 /* Line 351 of lalr1.java  */
-/* Line 319 of "YYParser.y"  */
+/* Line 122 of "YYParser.y"  */
     {
 	
 		writer.print("\t exp -> b \n") ;
@@ -404,7 +406,7 @@ class YYParser
   if (yyn == 6)
     
 /* Line 351 of lalr1.java  */
-/* Line 327 of "YYParser.y"  */
+/* Line 130 of "YYParser.y"  */
     {
 		writer.print("\t exp -> n \n") ;
 		yyval=new eval();
@@ -418,7 +420,7 @@ class YYParser
   if (yyn == 7)
     
 /* Line 351 of lalr1.java  */
-/* Line 334 of "YYParser.y"  */
+/* Line 137 of "YYParser.y"  */
     {
 		writer.print("\t exp -> x \n") ;
 	yyval=new eval();
@@ -433,7 +435,7 @@ class YYParser
   if (yyn == 8)
     
 /* Line 351 of lalr1.java  */
-/* Line 342 of "YYParser.y"  */
+/* Line 145 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp EQ_KW exp \n") ;
 		yyval=new eval();
@@ -448,7 +450,7 @@ class YYParser
   if (yyn == 9)
     
 /* Line 351 of lalr1.java  */
-/* Line 350 of "YYParser.y"  */
+/* Line 153 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp LT_KW exp \n") ;
 		yyval=new eval();
@@ -463,7 +465,7 @@ class YYParser
   if (yyn == 10)
     
 /* Line 351 of lalr1.java  */
-/* Line 358 of "YYParser.y"  */
+/* Line 161 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp LE_KW exp \n") ;
 		yyval=new eval();
@@ -478,7 +480,7 @@ class YYParser
   if (yyn == 11)
     
 /* Line 351 of lalr1.java  */
-/* Line 366 of "YYParser.y"  */
+/* Line 169 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp GE_KW exp \n") ;
 		yyval=new eval();
@@ -493,7 +495,7 @@ class YYParser
   if (yyn == 12)
     
 /* Line 351 of lalr1.java  */
-/* Line 374 of "YYParser.y"  */
+/* Line 177 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp GT_KW exp \n") ;
 	yyval=new eval();
@@ -508,7 +510,7 @@ class YYParser
   if (yyn == 13)
     
 /* Line 351 of lalr1.java  */
-/* Line 382 of "YYParser.y"  */
+/* Line 185 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp PLUS_KW exp \n") ;
 	yyval=new eval();
@@ -523,7 +525,7 @@ class YYParser
   if (yyn == 14)
     
 /* Line 351 of lalr1.java  */
-/* Line 390 of "YYParser.y"  */
+/* Line 193 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp MINUS_KW exp \n") ;
 		yyval=new eval();
@@ -537,7 +539,7 @@ class YYParser
   if (yyn == 15)
     
 /* Line 351 of lalr1.java  */
-/* Line 397 of "YYParser.y"  */
+/* Line 200 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp AND_KW exp \n") ;
 		yyval=new eval();
@@ -551,7 +553,7 @@ class YYParser
   if (yyn == 16)
     
 /* Line 351 of lalr1.java  */
-/* Line 404 of "YYParser.y"  */
+/* Line 207 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp OR_KW exp \n") ;
 			yyval=new eval();
@@ -567,7 +569,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 17)
     
 /* Line 351 of lalr1.java  */
-/* Line 414 of "YYParser.y"  */
+/* Line 217 of "YYParser.y"  */
     {
 		writer.print("\t c -> NOP_KW \n") ;
 		yyval=new eval();
@@ -584,7 +586,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 18)
     
 /* Line 351 of lalr1.java  */
-/* Line 424 of "YYParser.y"  */
+/* Line 227 of "YYParser.y"  */
     {
 		writer.print("\t c -> x ASSIGN_KW exp \n") ;
 		yyval=new eval();
@@ -601,7 +603,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 19)
     
 /* Line 351 of lalr1.java  */
-/* Line 434 of "YYParser.y"  */
+/* Line 237 of "YYParser.y"  */
     {
 		writer.print("\t c -> INL_KW varlist \n") ;
 		yyval=new eval();
@@ -618,7 +620,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 20)
     
 /* Line 351 of lalr1.java  */
-/* Line 444 of "YYParser.y"  */
+/* Line 247 of "YYParser.y"  */
     {
 		writer.print("\t c -> INH_KW varlist \n") ;
 		yyval=new eval();
@@ -635,7 +637,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 21)
     
 /* Line 351 of lalr1.java  */
-/* Line 454 of "YYParser.y"  */
+/* Line 257 of "YYParser.y"  */
     {
 		writer.print("\t c -> OUTL_KW x \n") ;
 		yyval=new eval();
@@ -652,7 +654,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 22)
     
 /* Line 351 of lalr1.java  */
-/* Line 464 of "YYParser.y"  */
+/* Line 267 of "YYParser.y"  */
     {
 		writer.print("\t c -> OUTH_KW x \n") ;
 		yyval=new eval();
@@ -669,7 +671,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 23)
     
 /* Line 351 of lalr1.java  */
-/* Line 474 of "YYParser.y"  */
+/* Line 277 of "YYParser.y"  */
     {
 		writer.print("\t c -> OUTL_KW BOT_KW \n") ;
 		yyval=new eval();
@@ -686,7 +688,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 24)
     
 /* Line 351 of lalr1.java  */
-/* Line 484 of "YYParser.y"  */
+/* Line 287 of "YYParser.y"  */
     {
 		writer.print("\t c -> OUTH_KW BOT_KW \n") ;	
 		yyval=new eval();
@@ -703,7 +705,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 25)
     
 /* Line 351 of lalr1.java  */
-/* Line 494 of "YYParser.y"  */
+/* Line 297 of "YYParser.y"  */
     {
 		writer.print("\t c -> IF_KW exp THEN_KW M clist ENDIF_KW \n") ;
 		yyval=new eval();
@@ -724,7 +726,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 26)
     
 /* Line 351 of lalr1.java  */
-/* Line 508 of "YYParser.y"  */
+/* Line 311 of "YYParser.y"  */
     {
 		writer.print("\t c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW \n") ;
 		yyval=new eval();
@@ -747,7 +749,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 27)
     
 /* Line 351 of lalr1.java  */
-/* Line 524 of "YYParser.y"  */
+/* Line 327 of "YYParser.y"  */
     {
 		writer.print("\t c -> WHILE_KW exp DO_KW M clist DONE_KW \n") ;
 		yyval=new eval();
@@ -770,7 +772,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 28)
     
 /* Line 351 of lalr1.java  */
-/* Line 541 of "YYParser.y"  */
+/* Line 344 of "YYParser.y"  */
     {
 		writer.print("\t varlist -> x \n") ;
 		yyval=new eval();
@@ -784,7 +786,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 29)
     
 /* Line 351 of lalr1.java  */
-/* Line 548 of "YYParser.y"  */
+/* Line 351 of "YYParser.y"  */
     {
 		writer.print("\t varlist -> x , varlist \n") ;
 		yyval=new eval();
@@ -798,7 +800,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 30)
     
 /* Line 351 of lalr1.java  */
-/* Line 556 of "YYParser.y"  */
+/* Line 359 of "YYParser.y"  */
     {
 		writer.print("\t b -> BOOL_CONSTANT \n") ;
 		yyval=new eval();
@@ -812,7 +814,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 31)
     
 /* Line 351 of lalr1.java  */
-/* Line 564 of "YYParser.y"  */
+/* Line 367 of "YYParser.y"  */
     {
 		writer.print("\t n -> INTEGER_NUMBER \n") ;
 		yyval=new eval();
@@ -826,7 +828,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 32)
     
 /* Line 351 of lalr1.java  */
-/* Line 572 of "YYParser.y"  */
+/* Line 375 of "YYParser.y"  */
     {
 		writer.print("\t x -> IDENTIFIER \n") ;
 		yyval=new eval();
@@ -840,7 +842,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 33)
     
 /* Line 351 of lalr1.java  */
-/* Line 580 of "YYParser.y"  */
+/* Line 383 of "YYParser.y"  */
     {
 	
 	};
@@ -851,7 +853,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 34)
     
 /* Line 351 of lalr1.java  */
-/* Line 585 of "YYParser.y"  */
+/* Line 388 of "YYParser.y"  */
     {
 	
 	};
@@ -861,7 +863,7 @@ writer.print(((eval)yyval).stmt+ "\n");
 
 
 /* Line 351 of lalr1.java  */
-/* Line 865 of "YYParser.java"  */
+/* Line 867 of "YYParser.java"  */
 	default: break;
       }
 
@@ -1439,10 +1441,10 @@ writer.print(((eval)yyval).stmt+ "\n");
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
   private static final short yyrline_[] =
   {
-         0,   284,   284,   299,   307,   318,   326,   333,   341,   349,
-     357,   365,   373,   381,   389,   396,   403,   413,   423,   433,
-     443,   453,   463,   473,   483,   493,   507,   523,   540,   547,
-     555,   563,   571,   580,   585
+         0,    85,    85,   102,   110,   121,   129,   136,   144,   152,
+     160,   168,   176,   184,   192,   199,   206,   216,   226,   236,
+     246,   256,   266,   276,   286,   296,   310,   326,   343,   350,
+     358,   366,   374,   383,   388
   };
 
   // Report on the debug stream that the rule yyrule is going to be reduced.
@@ -1525,16 +1527,10 @@ writer.print(((eval)yyval).stmt+ "\n");
 
 
 /*************************************** MAIN *****************************************/
-static PrintStream writer, output;
-static int IntValue;
-Vector<Integer> tempIntValue = new Vector<Integer>();
-static double DoubleValue;
-static int BoolValue;
-static String IDvalue;
+static PrintStream writer;
 static String stmt;
 private int nodeCounter=0;
 
-Vector<String> tempIDValue = new Vector<String>();
 
 public static void main(String args[]) throws IOException, FileNotFoundException {
 		YYParser yyparser;
@@ -1542,7 +1538,6 @@ public static void main(String args[]) throws IOException, FileNotFoundException
 
 
 	writer = new PrintStream (new File("reduction.txt"));
-	output = new PrintStream (new File("result.c"));
 	lexer = new Yylex(new InputStreamReader(new FileInputStream("input.wl")));
 
 	
@@ -1581,303 +1576,28 @@ public static void main(String args[]) throws IOException, FileNotFoundException
 }
 
 /*-------------------------------------------------------------------------------------------*/
-	Vector<activationRecord> records = new Vector<activationRecord>();
-	Vector<Integer> offsets = new Vector<Integer>();
 	
-	static Vector<String> symbols=new Vector<String>();
-	static Vector<String> tsymbols=new Vector<String>();
-
-	static int tempSymbol=0;
-	Vector<quad> quads = new Vector<quad>();
-	int tempCount = 0;
-	/*************************************** merge *****************************************/
-	public Vector<Integer> merge(Vector<Integer> l1, Vector<Integer> l2) {
-		Vector<Integer> res = new Vector<Integer>();
-		res.addAll(l1);
-		res.addAll(l2);
-		return res;
-	}
-	/*************************************** makelist **************************************/
-	public Vector<Integer> makelist(int l) {
-		Vector<Integer> res = new Vector<Integer>();
-		res.add(l);
-		return res;
-	}
-	/*************************************** backpatch ************************************/
-	public void backpatch(Vector<Integer> l, int i) {
-	//	System.out.println("fff");
-		for (int qnumber : l)
-			quads.get(qnumber).fourth = ""+ i;
-
-	}
-	/*************************************** newTemp **************************************/
-	public String newTemp() {
-		String temp = new String("t" + tempCount);
-		tempCount++;
-		return temp;
-	}
-	
-	public String newTemp(String itype) {
-	
-	char c=itype.charAt(0);
-	String type="";
-		switch (c) { 
-		case 'i' : 
-		type="integer";
-		break;
-		
-		case 'r' :
-		 type="real";
-		  break;
-		  
-		case 'b' :
-		 type="integer"; 
-		 break;
-		}
-		String temp = new String("t" + tempCount);
-		tempCount++;
-		if(records.size()>0){
-			records.get(records.size()-1).vars.add(temp);
-			records.get(records.size()-1).vNames.add(temp);
-			records.get(records.size()-1).vTypes.add(type);
-			System.out.println(temp+ "   "+type);
-			symbols.add(temp);
-			tsymbols.add(type);
-		}
-		return temp;
-	}
-	/*************************************** emit ****************************************/
-	public void emit(String first, String second, String third, String forth) {
-		quad q = new quad(first, second, third, forth);
-		quads.add(q);
-	}
-	
-		public void emit(String first, String second, String third, int forth) {
-		quad q = new quad(first, second, third, forth+"");
-		quads.add(q);
-	}
-	
-	public void emit(quad q) {
-		quads.add(q);
-	}
-
-	/*************************************** nexQuad ************************************/
-	public int nextQuad() {
-		return quads.size();
-	}
-	/*************************************** lookup ************************************/
-	public String lookUp(String id,activationRecord current){
-		
-		if(current == null)
-			return null;
-			
-		int i=current.vNames.indexOf(id);
-		System.out.println(current.vNames.size()+"id= "+id);
-		if( i!=-1)
-			return current.vTypes.get(i);
-	
-		return lookUp(id,current.father);
-		
-	}
-	/*************************************** findproc ************************************/
-	public activationRecord findProc(String id){
-			int i=records.get(records.size()-1).procNames.indexOf(id);
-		if(i !=-1)
-			return records.get(records.size()-1).childs.get(i);
-		
-		if(records.get(records.size()-1).father == null)
-			return null;
-		else{
-			i= records.get(records.size()-1).father.procNames.indexOf(id);
-			return records.get(records.size()-1).father.childs.get(i);
-		}
-	}	
-	/*************************************** insertType ************************************/
-	public void insertTypeToSymbolTable(String var,String tvar){
-	
-		String[] newVars=var.split("#");
-		System.out.println("length="+ newVars.length+"  "+ var);
-		for(String ss:newVars){
-			System.out.println(tvar + " added");
-			tsymbols.add(tvar);
-			records.get(records.size()-1).vTypes.add(tvar);	
-		}
-
-	
-	}
-	/*************************************** insertSymbol ************************************/
-	public String insertSymbolToSymbolTable(String symbol){
-		
-		records.get(records.size()-1).vNames.add(symbol);
-		if(symbols.indexOf(symbol)!=-1){
-			records.get(records.size()-1).vars.add("d"+tempSymbol);
-			symbols.add("d"+tempSymbol);
-			String alpha = "d"+tempSymbol;
-			tempSymbol++;
-		System.out.println("place= "+("d"+tempSymbol) +" name= "+ symbol);
-			return alpha;
-		}
-		else{
-				symbols.add(symbol);
-				records.get(records.size()-1).vars.add(symbol);
-			System.out.println("place= "+ symbol +" name= "+ symbol);
-				return symbol;
-			}
-		
-	}
-	/*************************************** printQuadToCode ************************************/
-	public void printQuadToCode(){
-	
-
-	output.println("#include <stdio.h>\n\n");
-	output.println("void  *stack[1024];");
-	output.println("void  *ptr;");
-	output.println("int  top=0,procParamNumber=0;");
-	for(int i=0;i<symbols.size();i++){
-		if(tsymbols.get(i).compareTo("real")==0)
-			output.println("double  "+symbols.get(i)+";");
-		else
-			output.println("int   "+symbols.get(i)+";");
-		
-	}
-	
-	output.println("\n\nint main(){\n");
-		
-	for(int i = 0;i< quads.size(); i++){
-	
-	output.print("L"+i+" :	") ;
-	if(quads.get(i).first.compareTo("goto")==0)
-			output.println("goto L" + quads.get(i).fourth +";");
-	else if(quads.get(i).first.compareTo("gotoptr")==0)
-			output.println("goto *ptr;");
-	else if(quads.get(i).first.compareTo("IfCase")==0 )
-		output.println("if ( " + quads.get(i).second + " == " + quads.get(i).third + " )  goto L" + quads.get(i).fourth+";");
-	
-	else if(quads.get(i).first.compareTo(":=")==0 )
-		output.println(quads.get(i).fourth+" = "+quads.get(i).second+";");
-	else if(quads.get(i).first.compareTo("+")==0 || 
-		quads.get(i).first.compareTo( "-")==0 ||
-		quads.get(i).first.compareTo( "*")==0 || 
-		quads.get(i).first.compareTo("/")==0 ||
-		quads.get(i).first.compareTo("&&")==0 || 
-		quads.get(i).first.compareTo("||")==0
-		)
-				output.println(quads.get(i).fourth+" = "+quads.get(i).second+" "+quads.get(i).first+" "+quads.get(i).third+";");
-
-	else if(quads.get(i).first.compareTo("<")==0 || quads.get(i).first.compareTo("<=")==0 || quads.get(i).first.compareTo(">")==0  || quads.get(i).first.compareTo(">=")==0 
-		 || quads.get(i).first.compareTo("!=")==0 || quads.get(i).first.compareTo("=")==0 || quads.get(i).first.compareTo("")==0 )
-		output.println("if ( "+quads.get(i).second+" "+quads.get(i).first+" "+quads.get(i).third+" )  "+"goto L"+quads.get(i).fourth+";");
-	
-	}	
-	output.println("L"+quads.size()+" :  "+"return 0;\n");
-	output.println("}");
-	output.close();
-	
-	}
 /*-------------------------------------------------------------------------------------------*/	
 
 
 
 /* Line 927 of lalr1.java  */
-/* Line 1783 of "YYParser.java"  */
+/* Line 1586 of "YYParser.java"  */
 
 }
 
 
 /* Line 931 of lalr1.java  */
-/* Line 590 of "YYParser.y"  */
+/* Line 393 of "YYParser.y"  */
 
 
 /*************************************** eval ************************************/
 class eval {
-
-	public int quad;
-	public int isBoolean;
-
-	public String place="";
-	public String name="";
-	public String code="";
-	public String type="";
-	public String ids="";
 	
 	public String stmt="";
 	
 	public Node node;
 	public LinkedList list;
-
-	public Vector<Integer> true_list=new Vector<Integer>();
-	public Vector<Integer> false_list=new Vector<Integer>();
-	public Vector<Integer> next_list=new Vector<Integer>();
-
-	public Vector<Integer> intNumber_case_list=new Vector<Integer>();
-	public Vector<Integer> label_case_list=new Vector<Integer>();
-
-
-
-
-}
-/*************************************** activationRecord ************************************/
-class activationRecord {
- 
-	public int offset;
-	
-	/* vars */
-	public Vector<String> vars = new Vector<String>(); //place
-	public Vector<String> vNames = new Vector<String>(); //name
-	public Vector<String> vTypes = new Vector<String>(); 
-	
-	/*params*/
-	public Vector<String> params = new Vector<String>();
-	public Vector<String> pTypes = new Vector<String>();
-	public int paramSize=0;
-	public int startLabel;
-	public String returnType="void";
-	
-	/* activation records */
-	public activationRecord father;
-	Vector<activationRecord> childs = new Vector<activationRecord>();
-	Vector<String> procNames = new Vector<String>();
-
-	public activationRecord(activationRecord father) {
-			this.father=father;
-	}
-	public void addVar(String name, String type) {
-		vars.add(name);
-		vTypes.add(type);
-	}
-	public void addChild(activationRecord child,String childName){
-		childs.add(child);
-		procNames.add(childName);
-		System.out.println("child = "+ childName);
-	}
-	
-
-	public void printSymbols(){
-		System.out.println(vars.size()+"----"+ vNames.size());
-	for(int i=0;i<vNames.size();i++){
-		System.out.println("place= "+vars.get(i) +" name= "+ vNames.get(i)+" type= "+vTypes.get(i));
-		}
-	}
-
-}
-/*************************************** quad ************************************/
-class quad {
-	public String first;
-	public String second;
-	public String third;
-	public String fourth;
-
-	public quad(String first, String second, String third, String forth) {
-		this.first = first;
-		this.second = second;
-		this.third = third;
-		this.fourth = forth;
-	}
-
-	public String print() {
-
-		return null;
-	}
 
 }
 

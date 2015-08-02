@@ -336,7 +336,11 @@ class YYParser
   if (yyn == 2)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 285 of "YYParser.y"  */
+=======
+/* Line 86 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t program -> PROGRAM_KW ';' clist \n") ;
 		writer.print("###Hooray! - Your program is syntactically correct### \n");
@@ -357,7 +361,11 @@ class YYParser
   if (yyn == 3)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 300 of "YYParser.y"  */
+=======
+/* Line 103 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t clist -> c \n") ;
 		yyval=new eval();
@@ -372,7 +380,11 @@ class YYParser
   if (yyn == 4)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 308 of "YYParser.y"  */
+=======
+/* Line 111 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t clist -> clist ; M c \n") ;
 		yyval=new eval();
@@ -389,7 +401,11 @@ class YYParser
   if (yyn == 5)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 319 of "YYParser.y"  */
+=======
+/* Line 122 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 	
 		writer.print("\t exp -> b \n") ;
@@ -404,7 +420,11 @@ class YYParser
   if (yyn == 6)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 327 of "YYParser.y"  */
+=======
+/* Line 130 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t exp -> n \n") ;
 		yyval=new eval();
@@ -418,7 +438,11 @@ class YYParser
   if (yyn == 7)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 334 of "YYParser.y"  */
+=======
+/* Line 137 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t exp -> x \n") ;
 	yyval=new eval();
@@ -433,7 +457,11 @@ class YYParser
   if (yyn == 8)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 342 of "YYParser.y"  */
+=======
+/* Line 145 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t exp -> exp EQ_KW exp \n") ;
 		yyval=new eval();
@@ -448,7 +476,11 @@ class YYParser
   if (yyn == 9)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 350 of "YYParser.y"  */
+=======
+/* Line 153 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t exp -> exp LT_KW exp \n") ;
 		yyval=new eval();
@@ -463,7 +495,11 @@ class YYParser
   if (yyn == 10)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 358 of "YYParser.y"  */
+=======
+/* Line 161 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t exp -> exp LE_KW exp \n") ;
 		yyval=new eval();
@@ -478,7 +514,11 @@ class YYParser
   if (yyn == 11)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 366 of "YYParser.y"  */
+=======
+/* Line 169 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t exp -> exp GE_KW exp \n") ;
 		yyval=new eval();
@@ -493,7 +533,11 @@ class YYParser
   if (yyn == 12)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 374 of "YYParser.y"  */
+=======
+/* Line 177 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t exp -> exp GT_KW exp \n") ;
 	yyval=new eval();
@@ -508,7 +552,11 @@ class YYParser
   if (yyn == 13)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 382 of "YYParser.y"  */
+=======
+/* Line 185 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t exp -> exp PLUS_KW exp \n") ;
 	yyval=new eval();
@@ -523,7 +571,11 @@ class YYParser
   if (yyn == 14)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 390 of "YYParser.y"  */
+=======
+/* Line 193 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t exp -> exp MINUS_KW exp \n") ;
 		yyval=new eval();
@@ -537,7 +589,11 @@ class YYParser
   if (yyn == 15)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 397 of "YYParser.y"  */
+=======
+/* Line 200 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t exp -> exp AND_KW exp \n") ;
 		yyval=new eval();
@@ -551,7 +607,11 @@ class YYParser
   if (yyn == 16)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 404 of "YYParser.y"  */
+=======
+/* Line 207 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t exp -> exp OR_KW exp \n") ;
 			yyval=new eval();
@@ -567,7 +627,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 17)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 414 of "YYParser.y"  */
+=======
+/* Line 217 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t c -> NOP_KW \n") ;
 		yyval=new eval();
@@ -584,7 +648,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 18)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 424 of "YYParser.y"  */
+=======
+/* Line 227 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t c -> x ASSIGN_KW exp \n") ;
 		yyval=new eval();
@@ -601,7 +669,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 19)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 434 of "YYParser.y"  */
+=======
+/* Line 237 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t c -> INL_KW varlist \n") ;
 		yyval=new eval();
@@ -618,7 +690,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 20)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 444 of "YYParser.y"  */
+=======
+/* Line 247 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t c -> INH_KW varlist \n") ;
 		yyval=new eval();
@@ -635,7 +711,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 21)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 454 of "YYParser.y"  */
+=======
+/* Line 257 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t c -> OUTL_KW x \n") ;
 		yyval=new eval();
@@ -652,7 +732,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 22)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 464 of "YYParser.y"  */
+=======
+/* Line 267 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t c -> OUTH_KW x \n") ;
 		yyval=new eval();
@@ -669,7 +753,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 23)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 474 of "YYParser.y"  */
+=======
+/* Line 277 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t c -> OUTL_KW BOT_KW \n") ;
 		yyval=new eval();
@@ -686,7 +774,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 24)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 484 of "YYParser.y"  */
+=======
+/* Line 287 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t c -> OUTH_KW BOT_KW \n") ;	
 		yyval=new eval();
@@ -703,7 +795,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 25)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 494 of "YYParser.y"  */
+=======
+/* Line 297 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t c -> IF_KW exp THEN_KW M clist ENDIF_KW \n") ;
 		yyval=new eval();
@@ -724,7 +820,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 26)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 508 of "YYParser.y"  */
+=======
+/* Line 311 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW \n") ;
 		yyval=new eval();
@@ -747,7 +847,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 27)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 524 of "YYParser.y"  */
+=======
+/* Line 327 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t c -> WHILE_KW exp DO_KW M clist DONE_KW \n") ;
 		yyval=new eval();
@@ -770,7 +874,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 28)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 541 of "YYParser.y"  */
+=======
+/* Line 344 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t varlist -> x \n") ;
 		yyval=new eval();
@@ -784,7 +892,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 29)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 548 of "YYParser.y"  */
+=======
+/* Line 351 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t varlist -> x , varlist \n") ;
 		yyval=new eval();
@@ -798,7 +910,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 30)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 556 of "YYParser.y"  */
+=======
+/* Line 359 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t b -> BOOL_CONSTANT \n") ;
 		yyval=new eval();
@@ -812,7 +928,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 31)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 564 of "YYParser.y"  */
+=======
+/* Line 367 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t n -> INTEGER_NUMBER \n") ;
 		yyval=new eval();
@@ -826,7 +946,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 32)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 572 of "YYParser.y"  */
+=======
+/* Line 375 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 		writer.print("\t x -> IDENTIFIER \n") ;
 		yyval=new eval();
@@ -840,7 +964,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 33)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 580 of "YYParser.y"  */
+=======
+/* Line 383 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 	
 	};
@@ -851,7 +979,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 34)
     
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 585 of "YYParser.y"  */
+=======
+/* Line 388 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
     {
 	
 	};
@@ -861,7 +993,11 @@ writer.print(((eval)yyval).stmt+ "\n");
 
 
 /* Line 351 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 865 of "YYParser.java"  */
+=======
+/* Line 867 of "YYParser.java"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
 	default: break;
       }
 
@@ -1439,10 +1575,17 @@ writer.print(((eval)yyval).stmt+ "\n");
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
   private static final short yyrline_[] =
   {
+<<<<<<< HEAD
          0,   284,   284,   299,   307,   318,   326,   333,   341,   349,
      357,   365,   373,   381,   389,   396,   403,   413,   423,   433,
      443,   453,   463,   473,   483,   493,   507,   523,   540,   547,
      555,   563,   571,   580,   585
+=======
+         0,    85,    85,   102,   110,   121,   129,   136,   144,   152,
+     160,   168,   176,   184,   192,   199,   206,   216,   226,   236,
+     246,   256,   266,   276,   286,   296,   310,   326,   343,   350,
+     358,   366,   374,   383,   388
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
   };
 
   // Report on the debug stream that the rule yyrule is going to be reduced.
@@ -1542,7 +1685,10 @@ public static void main(String args[]) throws IOException, FileNotFoundException
 
 
 	writer = new PrintStream (new File("reduction.txt"));
+<<<<<<< HEAD
 	output = new PrintStream (new File("result.c"));
+=======
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
 	lexer = new Yylex(new InputStreamReader(new FileInputStream("input.wl")));
 
 	
@@ -1779,13 +1925,21 @@ public static void main(String args[]) throws IOException, FileNotFoundException
 
 
 /* Line 927 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 1783 of "YYParser.java"  */
+=======
+/* Line 1586 of "YYParser.java"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
 
 }
 
 
 /* Line 931 of lalr1.java  */
+<<<<<<< HEAD
 /* Line 590 of "YYParser.y"  */
+=======
+/* Line 393 of "YYParser.y"  */
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
 
 
 /*************************************** eval ************************************/

@@ -23,9 +23,14 @@ public class LinkedList {
         
     
     }
-    
+    /**
+     * nextPointer1 and previousPointer1 are updated.
+     * 
+     * @param list 
+     */
     public void merge (LinkedList list){
         last.setNextPointer1(list.getFirst());
+        list.getFirst().addPreviousPointer(last);
         last = list.getLast();
     }
 

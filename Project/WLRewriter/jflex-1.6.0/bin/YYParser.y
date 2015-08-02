@@ -3,7 +3,7 @@
 
   import java.io.*;
   import java.lang.*;
-  import java.util.Vector; 
+  import java.util.*; 
 
 %}
 
@@ -26,9 +26,12 @@ public static void main(String args[]) throws IOException, FileNotFoundException
 		YYParser yyparser;
 		final Yylex lexer;		
 
-
-	writer = new PrintStream (new File("reduction.txt"));
-	lexer = new Yylex(new InputStreamReader(new FileInputStream("input.wl")));
+        Scanner sc = new Scanner(System.in);
+        String sourceCodeFileName = sc.next();
+                
+                
+       	writer = new PrintStream (new File("reduction.txt"));
+		lexer = new Yylex(new InputStreamReader(new FileInputStream(sourceCodeFileName)));
 
 	
 	
@@ -301,9 +304,13 @@ c : NOP_KW
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$2).stmt);//condition expression node
-		Node dummy = new Node(nodeCounter++, "dummy");//dummy node for last node of if
 		((eval)$$).list = new LinkedList(((eval)$$).node);
+
+		Node dummy = new Node(nodeCounter++, "dummy");//dummy node for last node of if
+		
 		((eval)$$).list.getLast().setNextPointer2(dummy);//if false
+		dummy.addPreviousPointer(((eval)$$).list.getLast()); //backward pointer
+		
 		((eval)$$).list.merge(((eval)$5).list);//if true
 		((eval)$$).list.merge(new LinkedList(dummy));	
 	};
@@ -315,10 +322,14 @@ c : NOP_KW
 		writer.print(((eval)$$).stmt+ "\n");
 
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$2).stmt);//condition expression node
+		((eval)$$).list = new LinkedList(((eval)$$).node);
+		
 		Node dummy = new Node(nodeCounter++, "dummy");//dummy node for last node of if
 		LinkedList dummyList = new LinkedList(dummy);
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		
 		((eval)$$).list.getLast().setNextPointer2(((eval)$9).list.getFirst());//if false - else section
+		((eval)$9).list.getFirst().addPreviousPointer(((eval)$$).list.getLast()); //backward pointer
+		
 		((eval)$9).list.merge(dummyList);
 		((eval)$$).list.merge(((eval)$5).list);//if true
 		((eval)$$).list.merge(dummyList);	
@@ -331,12 +342,19 @@ c : NOP_KW
 		writer.print(((eval)$$).stmt+ "\n");	
 	
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$2).stmt);//condition expression node
+		((eval)$$).list = new LinkedList(((eval)$$).node);
+		
 		Node dummy = new Node(nodeCounter++, "dummy");//dummy node for last node of if
 		LinkedList dummyList = new LinkedList(dummy);
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		
 		((eval)$$).list.getLast().setNextPointer2(dummy);//while condition false
-		((eval)$$).list.getLast().setNextPointer1(((eval)$5).list.getFirst()); //while condition true (loop)
+		dummy.addPreviousPointer(((eval)$$).list.getLast()); //backward pointer
+		
+		((eval)$$).list.merge(((eval)$5).list); //while condition true (loop)
+		
 		((eval)$5).list.getLast().setNextPointer1(((eval)$$).list.getFirst());
+		((eval)$$).list.getFirst().addPreviousPointer(((eval)$5).list.getLast());
+		
 		((eval)$$).list.setLast(dummy);
 	};
 	

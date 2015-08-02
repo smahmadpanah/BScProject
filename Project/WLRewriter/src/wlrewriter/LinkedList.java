@@ -14,7 +14,6 @@ package wlrewriter;
 public class LinkedList {
 
     private Node first, last;
-    private int size = 0;
     
     
     public LinkedList(Node node) {
@@ -24,9 +23,14 @@ public class LinkedList {
         
     
     }
-    
+    /**
+     * nextPointer1 and previousPointer1 are updated.
+     * 
+     * @param list 
+     */
     public void merge (LinkedList list){
         last.setNextPointer1(list.getFirst());
+        list.getFirst().addPreviousPointer(last);
         last = list.getLast();
     }
 
@@ -38,9 +42,6 @@ public class LinkedList {
         return last;
     }
 
-    public int getSize() {
-        return size;
-    }
 
     public void setFirst(Node first) {
         this.first = first;

@@ -13,6 +13,9 @@ h3
 h3
 =======
 l1
+<<<<<<< HEAD
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
+=======
 >>>>>>> parent of 9b34154... CFG دوطرفه شد
 	 n -> INTEGER_NUMBER 
 0
@@ -20,8 +23,11 @@ l1
 0
 	 exp -> exp EQ_KW exp 
 <<<<<<< HEAD
+<<<<<<< HEAD
 h3 == 0
 =======
+=======
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
 l1 == 0
 	 x -> IDENTIFIER 
 l2
@@ -40,6 +46,7 @@ l1
 l2
 	 exp -> x 
 l2
+<<<<<<< HEAD
 <<<<<<< HEAD
 	 n -> INTEGER_NUMBER 
 0
@@ -72,6 +79,11 @@ program; inH h3; while h3 == 0 do while l2 > 0 do outH h3 done ; NOP done
 	 c -> x ASSIGN_KW exp 
 l1 = l2
 	 clist -> clist ; M c 
+=======
+	 c -> x ASSIGN_KW exp 
+l1 = l2
+	 clist -> clist ; M c 
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
 l2 = h1; l1 = l2
 	 c -> IF_KW exp THEN_KW M clist ENDIF_KW 
  if l1 == 0 then l2 = h1; l1 = l2 endif
@@ -80,4 +92,7 @@ inL l1, l2;  if l1 == 0 then l2 = h1; l1 = l2 endif
 	 program -> PROGRAM_KW ';' clist 
 ###Hooray! - Your program is syntactically correct### 
 program; inL l1, l2;  if l1 == 0 then l2 = h1; l1 = l2 endif
+<<<<<<< HEAD
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
+=======
 >>>>>>> parent of 9b34154... CFG دوطرفه شد

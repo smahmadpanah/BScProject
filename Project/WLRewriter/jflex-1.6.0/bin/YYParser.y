@@ -35,7 +35,10 @@ public static void main(String args[]) throws IOException, FileNotFoundException
 
 	writer = new PrintStream (new File("reduction.txt"));
 <<<<<<< HEAD
+<<<<<<< HEAD
 	output = new PrintStream (new File("result.c"));
+=======
+>>>>>>> parent of 9b34154... CFG دوطرفه شد
 =======
 >>>>>>> parent of 9b34154... CFG دوطرفه شد
 	lexer = new Yylex(new InputStreamReader(new FileInputStream("input.wl")));

@@ -14,6 +14,7 @@ package wlrewriter;
 public class LinkedList {
 
     private Node first, last;
+    private int size = 0;
     
     
     public LinkedList(Node node) {
@@ -37,6 +38,9 @@ public class LinkedList {
         return last;
     }
 
+    public int getSize() {
+        return size;
+    }
 
     public void setFirst(Node first) {
         this.first = first;

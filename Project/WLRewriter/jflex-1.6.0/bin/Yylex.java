@@ -600,12 +600,14 @@ class Yylex {
           }
         case 32: break;
         case 2: 
-          { YYParser.stmt=yytext();	
+          { YYParser.IDvalue = yytext();
+	YYParser.stmt=yytext();	
 	return YYParser.IDENTIFIER;
           }
         case 33: break;
         case 3: 
-          { YYParser.stmt=yytext();
+          { YYParser.IntValue=Integer.parseInt(yytext());
+	YYParser.stmt=yytext();
 	return YYParser.INTEGER_NUMBER;
           }
         case 34: break;
@@ -700,6 +702,10 @@ class Yylex {
         case 26: 
           { String s=yytext();
 	 YYParser.stmt=yytext();
+     if(s.compareTo("true")==0)
+     	YYParser.BoolValue=1;
+     else
+     	YYParser.BoolValue=0;
 	return YYParser.BOOL_CONSTANT;
           }
         case 57: break;

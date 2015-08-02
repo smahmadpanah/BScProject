@@ -1,49 +1,49 @@
 	 x -> IDENTIFIER 
-l1
-	 x -> IDENTIFIER 
-l2
+h3
 	 varlist -> x 
-l2
-	 varlist -> x , varlist 
-l1, l2
-	 c -> INL_KW varlist 
-inL l1, l2
+h3
+	 c -> INH_KW varlist 
+inH h3
 	 clist -> c 
-inL l1, l2
+inH h3
 	 x -> IDENTIFIER 
-l1
+h3
 	 exp -> x 
-l1
+h3
 	 n -> INTEGER_NUMBER 
 0
 	 exp -> n 
 0
 	 exp -> exp EQ_KW exp 
-l1 == 0
+h3 == 0
 	 x -> IDENTIFIER 
 l2
-	 x -> IDENTIFIER 
-h1
 	 exp -> x 
-h1
-	 c -> x ASSIGN_KW exp 
-l2 = h1
+l2
+	 n -> INTEGER_NUMBER 
+0
+	 exp -> n 
+0
+	 exp -> exp GT_KW exp 
+l2 > 0
+	 x -> IDENTIFIER 
+h3
+	 c -> OUTH_KW x 
+outH h3
 	 clist -> c 
-l2 = h1
-	 x -> IDENTIFIER 
-l1
-	 x -> IDENTIFIER 
-l2
-	 exp -> x 
-l2
-	 c -> x ASSIGN_KW exp 
-l1 = l2
+outH h3
+	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
+while l2 > 0 do outH h3 done 
+	 clist -> c 
+while l2 > 0 do outH h3 done 
+	 c -> NOP_KW 
+NOP
 	 clist -> clist ; M c 
-l2 = h1; l1 = l2
-	 c -> IF_KW exp THEN_KW M clist ENDIF_KW 
- if l1 == 0 then l2 = h1; l1 = l2 endif
+while l2 > 0 do outH h3 done ; NOP
+	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
+while h3 == 0 do while l2 > 0 do outH h3 done ; NOP done 
 	 clist -> clist ; M c 
-inL l1, l2;  if l1 == 0 then l2 = h1; l1 = l2 endif
+inH h3; while h3 == 0 do while l2 > 0 do outH h3 done ; NOP done 
 	 program -> PROGRAM_KW ';' clist 
 ###Hooray! - Your program is syntactically correct### 
-program; inL l1, l2;  if l1 == 0 then l2 = h1; l1 = l2 endif
+program; inH h3; while h3 == 0 do while l2 > 0 do outH h3 done ; NOP done 

@@ -20,6 +20,7 @@ public class Node {
     private HashSet<Node> previousPointers; // For Predecessor
     private HashSet<Node> PostDominators; // For Dominator Nodes
     private HashSet<Node> nextPointersForPostDomTree;
+    private ArrayList<Node> immediatePostDominator;
     public boolean isVisited;
 
     public Node(int nodeID, String statement) {
@@ -31,6 +32,7 @@ public class Node {
         previousPointers = new HashSet<Node>();
         PostDominators = new HashSet<Node>();
         nextPointersForPostDomTree = new HashSet<>();
+        immediatePostDominator = new ArrayList<>();
     }
 
     public int getNodeID() {
@@ -104,6 +106,16 @@ public class Node {
     public HashSet<Node> getNextPointersForPostDomTree() {
         return nextPointersForPostDomTree;
     }
+
+    public ArrayList<Node> getImmediatePostDominator() {
+        return immediatePostDominator;
+    }
+
+    public void setImmediatePostDominator(ArrayList<Node> immediatePostDominator) {
+        this.immediatePostDominator = immediatePostDominator;
+    }
+    
+    
     
     
 

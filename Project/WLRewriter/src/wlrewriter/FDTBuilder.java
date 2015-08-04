@@ -5,6 +5,7 @@
  */
 package wlrewriter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -37,6 +38,13 @@ public class FDTBuilder {
         //draw the FDT (Post Dom Tree) - Find the immediate post dominance
         makePostDomTree();
 
+        //find the immediate post dom for each node - It must be unique, but I did not take risk and get an array for it
+        setImmediatePostDoms();
+        
+        //print the immediate post dom for each node that they are set in the field of each node
+        printImmediatePostDoms();
+
+        computePDF
     }
 
     private void computePostDominators() {
@@ -149,5 +157,45 @@ public class FDTBuilder {
     private void mergeLists(LinkedList first, LinkedList second) {
         first.getFirst().addNextPointersForPostDomTree(second.getFirst());
         second.getFirst().addPreviousPointer(first.getFirst());
+    }
+
+    private void setImmediatePostDoms() {
+        for (Node n : FDTNodes) {
+            ArrayList<Node> immediatePostDomForCurrentNode = new ArrayList<>();
+            for (Node i : n.getPostDominators()) {
+                boolean flag = true;
+                for (Node j : n.getPostDominators()) {
+                    if (!j.equals(i)) {
+                        if (j.getPostDominators().contains(i)) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+                if (flag == true) {
+                    immediatePostDomForCurrentNode.add(i);
+                }
+
+            }
+
+            if (immediatePostDomForCurrentNode.size() > 1) {
+                System.err.println("Immediate Post Dom for this node is not unique!!");
+            }
+
+            n.setImmediatePostDominator(immediatePostDomForCurrentNode);
+
+        }
+
+    }
+
+    private void printImmediatePostDoms() {
+        for (Node n : FDTNodes) {
+
+            System.out.println("Immediate Post Dom for Node " + n.getNodeID() + " --> " + n.getStatement() + ":");
+
+            for (Node q : n.getImmediatePostDominator()) {
+                System.out.println("\t" + q.getNodeID() + " --> " + q.getStatement());
+            }
+        }
     }
 }

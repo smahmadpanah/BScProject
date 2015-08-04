@@ -14,38 +14,40 @@ inL l1, l2
 l1
 	 exp -> x 
 l1
+	 n -> INTEGER_NUMBER 
+0
+	 exp -> n 
+0
+	 exp -> exp EQ_KW exp 
+l1 == 0
 	 x -> IDENTIFIER 
-l3
+l2
+	 x -> IDENTIFIER 
+h1
 	 exp -> x 
-l3
-	 exp -> exp LT_KW exp 
-l1 < l3
+h1
+	 c -> x ASSIGN_KW exp 
+l2 = h1
+	 clist -> c 
+l2 = h1
 	 x -> IDENTIFIER 
 l1
 	 x -> IDENTIFIER 
 l2
 	 exp -> x 
 l2
-	 n -> INTEGER_NUMBER 
-2
-	 exp -> n 
-2
-	 exp -> exp PLUS_KW exp 
-l2 + 2
 	 c -> x ASSIGN_KW exp 
-l1 = l2 + 2
+l1 = l2
+	 clist -> clist ; M c 
+l2 = h1; l1 = l2
+	 c -> NOP_KW 
+NOP
 	 clist -> c 
-l1 = l2 + 2
-	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
-while l1 < l3 do l1 = l2 + 2 done 
+NOP
+	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
+ if l1 == 0 then l2 = h1; l1 = l2 else NOP endif 
 	 clist -> clist ; M c 
-inL l1, l2; while l1 < l3 do l1 = l2 + 2 done 
-	 x -> IDENTIFIER 
-l2
-	 c -> OUTL_KW x 
-outL l2
-	 clist -> clist ; M c 
-inL l1, l2; while l1 < l3 do l1 = l2 + 2 done ; outL l2
+inL l1, l2;  if l1 == 0 then l2 = h1; l1 = l2 else NOP endif 
 	 program -> PROGRAM_KW ';' clist 
 ###Hooray! - Your program is syntactically correct### 
-program; inL l1, l2; while l1 < l3 do l1 = l2 + 2 done ; outL l2
+program; inL l1, l2;  if l1 == 0 then l2 = h1; l1 = l2 else NOP endif 

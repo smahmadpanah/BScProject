@@ -1,0 +1,15 @@
+Compute PostDominators(){
+For (each n in NodeSet)
+	PostDom(n) = NodeSet
+	
+WorkList = {StopNode}
+While (WorkList is not empty) {
+	Remove any node Y from WorkList
+	New = {Y} U (intersection PostDom(x) s.t. x is in Succ(Y))
+	If New != PostDom(Y) {
+		PostDom(Y) = New
+		For (each Z in Pred(Y))
+			WorkList = WorkList U {Z}
+}
+}
+}

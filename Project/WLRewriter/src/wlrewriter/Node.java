@@ -18,8 +18,8 @@ public class Node {
     private String statement;
     private Node nextPointer1, nextPointer2; // For Successor --> in condition statements: nextPointer1 = true, nextPointer2 = false | in other statments: nextPointer1 = next node, nextPointer2 = null
     private HashSet<Node> previousPointers; // For Predecessor
-    private HashSet<Node> Dominators; // For Dominator Nodes
-    private HashSet<Node> nextPointersForFDT, nextPointersForPostDomTree;
+    private HashSet<Node> PostDominators; // For Dominator Nodes
+    private HashSet<Node> nextPointersForPostDomTree;
     public boolean isVisited;
 
     public Node(int nodeID, String statement) {
@@ -29,8 +29,7 @@ public class Node {
         nextPointer1 = null;
         nextPointer2 = null;
         previousPointers = new HashSet<Node>();
-        Dominators = new HashSet<Node>();
-        nextPointersForFDT = new HashSet<>();
+        PostDominators = new HashSet<Node>();
         nextPointersForPostDomTree = new HashSet<>();
     }
 
@@ -86,24 +85,16 @@ public class Node {
         return successor;
     }
 
-    public HashSet<Node> getDominators() {
-        return Dominators;
+    public HashSet<Node> getPostDominators() {
+        return PostDominators;
     }
 
-    public void setDominators(HashSet<Node> Dominators) {
-        this.Dominators = Dominators;
+    public void setPostDominators(HashSet<Node> PostDominators) {
+        this.PostDominators = PostDominators;
     }
 
     public void setPreviousPointers(HashSet<Node> previousPointers) {
         this.previousPointers = previousPointers;
-    }
-
-    public HashSet<Node> getNextPointersForFDT() {
-        return nextPointersForFDT;
-    }
-
-    public void addNextPointersForFDT(Node nextNode) {
-        nextPointersForFDT.add(nextNode);
     }
 
     public void addNextPointersForPostDomTree(Node nextNode) {

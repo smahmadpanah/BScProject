@@ -18,7 +18,7 @@ import java.util.LinkedHashSet;
  */
 public class FDTBuilder {
 
-    private LinkedList cfg, FDTree, postDomTree;
+    private LinkedList cfg, FDTree; //FDTree is equal to PostDomTree
     private HashSet<Node> FDTNodes;
 
     public FDTBuilder(LinkedList cfg) {
@@ -28,85 +28,78 @@ public class FDTBuilder {
         //print the cfg for test
         cfg.printNodeSet();
 
-        //computing dominators
-        computeDominators();
+        //computing post dominators
+        computePostDominators();
 
         //print dominators
-        printDominators();
+        printPostDominators();
 
-        //draw the FDT - Find the immediate dominance
-        makeImmedaiteDomTree();
+        //draw the FDT (Post Dom Tree) - Find the immediate post dominance
+        makePostDomTree();
 
-        //build the post dominance tree - main result tree for the class
-        buildPostDomTree();
     }
 
-    private void computeDominators() {
+    private void computePostDominators() {
 
         for (Node n : cfg.getNodeSet()) {
-            n.setDominators(cfg.getNodeSet()); //Dom(n) = NodeSet
+            n.setPostDominators(cfg.getNodeSet()); //PostDom(n) = NodeSet
         }
 
         HashSet<Node> workList = new HashSet<Node>();
-        workList.add(cfg.getFirst()); //WorkList = {StartNode}
+        workList.add(cfg.getLast()); //WorkList = {StopNode}
 
         while (!workList.isEmpty()) {
 
             Node y = workList.iterator().next();
             workList.remove(y); // Remove any node Y from Worklist
 
-            // New = {y} + intersect Dom(x): x is in pred(y)
+            // New = {y} + intersect PostDom(x): x is in succ(y)
             HashSet<Node> New = new HashSet<>();
             New.add(y);
 
-            //  try {
-            HashSet<Node> intersect = new HashSet<>();
-            if (y.pred().iterator().hasNext()) {
-                intersect = (HashSet) y.pred().iterator().next().getDominators().clone();
+            if (y.succ().iterator().hasNext()) {
+                HashSet<Node> intersect = new HashSet<>(y.succ().iterator().next().getPostDominators());
 
-                for (Node x : y.pred()) {
-                    intersect.retainAll(x.getDominators());
+                for (Node x : y.succ()) {
+                    intersect.retainAll(x.getPostDominators());
                 }
                 New.addAll(intersect);
             }
 
-            if (!New.equals(y.getDominators())) {
-                y.setDominators(New); //Dom(y) = New
+            if (!New.equals(y.getPostDominators())) {
+                y.setPostDominators(New); //PostDom(y) = New
 
-                workList.addAll(y.succ()); // for (each z in succ(y)) worklist += {z}
+                workList.addAll(y.pred()); // for (each z in pred(y)) worklist += {z}
 
             }
-//            } catch (NullPointerException ex) {
-//                System.out.println("Intersect is null");
-//
-//            }
+
         }
-        // you can find dominators for each node in getDominators() method 
+        // you can find post dominators for each node in getPostDominators() method 
 
     }
 
-    private void printDominators() {
+    private void printPostDominators() {
 
         for (Node i : cfg.getNodeSet()) {
-            System.out.print("Dom(" + i.getNodeID() + "): ");
-            for (Node alpha : i.getDominators()) {
+            System.out.print("Post-Dom(" + i.getNodeID() + "): ");
+            for (Node alpha : i.getPostDominators()) {
                 System.out.print(alpha.getNodeID() + ", ");
             }
             System.out.println("");
         }
     }
 
-    private void makeImmedaiteDomTree() {
+    private void makePostDomTree() {
         FDTNodes = new HashSet<>();
 
         //copy nodes from CFG to FDTNodes
         for (Node p : cfg.getNodeSet()) {
             Node n = new Node(p.getNodeID(), p.getStatement());
-            HashSet<Node> tempDom = new HashSet<>(p.getDominators());
-            n.setDominators(tempDom);
+            HashSet<Node> tempPostDom = new HashSet<>(p.getPostDominators());
+            n.setPostDominators(tempPostDom);
 
-            //eliminate the node from dominators to search its pred
-            n.getDominators().remove(p);
+            //eliminate the node from post-dominators to search its pred
+            n.getPostDominators().remove(p);
 
             FDTNodes.add(n);
 
@@ -121,23 +114,21 @@ public class FDTBuilder {
 
         }
 
-        
         FDTree = new LinkedList(null);
         for (Iterator<LinkedList> it = listOfFDTNodes.iterator(); it.hasNext();) {
             LinkedList temp = it.next();
             Node tempNode = temp.getFirst();
 
-            
-            if (tempNode.getStatement().equals("START")) {
+            if (tempNode.getStatement().equals("STOP")) {
                 FDTree.setFirst(tempNode);
             }
             else {
-                if (tempNode.getStatement().equals("STOP")) {
+                if (tempNode.getStatement().equals("START")) {
                     FDTree.setLast(tempNode);
                 }
                 for (Iterator<Node> it2 = cfg.getNodeSet().iterator(); it2.hasNext();) {
                     Node temp2 = it2.next();
-                    if (tempNode.getDominators().equals(temp2.getDominators())) {
+                    if (tempNode.getPostDominators().equals(temp2.getPostDominators())) {
                         for (Iterator<LinkedList> it3 = listOfFDTNodes.iterator(); it3.hasNext();) {
                             LinkedList temp3 = it3.next();
                             Node tempNode3 = temp3.getFirst();
@@ -152,39 +143,11 @@ public class FDTBuilder {
 
             }
         }
-        /**
-         * ********************************************************************
-         */
-        System.out.println("ImmediateTree");
+        System.out.println("Post-Dom Tree is created");
     }
 
     private void mergeLists(LinkedList first, LinkedList second) {
-        first.getFirst().addNextPointersForFDT(second.getFirst());
+        first.getFirst().addNextPointersForPostDomTree(second.getFirst());
         second.getFirst().addPreviousPointer(first.getFirst());
     }
-
-    private void buildPostDomTree() {
-        postDomTree = new LinkedList(FDTree.getLast()); //STOP is the first node of post dom tree
-        Node currentNode = postDomTree.getFirst();
-        postDomTree.setLast(FDTree.getFirst()); // START is the last node of post dom tree
-
-        while (!currentNode.isVisited) {
-            currentNode.isVisited = true;
-            if (!currentNode.getStatement().equals("START")) {
-                currentNode.addNextPointersForPostDomTree(currentNode.pred().iterator().next());
-                if (currentNode.pred().iterator().next().getNextPointersForFDT().size() > 1) {
-                    for (Node beta : currentNode.pred().iterator().next().getNextPointersForFDT()) {
-                       /////////////////////////////////////////////////////
-                        if (beta.getNodeID() != currentNode.getNodeID() && !beta.isVisited) {
-                            
-                            currentNode.addNextPointersForPostDomTree(beta);
-                        }
-                    }
-                }
-                currentNode = currentNode.pred().iterator().next();
-            }
-        }
-        System.out.println("PostDomTree is created.");
-    }
-
 }

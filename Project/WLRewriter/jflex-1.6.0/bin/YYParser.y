@@ -98,8 +98,10 @@ program : PROGRAM_KW ';' clist
 		((eval)$$).list = new LinkedList(((eval)$$).node);
 		((eval)$$).list.merge(((eval)$3).list);
 		((eval)$$).list.merge(new LinkedList(new Node(nodeCounter++, "STOP")));
-        System.out.println("the CFG is created.");
+		System.out.println("the CFG is created.");
 
+		FDTBuilder fdt = new FDTBuilder(((eval)$$).list); //the CFG is input to build the Forward Dominance Tree
+		System.out.println("the FDT is created.");
 	};
 
 clist: c
@@ -329,6 +331,9 @@ c : NOP_KW
 		
 		((eval)$$).list.getLast().setNextPointer2(((eval)$9).list.getFirst());//if false - else section
 		((eval)$9).list.getFirst().addPreviousPointer(((eval)$$).list.getLast()); //backward pointer
+		((eval)$$).list.getNodeSet().addAll(((eval)$9).list.getNodeSet());
+
+		
 		
 		((eval)$9).list.merge(dummyList);
 		((eval)$$).list.merge(((eval)$5).list);//if true
@@ -348,8 +353,9 @@ c : NOP_KW
 		LinkedList dummyList = new LinkedList(dummy);
 		
 		((eval)$$).list.getLast().setNextPointer2(dummy);//while condition false
-		dummy.addPreviousPointer(((eval)$$).list.getLast()); //backward pointer
-		
+		dummy.addPreviousPointer(((eval)$$).list.getLast()); //backward pointer	
+		((eval)$$).list.getNodeSet().add(dummy);
+
 		((eval)$$).list.merge(((eval)$5).list); //while condition true (loop)
 		
 		((eval)$5).list.getLast().setNextPointer1(((eval)$$).list.getFirst());

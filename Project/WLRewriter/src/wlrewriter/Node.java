@@ -18,15 +18,21 @@ public class Node {
     private String statement;
     private Node nextPointer1, nextPointer2; // For Successor --> in condition statements: nextPointer1 = true, nextPointer2 = false | in other statments: nextPointer1 = next node, nextPointer2 = null
     private HashSet<Node> previousPointers; // For Predecessor
+    private HashSet<Node> Dominators; // For Dominator Nodes
+    private HashSet<Node> nextPointersForFDT, nextPointersForPostDomTree;
+    public boolean isVisited;
 
     public Node(int nodeID, String statement) {
+        this.isVisited = false;
         this.nodeID = nodeID;
         this.statement = statement;
         nextPointer1 = null;
         nextPointer2 = null;
         previousPointers = new HashSet<Node>();
+        Dominators = new HashSet<Node>();
+        nextPointersForFDT = new HashSet<>();
+        nextPointersForPostDomTree = new HashSet<>();
     }
-
 
     public int getNodeID() {
         return nodeID;
@@ -55,28 +61,59 @@ public class Node {
     public void setNextPointer1(Node nextPointer1) {
         this.nextPointer1 = nextPointer1;
     }
-    
-    public void addPreviousPointer(Node previousPointer){
+
+    public void addPreviousPointer(Node previousPointer) {
         previousPointers.add(previousPointer);
     }
 
     public void setNextPointer2(Node nextPointer2) {
         this.nextPointer2 = nextPointer2;
-    }  
-    
-    public HashSet<Node> pred(){
+    }
+
+    public HashSet<Node> pred() {
         return previousPointers;
     }
-    
-    public HashSet<Node> succ(){
-    HashSet<Node> successor = new HashSet<Node>();
-    successor.add(nextPointer1);
-    successor.add(nextPointer2);
-    
-    return successor;
+
+    public HashSet<Node> succ() {
+        HashSet<Node> successor = new HashSet<Node>();
+        if (nextPointer1 != null) {
+            successor.add(nextPointer1);
+        }
+        if (nextPointer2 != null) {
+            successor.add(nextPointer2);
+        }
+
+        return successor;
+    }
+
+    public HashSet<Node> getDominators() {
+        return Dominators;
+    }
+
+    public void setDominators(HashSet<Node> Dominators) {
+        this.Dominators = Dominators;
+    }
+
+    public void setPreviousPointers(HashSet<Node> previousPointers) {
+        this.previousPointers = previousPointers;
+    }
+
+    public HashSet<Node> getNextPointersForFDT() {
+        return nextPointersForFDT;
+    }
+
+    public void addNextPointersForFDT(Node nextNode) {
+        nextPointersForFDT.add(nextNode);
+    }
+
+    public void addNextPointersForPostDomTree(Node nextNode) {
+        nextPointersForPostDomTree.add(nextNode);
+    }
+
+    public HashSet<Node> getNextPointersForPostDomTree() {
+        return nextPointersForPostDomTree;
     }
     
     
 
-    
 }

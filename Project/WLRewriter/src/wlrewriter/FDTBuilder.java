@@ -26,6 +26,8 @@ public class FDTBuilder {
 
         this.cfg = cfg;
 
+        this.cfg.getFirst().setNextPointer2(this.cfg.getLast()); //according to the article, it needs to connect START to STOP
+
         //print the cfg for test
         cfg.printNodeSet();
 
@@ -50,8 +52,10 @@ public class FDTBuilder {
         //print the PDFs for all nodes in FDTNodes
         printPDFs();
 
+        //compute Control Dependecies from PDFs
         computeControlDep();
-        
+
+        //print the Control Dependecies
         printControlDeps();
     }
 
@@ -184,6 +188,13 @@ public class FDTBuilder {
                         System.err.println("Immediate Post Dom for this node is not unique!!");
                     }
                     n.setImmediatePostDominator(i);
+
+                    for (Node k : cfg.getNodeSet()) {
+                        if (k.getNodeID() == n.getNodeID()) {
+                            k.setImmediatePostDominator(i);
+                            break;
+                        }
+                    }
                 }
 
             }
@@ -223,16 +234,21 @@ public class FDTBuilder {
 
                     HashSet<Node> currentPDF = new HashSet<>(); //PDF for node x
                     ///local///
-                    if (!x.pred().isEmpty()) {
-                        for (Node y : x.pred()) {
-                            if (y.getImmediatePostDominator() != null) {
-                                if (y.getImmediatePostDominator().getNodeID() != x.getNodeID()) {
-                                    currentPDF.add(y);
+                    for (Node xInCFG : cfg.getNodeSet()) {
+                        if (xInCFG.getNodeID() == x.getNodeID()) { // Node xInCFG is x in CFG - we need pred() in CFG
+                            if (!xInCFG.pred().isEmpty()) {
+                                for (Node y : xInCFG.pred()) {
+                                    if (y.getImmediatePostDominator() != null) {
+                                        if (y.getImmediatePostDominator().getNodeID() != xInCFG.getNodeID()) {
+                                            currentPDF.add(y);
+                                        }
+                                    }
+                                    else {
+                                        currentPDF.add(y);
+                                    }
                                 }
                             }
-                            else {
-                                currentPDF.add(y);
-                            }
+                            break;
                         }
                     }
 
@@ -280,21 +296,25 @@ public class FDTBuilder {
     private void computeControlDep() {
         for (Node y : FDTNodes) {
             for (Node x : FDTNodes) {
-                if(y.getPDF().contains(x)){
-                    x.getContolDep().add(y);
+                for (Iterator<Node> it = y.getPDF().iterator(); it.hasNext();) {
+                    Node w = it.next();
+                    if (w.getNodeID() == x.getNodeID()) {
+                        //dar sorati ke be khodes nabayad vabastegi dashte bashe, in ja ye if mizarim : if(y.getNodeId()!=x.getNodeId())
+                        x.getContolDep().add(y);
+
+                    }
                 }
-                    
             }
         }
     }
-    
+
     private void printControlDeps() {
         System.out.println("**** print ControlDeps ****");
         for (Node n : FDTNodes) {
             System.out.print("Node -->" + n.getNodeID() + ": " + n.getStatement() + " = {");
 
             for (Node q : n.getContolDep()) {
-                System.out.print(q.getNodeID() + ": " + q.getStatement() + ",");
+                System.out.print(q.getNodeID() + ": " + q.getStatement() + " | ");
             }
             System.out.println("}");
         }

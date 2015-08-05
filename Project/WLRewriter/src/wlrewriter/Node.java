@@ -20,8 +20,10 @@ public class Node {
     private HashSet<Node> previousPointers; // For Predecessor
     private HashSet<Node> PostDominators; // For Dominator Nodes
     private HashSet<Node> nextPointersForPostDomTree;
-    private ArrayList<Node> immediatePostDominator;
+    private Node immediatePostDominator;
     public boolean isVisited;
+    private HashSet<Node> PDF, ContolDep; //PDF is related to Control Dependeces, ControlDep is Control Dependeces for the node
+    
 
     public Node(int nodeID, String statement) {
         this.isVisited = false;
@@ -32,7 +34,9 @@ public class Node {
         previousPointers = new HashSet<Node>();
         PostDominators = new HashSet<Node>();
         nextPointersForPostDomTree = new HashSet<>();
-        immediatePostDominator = new ArrayList<>();
+        immediatePostDominator = null;
+        PDF = new HashSet<>();
+        ContolDep = new HashSet<>();
     }
 
     public int getNodeID() {
@@ -107,13 +111,31 @@ public class Node {
         return nextPointersForPostDomTree;
     }
 
-    public ArrayList<Node> getImmediatePostDominator() {
+    public Node getImmediatePostDominator() {
         return immediatePostDominator;
     }
 
-    public void setImmediatePostDominator(ArrayList<Node> immediatePostDominator) {
+    public void setImmediatePostDominator(Node immediatePostDominator) {
         this.immediatePostDominator = immediatePostDominator;
     }
+
+    public HashSet<Node> getPDF() {
+        return PDF;
+    }
+
+    public void setPDF(HashSet<Node> PDF) {
+        this.PDF = PDF;
+    }
+
+    public HashSet<Node> getContolDep() {
+        return ContolDep;
+    }
+
+    public void setContolDep(HashSet<Node> ContolDep) {
+        this.ContolDep = ContolDep;
+    }
+    
+    
     
     
     

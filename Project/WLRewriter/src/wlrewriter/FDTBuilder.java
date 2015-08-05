@@ -40,11 +40,19 @@ public class FDTBuilder {
 
         //find the immediate post dom for each node - It must be unique, but I did not take risk and get an array for it
         setImmediatePostDoms();
-        
+
         //print the immediate post dom for each node that they are set in the field of each node
         printImmediatePostDoms();
 
-        computePDF
+        //compute PDF for each node that they will be control dependences
+        computePDFs();
+
+        //print the PDFs for all nodes in FDTNodes
+        printPDFs();
+
+        computeControlDep();
+        
+        printControlDeps();
     }
 
     private void computePostDominators() {
@@ -87,7 +95,7 @@ public class FDTBuilder {
     }
 
     private void printPostDominators() {
-
+        System.out.println("**** print Post Dominators ****");
         for (Node i : cfg.getNodeSet()) {
             System.out.print("Post-Dom(" + i.getNodeID() + "): ");
             for (Node alpha : i.getPostDominators()) {
@@ -161,7 +169,6 @@ public class FDTBuilder {
 
     private void setImmediatePostDoms() {
         for (Node n : FDTNodes) {
-            ArrayList<Node> immediatePostDomForCurrentNode = new ArrayList<>();
             for (Node i : n.getPostDominators()) {
                 boolean flag = true;
                 for (Node j : n.getPostDominators()) {
@@ -173,29 +180,125 @@ public class FDTBuilder {
                     }
                 }
                 if (flag == true) {
-                    immediatePostDomForCurrentNode.add(i);
+                    if (n.getImmediatePostDominator() != null) {
+                        System.err.println("Immediate Post Dom for this node is not unique!!");
+                    }
+                    n.setImmediatePostDominator(i);
                 }
 
             }
-
-            if (immediatePostDomForCurrentNode.size() > 1) {
-                System.err.println("Immediate Post Dom for this node is not unique!!");
-            }
-
-            n.setImmediatePostDominator(immediatePostDomForCurrentNode);
 
         }
 
     }
 
     private void printImmediatePostDoms() {
+        System.out.println("**** print Immediate Post Dominators ****");
         for (Node n : FDTNodes) {
 
             System.out.println("Immediate Post Dom for Node " + n.getNodeID() + " --> " + n.getStatement() + ":");
 
-            for (Node q : n.getImmediatePostDominator()) {
+            if (!n.getStatement().equals("STOP")) { //because of being null for STOP node
+                Node q = n.getImmediatePostDominator();
                 System.out.println("\t" + q.getNodeID() + " --> " + q.getStatement());
+            }
+            else {
+                System.out.println("\t");
+            }
+
+        }
+    }
+
+    private void computePDFs() {
+        for (Node n : FDTNodes) {
+            if (n.getNextPointersForPostDomTree().isEmpty()) { //the node is leaf of PostDomTree
+                HashSet<Node> worklist = new HashSet<>();
+                worklist.add(n);
+
+                while (!worklist.isEmpty()) {
+                    Node x = worklist.iterator().next();
+                    worklist.remove(x);
+
+                    worklist.addAll(x.pred()); //traverse bottom-up the postDomTree
+
+                    HashSet<Node> currentPDF = new HashSet<>(); //PDF for node x
+                    ///local///
+                    if (!x.pred().isEmpty()) {
+                        for (Node y : x.pred()) {
+                            if (y.getImmediatePostDominator() != null) {
+                                if (y.getImmediatePostDominator().getNodeID() != x.getNodeID()) {
+                                    currentPDF.add(y);
+                                }
+                            }
+                            else {
+                                currentPDF.add(y);
+                            }
+                        }
+                    }
+
+                    ///up///
+                    for (Node z : FDTNodes) {
+                        if (z.getImmediatePostDominator() != null) {
+                            if (z.getImmediatePostDominator().getNodeID() == x.getNodeID()) {
+
+                                for (Node y : z.getPDF()) {
+                                    if (y.getImmediatePostDominator() != null) {
+                                        if (y.getImmediatePostDominator().getNodeID() != x.getNodeID()) {
+                                            currentPDF.add(y);
+
+                                        }
+                                    }
+                                    else {
+                                        currentPDF.add(y);
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
+                    x.setPDF(currentPDF);
+
+                }
             }
         }
     }
+
+    private void printPDFs() {
+        System.out.println("**** print FDTs ****");
+        for (Node n : FDTNodes) {
+            System.out.println("PDF(" + n.getNodeID() + ": " + n.getStatement() + ") = {");
+
+            for (Node q : n.getPDF()) {
+                System.out.println("\t" + q.getNodeID() + ": " + q.getStatement() + ", ");
+            }
+            System.out.println("}");
+        }
+
+    }
+
+    private void computeControlDep() {
+        for (Node y : FDTNodes) {
+            for (Node x : FDTNodes) {
+                if(y.getPDF().contains(x)){
+                    x.getContolDep().add(y);
+                }
+                    
+            }
+        }
+    }
+    
+    private void printControlDeps() {
+        System.out.println("**** print ControlDeps ****");
+        for (Node n : FDTNodes) {
+            System.out.print("Node -->" + n.getNodeID() + ": " + n.getStatement() + " = {");
+
+            for (Node q : n.getContolDep()) {
+                System.out.print(q.getNodeID() + ": " + q.getStatement() + ",");
+            }
+            System.out.println("}");
+        }
+
+    }
+
 }

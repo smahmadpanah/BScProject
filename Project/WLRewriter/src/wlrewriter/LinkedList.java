@@ -5,6 +5,7 @@
  */
 package wlrewriter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -15,15 +16,15 @@ import java.util.Iterator;
 public class LinkedList {
 
     private Node first, last;
-    private HashSet<Node> nodeSet; //list of nodes
-
+    private HashSet<Node> nodeSet; //list of nodes    
+    
     public LinkedList(Node node) {
 
         first = node;
         last = node;
         nodeSet = new HashSet<Node>();
         nodeSet.add(node);
-
+        
     }
 
     /**

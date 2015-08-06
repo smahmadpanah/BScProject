@@ -21,7 +21,8 @@ static PrintStream writer;
     static String stmt;
     private int nodeCounter = 0;
     private static String sourceCodeFileName;
-
+	
+	private static ArrayList<Variable> symbolTableOfVariables = new ArrayList<Variable>();
     
     
     public static void main(String args[]) throws IOException, FileNotFoundException {
@@ -33,8 +34,17 @@ static PrintStream writer;
 //        String sourceCodeFileName = "input-while.wl";
 
         writer = new PrintStream(new File("reduction.txt"));
-        lexer = new Yylex(new InputStreamReader(new FileInputStream(sourceCodeFileName)));
 
+        Yylex yylexTemp = null;
+        try{
+           yylexTemp = new Yylex(new InputStreamReader(new FileInputStream(sourceCodeFileName)));
+        } catch (Exception ex) {
+            System.err.println("Source code file not found!");
+            System.exit(0);
+        }
+
+         lexer = yylexTemp;
+		
         yyparser = new YYParser(new Lexer() {
 
             @Override
@@ -99,7 +109,24 @@ program : PROGRAM_KW ';' clist
 		$$ = new eval();
 		((eval)$$).stmt += "program; " + ((eval)$3).stmt;
 		writer.print(((eval)$$).stmt+ "\n");
+		
+		//((eval)$$).variables.addAll(((eval)$3).variables);
+		
 		((eval)$$).node = new Node(nodeCounter++, "START");
+		
+		
+		/*for(String str : ((eval)$$).variables){
+					for(Variable varvar : symbolTableOfVariables){
+						if(str.equals(varvar.name)){
+							((eval)$$).node.addToVariablesOfNode(varvar);
+							break;
+						}
+		
+					}
+				}
+		*/
+		
+		
 		((eval)$$).list = new LinkedList(((eval)$$).node);
 		((eval)$$).list.merge(((eval)$3).list);
 		((eval)$$).list.merge(new LinkedList(new Node(nodeCounter++, "STOP")));
@@ -115,6 +142,9 @@ clist: c
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt;
 		writer.print(((eval)$$).stmt+ "\n");
+		
+		//((eval)$$).variables.addAll(((eval)$1).variables);
+		
 		((eval)$$).list = ((eval)$1).list;
 	};
 	| clist ';' M c
@@ -123,6 +153,11 @@ clist: c
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + "; " + ((eval)$4).stmt;
 		writer.print(((eval)$$).stmt+ "\n");
+		
+		//((eval)$$).variables.addAll(((eval)$1).variables);
+		//((eval)$$).variables.addAll(((eval)$4).variables);
+		
+		
 		((eval)$$).list = ((eval)$1).list;
 		((eval)$$).list.merge(((eval)$4).list);
 		
@@ -146,10 +181,26 @@ exp : b
 	| x
 	{
 		writer.print("\t exp -> x \n") ;
-	$$=new eval();
+		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt;
 
+		((eval)$$).variables.add(((eval)$1).stmt);
+		
 	writer.print(((eval)$$).stmt+ "\n");
+	
+		boolean check = false;
+		for(Variable v : symbolTableOfVariables){
+			if(((eval)$1).stmt.equals(v.name)){
+				check = true;
+				break;
+			}
+		}
+		
+		if(!check){
+			System.err.println("undefined variable!");
+			System.err.println("\t"+((eval)$$).stmt);
+			System.exit(0);
+		}
 	};
 	| exp EQ_KW exp
 	{
@@ -158,6 +209,9 @@ exp : b
 		((eval)$$).stmt += ((eval)$1).stmt + " == "+ ((eval)$3).stmt;
 
 		writer.print(((eval)$$).stmt+ "\n");
+	
+	((eval)$$).variables.addAll(((eval)$1).variables);
+	((eval)$$).variables.addAll(((eval)$3).variables);
 	};
 	| exp LT_KW exp
 	{
@@ -166,6 +220,9 @@ exp : b
 		((eval)$$).stmt += ((eval)$1).stmt + " < "+ ((eval)$3).stmt;
 
 		writer.print(((eval)$$).stmt+ "\n");
+	
+	((eval)$$).variables.addAll(((eval)$1).variables);
+	((eval)$$).variables.addAll(((eval)$3).variables);
 	};
 	| exp LE_KW exp
 	{
@@ -174,6 +231,9 @@ exp : b
 		((eval)$$).stmt += ((eval)$1).stmt + " <= "+ ((eval)$3).stmt;
 
 		writer.print(((eval)$$).stmt+ "\n");
+	
+	((eval)$$).variables.addAll(((eval)$1).variables);
+	((eval)$$).variables.addAll(((eval)$3).variables);
 	};
 	| exp GE_KW exp
 	{
@@ -182,6 +242,9 @@ exp : b
 		((eval)$$).stmt += ((eval)$1).stmt + " >= "+ ((eval)$3).stmt;
 
 		writer.print(((eval)$$).stmt+ "\n");
+	
+	((eval)$$).variables.addAll(((eval)$1).variables);
+	((eval)$$).variables.addAll(((eval)$3).variables);
 	};
 	| exp GT_KW exp
 	{
@@ -190,6 +253,9 @@ exp : b
 		((eval)$$).stmt += ((eval)$1).stmt + " > "+ ((eval)$3).stmt;
 
 	writer.print(((eval)$$).stmt+ "\n");
+	
+	((eval)$$).variables.addAll(((eval)$1).variables);
+	((eval)$$).variables.addAll(((eval)$3).variables);
 	};
 	| exp PLUS_KW exp
 	{
@@ -198,6 +264,9 @@ exp : b
 		((eval)$$).stmt += ((eval)$1).stmt + " + "+ ((eval)$3).stmt;
 
 	writer.print(((eval)$$).stmt+ "\n");
+	
+	((eval)$$).variables.addAll(((eval)$1).variables);
+	((eval)$$).variables.addAll(((eval)$3).variables);
 	};
 	| exp MINUS_KW exp
 	{
@@ -205,6 +274,9 @@ exp : b
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " - "+ ((eval)$3).stmt;
 	writer.print(((eval)$$).stmt+ "\n");
+	
+	((eval)$$).variables.addAll(((eval)$1).variables);
+	((eval)$$).variables.addAll(((eval)$3).variables);
 	};
 	| exp AND_KW M exp
 	{
@@ -212,6 +284,9 @@ exp : b
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " and "+ ((eval)$4).stmt;
 	writer.print(((eval)$$).stmt+ "\n");
+
+	((eval)$$).variables.addAll(((eval)$1).variables);
+	((eval)$$).variables.addAll(((eval)$4).variables);	
 	};
 	| exp OR_KW M exp
 	{
@@ -221,6 +296,9 @@ exp : b
 	
 writer.print(((eval)$$).stmt+ "\n");	
 
+
+	((eval)$$).variables.addAll(((eval)$1).variables);
+	((eval)$$).variables.addAll(((eval)$4).variables);
 	};
 
 c : NOP_KW
@@ -239,8 +317,36 @@ c : NOP_KW
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " = " + ((eval)$3).stmt;
 		writer.print(((eval)$$).stmt+ "\n");	
-		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		
+		((eval)$$).variables.add(((eval)$1).stmt);
+		((eval)$$).variables.addAll(((eval)$3).variables);
+		
+		boolean check = false;
+		for(Variable v : symbolTableOfVariables){
+			if(((eval)$1).stmt.equals(v.name)){
+				((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
+				
+				for(String str : ((eval)$$).variables){
+					for(Variable varvar : symbolTableOfVariables){
+						if(str.equals(varvar.name)){
+							((eval)$$).node.addToVariablesOfNode(varvar);
+							break;
+						}
+		
+					}
+				}
+				
+				((eval)$$).list = new LinkedList(((eval)$$).node);
+				check = true;
+				break;
+			}
+		}
+		
+		if(!check){
+			System.err.println("undefined variable can not be assigned:");
+			System.err.println("\t"+((eval)$$).stmt);
+			System.exit(0);
+		}
 
 	};
 	| INL_KW varlist
@@ -249,8 +355,34 @@ c : NOP_KW
 		$$=new eval();
 		((eval)$$).stmt += "inL "+((eval)$2).stmt;	
 		writer.print(((eval)$$).stmt+ "\n");	
-		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		
+		((eval)$$).variables.addAll(((eval)$2).variables);
+		
+		
+		boolean first = true;
+		for(String i : ((eval)$2).variables){
+			Variable currentVar = new Variable(i);
+			
+			for(Variable v : symbolTableOfVariables){
+				if(v.name.equals(currentVar.name)){
+					v.type = "low";
+					currentVar.type = "low";
+				}
+			}
+			
+			((eval)$$).node = new Node(nodeCounter++, currentVar.name);
+			((eval)$$).node.addToVariablesOfNode(currentVar);
+			
+			if(first){
+				((eval)$$).list = new LinkedList(((eval)$$).node);
+				first = false;
+			}
+			else{
+				((eval)$$).list.merge(new LinkedList(((eval)$$).node));
+			}
+		}
+		
+		
 
 	};
 	| INH_KW varlist
@@ -258,9 +390,35 @@ c : NOP_KW
 		writer.print("\t c -> INH_KW varlist \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "inH "+((eval)$2).stmt;
-		writer.print(((eval)$$).stmt+ "\n");	
-		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		writer.print(((eval)$$).stmt+ "\n");
+		
+		((eval)$$).variables.addAll(((eval)$2).variables);
+		
+		
+		boolean first = true;
+		for(String i : ((eval)$2).variables){
+			Variable currentVar = new Variable(i);
+			
+			for(Variable v : symbolTableOfVariables){
+				if(v.name.equals(currentVar.name)){
+					v.type = "high";
+					currentVar.type = "high";
+				}
+			}
+			
+			((eval)$$).node = new Node(nodeCounter++, currentVar.name);
+			((eval)$$).node.addToVariablesOfNode(currentVar);
+			
+			if(first){
+				((eval)$$).list = new LinkedList(((eval)$$).node);
+				first = false;
+			}
+			else{
+				((eval)$$).list.merge(new LinkedList(((eval)$$).node));
+			}
+		}
+		
+		
 
 	};
 	| OUTL_KW x
@@ -269,8 +427,38 @@ c : NOP_KW
 		$$=new eval();
 		((eval)$$).stmt += "outL " + ((eval)$2).stmt;
 		writer.print(((eval)$$).stmt+ "\n");	
-		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		
+		((eval)$$).variables.add(((eval)$2).stmt);
+		
+		boolean check = false;
+		for(Variable v : symbolTableOfVariables){
+			if(((eval)$2).stmt.equals(v.name) && v.type.equals("low")){
+				((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
+				
+				for(String str : ((eval)$$).variables){
+					for(Variable varvar : symbolTableOfVariables){
+						if(str.equals(varvar.name)){
+							((eval)$$).node.addToVariablesOfNode(varvar);
+							break;
+						}
+		
+					}
+				}
+		
+				
+				((eval)$$).list = new LinkedList(((eval)$$).node);
+				check = true;
+				break;
+			}
+		}
+		
+		if(!check){
+			System.err.println("undefined variable!");
+			System.err.println("\t"+((eval)$$).stmt);
+			System.exit(0);
+		}
+		
+		
 
 	};
 	| OUTH_KW x
@@ -278,9 +466,38 @@ c : NOP_KW
 		writer.print("\t c -> OUTH_KW x \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "outH " + ((eval)$2).stmt;
-		writer.print(((eval)$$).stmt+ "\n");	
-		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		writer.print(((eval)$$).stmt+ "\n");
+		
+		((eval)$$).variables.add(((eval)$2).stmt);
+		
+		boolean check = false;
+		for(Variable v : symbolTableOfVariables){
+			if(((eval)$2).stmt.equals(v.name) && v.type.equals("high")){
+				((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
+				
+				
+				for(String str : ((eval)$$).variables){
+					for(Variable varvar : symbolTableOfVariables){
+						if(str.equals(varvar.name)){
+							((eval)$$).node.addToVariablesOfNode(varvar);
+							break;
+						}
+		
+					}
+				}
+				
+				((eval)$$).list = new LinkedList(((eval)$$).node);
+				check = true;
+				break;
+			}
+		}
+		
+		if(!check){
+			System.err.println("undefined variable!");
+			System.err.println("\t"+((eval)$$).stmt);
+			System.exit(0);
+		}
+		
 
 	};
 	| OUTL_KW BOT_KW
@@ -310,7 +527,21 @@ c : NOP_KW
 		((eval)$$).stmt += " if " + ((eval)$2).stmt + " then " + ((eval)$5).stmt + " endif";
 		writer.print(((eval)$$).stmt+ "\n");
 		
+		((eval)$$).variables.addAll(((eval)$2).variables);
+		//((eval)$$).variables.addAll(((eval)$5).variables);
+		
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$2).stmt);//condition expression node
+		
+		for(String str : ((eval)$$).variables){
+			for(Variable v : symbolTableOfVariables){
+				if(str.equals(v.name)){
+					((eval)$$).node.addToVariablesOfNode(v);
+					break;
+				}
+		
+			}
+		}
+		
 		((eval)$$).list = new LinkedList(((eval)$$).node);
 
 		Node dummy = new Node(nodeCounter++, "dummy");//dummy node for last node of if
@@ -327,8 +558,23 @@ c : NOP_KW
 		$$=new eval();
 		((eval)$$).stmt += " if " + ((eval)$2).stmt + " then " + ((eval)$5).stmt + " else " + ((eval)$9).stmt + " endif ";
 		writer.print(((eval)$$).stmt+ "\n");
+		
+		((eval)$$).variables.addAll(((eval)$2).variables);
+		//((eval)$$).variables.addAll(((eval)$5).variables);
+		//((eval)$$).variables.addAll(((eval)$9).variables);
 
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$2).stmt);//condition expression node
+		
+		for(String str : ((eval)$$).variables){
+			for(Variable v : symbolTableOfVariables){
+				if(str.equals(v.name)){
+					((eval)$$).node.addToVariablesOfNode(v);
+					break;
+				}
+		
+			}
+		}
+		
 		((eval)$$).list = new LinkedList(((eval)$$).node);
 		
 		Node dummy = new Node(nodeCounter++, "dummy");//dummy node for last node of if
@@ -349,9 +595,24 @@ c : NOP_KW
 		writer.print("\t c -> WHILE_KW exp DO_KW M clist DONE_KW \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "while " + ((eval)$2).stmt + " do " + ((eval)$5).stmt + " done ";
-		writer.print(((eval)$$).stmt+ "\n");	
+		writer.print(((eval)$$).stmt+ "\n");
+		
+		((eval)$$).variables.addAll(((eval)$2).variables);
+	//	((eval)$$).variables.addAll(((eval)$5).variables);
 	
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$2).stmt);//condition expression node
+		
+		for(String str : ((eval)$$).variables){
+			for(Variable v : symbolTableOfVariables){
+				if(str.equals(v.name)){
+					((eval)$$).node.addToVariablesOfNode(v);
+					break;
+				}
+		
+			}
+		}
+		
+		
 		((eval)$$).list = new LinkedList(((eval)$$).node);
 		
 		Node dummy = new Node(nodeCounter++, "dummy");//dummy node for last node of if
@@ -375,6 +636,25 @@ varlist : x
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt;
 		writer.print(((eval)$$).stmt+ "\n");
+		
+		Variable tempVar = new Variable(((eval)$1).stmt);
+		
+		boolean flag = true;
+		for(int i = 0; i < symbolTableOfVariables.size(); i++){
+			if(symbolTableOfVariables.get(i).name.equals(tempVar.name)){
+				flag = false;
+				break;
+			}
+		}
+		
+		if(flag == true){
+			symbolTableOfVariables.add(tempVar);
+			((eval)$$).variables.add(((eval)$1).stmt);
+		}
+		else{
+			System.err.println("The variable " + ((eval)$1).stmt + " is already declared!");
+			System.exit(0);
+		}
 	};
 	| x ',' varlist
 	{
@@ -382,6 +662,26 @@ varlist : x
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + ", " + ((eval)$3).stmt;
 		writer.print(((eval)$$).stmt+ "\n");
+		
+		Variable tempVar = new Variable(((eval)$1).stmt);
+		
+		boolean flag = true;
+		for(int i = 0; i < symbolTableOfVariables.size(); i++){
+			if(symbolTableOfVariables.get(i).name.equals(tempVar.name)){
+				flag = false;
+				break;
+			}
+		}
+		
+		
+		if(flag == true){
+			symbolTableOfVariables.add(tempVar);
+			((eval)$$).variables.add(((eval)$1).stmt);
+			((eval)$$).variables.addAll(((eval)$3).variables);
+		}
+		else{
+			System.err.println("The variable " + ((eval)$1).stmt + " is already declared!");
+		}
 	};
 	
 b : BOOL_CONSTANT
@@ -425,6 +725,8 @@ N : //lambda
 class eval {
 	
 	public String stmt="";
+	
+	public HashSet<String> variables = new HashSet<String>();
 	
 	public Node node;
 	public LinkedList list;

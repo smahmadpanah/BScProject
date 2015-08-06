@@ -314,7 +314,19 @@ public class FDTBuilder {
 
             for (Node q : n.getContolDep()) {
                 System.out.print(q.getNodeID() + ": " + q.getStatement() + " | ");
-                CDgraph += "\"" + "#" + n.getNodeID() + "    " + n.getStatement() + "\"" + " -> " + "\"" +"#" +q.getNodeID() + "    " + q.getStatement() + "\"" + ";\n";
+                for (Node u : cfg.getNodeSet()) {
+                    if (u.getNodeID() == q.getNodeID()) {
+                        if (u.getVariablesOfNode().size() > 0) {
+                            for (Variable v : u.getVariablesOfNode()) {
+                                if (v.type.equals("high")) {
+                                    CDgraph += " \"" + "#" + q.getNodeID() + "    " + q.getStatement() + "\"" + " [style=bold color=purple];\n";
+                                }
+                            }
+                        }
+                    }
+                }
+                CDgraph += "\"" + "#" + n.getNodeID() + "    " + n.getStatement() + "\"" + " -> " + "\"" + "#" + q.getNodeID() + "    " + q.getStatement() + "\"" + ";\n";
+                //control dep edges: solid // for data dep edges: " [style=dashed];\n"; 
             }
             System.out.println("}");
         }

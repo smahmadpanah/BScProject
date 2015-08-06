@@ -1,4 +1,5 @@
 program;
+inH k , r;
 while k>0 do 
 if r==9 then
 r = r + 1

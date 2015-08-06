@@ -24,6 +24,8 @@ public class Node {
     public boolean isVisited;
     private HashSet<Node> PDF, ContolDep; //PDF is related to Control Dependeces, ControlDep is Control Dependeces for the node
     
+    private HashSet<Variable> variablesOfNode;
+    
 
     public Node(int nodeID, String statement) {
         this.isVisited = false;
@@ -37,6 +39,7 @@ public class Node {
         immediatePostDominator = null;
         PDF = new HashSet<>();
         ContolDep = new HashSet<>();
+        variablesOfNode = new HashSet<>();
     }
 
     public int getNodeID() {
@@ -133,6 +136,14 @@ public class Node {
 
     public void setContolDep(HashSet<Node> ContolDep) {
         this.ContolDep = ContolDep;
+    }
+
+    public HashSet<Variable> getVariablesOfNode() {
+        return variablesOfNode;
+    }
+
+    public void addToVariablesOfNode(Variable variable) {
+        this.variablesOfNode.add(variable);
     }
     
     

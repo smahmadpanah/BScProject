@@ -10,9 +10,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
+import GraphViz.*;
+
 /**
  *
- * Forward Dominance Tree Builder
+ * Forward Dominance Tree and Control Dependence Graph Builder
  *
  * @param CFG
  * @author Mohammad
@@ -29,14 +31,12 @@ public class FDTBuilder {
         this.cfg.getFirst().setNextPointer2(this.cfg.getLast()); //according to the article, it needs to connect START to STOP
 
         //print the cfg for test
-        cfg.printNodeSet();
-
+//        cfg.printNodeSet();
         //computing post dominators
         computePostDominators();
 
         //print dominators
-        printPostDominators();
-
+//        printPostDominators();
         //draw the FDT (Post Dom Tree) - Find the immediate post dominance
         makePostDomTree();
 
@@ -44,14 +44,12 @@ public class FDTBuilder {
         setImmediatePostDoms();
 
         //print the immediate post dom for each node that they are set in the field of each node
-        printImmediatePostDoms();
-
+//        printImmediatePostDoms();
         //compute PDF for each node that they will be control dependences
         computePDFs();
 
         //print the PDFs for all nodes in FDTNodes
-        printPDFs();
-
+//        printPDFs();
         //compute Control Dependecies from PDFs
         computeControlDep();
 
@@ -299,7 +297,7 @@ public class FDTBuilder {
                 for (Iterator<Node> it = y.getPDF().iterator(); it.hasNext();) {
                     Node w = it.next();
                     if (w.getNodeID() == x.getNodeID()) {
-                        //dar sorati ke be khodes nabayad vabastegi dashte bashe, in ja ye if mizarim : if(y.getNodeId()!=x.getNodeId())
+                        // mitavanad tekrari bashe [dar sorati ke be khodes nabayad vabastegi dashte bashe, in ja ye if mizarim : if(y.getNodeId()!=x.getNodeId())]
                         x.getContolDep().add(y);
 
                     }
@@ -309,15 +307,21 @@ public class FDTBuilder {
     }
 
     private void printControlDeps() {
-        System.out.println("**** print ControlDeps ****");
+        String CDgraph = "";
+        System.out.println("\n******************\nprint Control Dependencies ");
         for (Node n : FDTNodes) {
             System.out.print("Node -->" + n.getNodeID() + ": " + n.getStatement() + " = {");
 
             for (Node q : n.getContolDep()) {
                 System.out.print(q.getNodeID() + ": " + q.getStatement() + " | ");
+                CDgraph += "\"" + "#" + n.getNodeID() + "    " + n.getStatement() + "\"" + " -> " + "\"" +"#" +q.getNodeID() + "    " + q.getStatement() + "\"" + ";\n";
             }
             System.out.println("}");
         }
+        System.out.println("******************\n");
+
+        GraphDrawer gd = new GraphDrawer();
+        gd.draw(YYParser.getSourceCodeFileName() + "_CDG.", CDgraph);
 
     }
 

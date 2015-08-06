@@ -18,55 +18,60 @@
 
 /*************************************** MAIN *****************************************/
 static PrintStream writer;
-static String stmt;
-private int nodeCounter=0;
+    static String stmt;
+    private int nodeCounter = 0;
+    private static String sourceCodeFileName;
 
-
-public static void main(String args[]) throws IOException, FileNotFoundException {
-		YYParser yyparser;
-		final Yylex lexer;		
+    
+    
+    public static void main(String args[]) throws IOException, FileNotFoundException {
+        YYParser yyparser;
+        final Yylex lexer;
 
         Scanner sc = new Scanner(System.in);
-        String sourceCodeFileName = sc.next();
-                
-                
-       	writer = new PrintStream (new File("reduction.txt"));
-		lexer = new Yylex(new InputStreamReader(new FileInputStream(sourceCodeFileName)));
+        sourceCodeFileName = sc.next();
+//        String sourceCodeFileName = "input-while.wl";
 
-	
-	
-	yyparser = new YYParser(new Lexer() {
-	
-	@Override
-	public int yylex () {
-	  int yyl_return = -1;
-	  try {   
-	
-	   yyl_return = lexer.yylex();
-	  }
-	  catch (IOException e) {
-	   System.err.println("IO error : " + e);
-	  }
-	  return yyl_return;
-	}
-	
-	@Override
-	public void yyerror (String error) {
-		//System.err.println ("Error : " + error);
-		System.err.println("**Error: Line "+ lexer.getYyline() +" near token '"+ lexer.yytext() +"' --> Message: "+ error +" **");
-		writer.print("**Error: Line "+ lexer.getYyline() +" near token '"+ lexer.yytext() +"' --> Message: "+ error +" **");
+        writer = new PrintStream(new File("reduction.txt"));
+        lexer = new Yylex(new InputStreamReader(new FileInputStream(sourceCodeFileName)));
 
-	}
-	
-	@Override
-	public Object getLVal() {
-		return null;
-	}
+        yyparser = new YYParser(new Lexer() {
 
-});
-	yyparser.parse();
-	writer.close();
-}
+            @Override
+            public int yylex() {
+                int yyl_return = -1;
+                try {
+
+                    yyl_return = lexer.yylex();
+                } catch (IOException e) {
+                    System.err.println("IO error : " + e);
+                }
+                return yyl_return;
+            }
+
+            @Override
+            public void yyerror(String error) {
+                //System.err.println ("Error : " + error);
+                System.err.println("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
+                writer.print("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
+
+            }
+
+            @Override
+            public Object getLVal() {
+                return null;
+            }
+
+        });
+        yyparser.parse();
+        writer.close();
+    }
+    
+    
+    public static String getSourceCodeFileName() {
+        return sourceCodeFileName;
+    }
+
 
 /*-------------------------------------------------------------------------------------------*/
 	

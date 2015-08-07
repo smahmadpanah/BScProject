@@ -8,7 +8,6 @@ package wlrewriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 
 import GraphViz.*;
 
@@ -24,6 +23,7 @@ public class FDTBuilder {
     private LinkedList cfg, FDTree; //FDTree is equal to PostDomTree
     private HashSet<Node> FDTNodes;
 
+//    private ArrayList<DataEdge> dataDeps;//data dependencies - by CFG nodes and we just save the relation between them for data dep graph
     public FDTBuilder(LinkedList cfg) {
 
         this.cfg = cfg;
@@ -55,6 +55,20 @@ public class FDTBuilder {
 
         //print the Control Dependecies
         printControlDeps();
+
+        //compute the Data Dependecies from CFG
+        computeDataDep();
+
+        //print the Data Dependecies
+        printDataDeps();
+
+        /**
+         * ***************************************************
+         */
+//        computePDG();
+        /**
+         * ***************************************************
+         */
     }
 
     private void computePostDominators() {
@@ -161,7 +175,7 @@ public class FDTBuilder {
 
             }
         }
-        System.out.println("Post-Dom Tree is created");
+//        System.out.println("Post-Dom Tree is created");
     }
 
     private void mergeLists(LinkedList first, LinkedList second) {
@@ -308,12 +322,12 @@ public class FDTBuilder {
 
     private void printControlDeps() {
         String CDgraph = "";
-        System.out.println("\n******************\nprint Control Dependencies ");
+//        System.out.println("\n******************\nprint Control Dependencies ");
         for (Node n : FDTNodes) {
-            System.out.print("Node -->" + n.getNodeID() + ": " + n.getStatement() + " = {");
+//            System.out.print("Node -->" + n.getNodeID() + ": " + n.getStatement() + " = {");
 
             for (Node q : n.getContolDep()) {
-                System.out.print(q.getNodeID() + ": " + q.getStatement() + " | ");
+//                System.out.print(q.getNodeID() + ": " + q.getStatement() + " | ");
                 for (Node u : cfg.getNodeSet()) {
                     if (u.getNodeID() == q.getNodeID()) {
                         if (u.getVariablesOfNode().size() > 0) {
@@ -323,17 +337,86 @@ public class FDTBuilder {
                                 }
                             }
                         }
+                        if (u.getAssignedVariable() != null) {
+                            if (u.getAssignedVariable().type.equals("high")) {
+                                CDgraph += " \"" + "#" + q.getNodeID() + "    " + q.getStatement() + "\"" + " [style=bold color=purple];\n";
+                            }
+                        }
                     }
                 }
                 CDgraph += "\"" + "#" + n.getNodeID() + "    " + n.getStatement() + "\"" + " -> " + "\"" + "#" + q.getNodeID() + "    " + q.getStatement() + "\"" + ";\n";
                 //control dep edges: solid // for data dep edges: " [style=dashed];\n"; 
             }
-            System.out.println("}");
+//            System.out.println("}");
         }
-        System.out.println("******************\n");
+//        System.out.println("******************\n");
 
         GraphDrawer gd = new GraphDrawer();
         gd.draw(YYParser.getSourceCodeFileName() + "_CDG.", CDgraph);
+
+        System.out.println("Control Dependence Graph is ready.");
+    }
+
+    private void computeDataDep() {
+
+//        System.out.println("\n\n\n\n\n\n\n");
+//        for (Node n : cfg.getNodeSet()) {
+//            System.out.println(n.getNodeID() + "|" + n.getStatement());
+//            for (Variable q : n.getVariablesOfNode()) {
+//                System.out.println("\t" + q.name);
+//            }
+//        }
+
+//        dataDeps = new ArrayList<>();
+        //for each node:
+        //variablesOfNode is the set that contains all variables except assigned variable
+        //assigned variable can be found by assignedVar field.
+        // So: All Variables (Read + Write) = variablesOfNode + assignedVar
+        for (Node n : cfg.getNodeSet()) {
+            if (n.getAssignedVariable() != null) {
+
+                for (Node zed : cfg.getNodeSet()) {
+                    zed.isVisited = false;
+                }
+
+                HashSet<Node> worklist = new HashSet<>();
+                worklist.add(n);
+
+                while (!worklist.isEmpty()) {
+                    Node node = worklist.iterator().next();
+                    worklist.remove(node);
+                    node.isVisited = true;
+
+                    for (Node w : node.succ()) {
+                        if (!w.isVisited) {
+                            worklist.add(w);
+                        }
+                    }
+
+                    for (Variable v : node.getVariablesOfNode()) {
+                        if (v.name.equals(n.getAssignedVariable().name)) {//Is assigned variable used in this node?
+                            n.getDataDepsForThisNode().add(node);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void printDataDeps() {
+        String DDgraph = "";
+//        System.out.println("\n##################\nprint Data Dependencies ");
+
+        for (Node n : cfg.getNodeSet()) {
+            for (Node q : n.getDataDepsForThisNode()) {
+                DDgraph += "\"" + "#" + n.getNodeID() + "    " + n.getStatement() + "\"" + " -> " + "\"" + "#" + q.getNodeID() + "    " + q.getStatement() + "\"" + ";\n";
+            }
+        }
+
+        GraphDrawer gd = new GraphDrawer();
+        gd.draw(YYParser.getSourceCodeFileName() + "_DDG.", DDgraph);
 
     }
 

@@ -29,6 +29,8 @@ static PrintStream writer;
         YYParser yyparser;
         final Yylex lexer;
 
+		
+		System.out.println("Enter the source code file path:");
         Scanner sc = new Scanner(System.in);
         sourceCodeFileName = sc.next();
 //        String sourceCodeFileName = "input-while.wl";
@@ -317,8 +319,7 @@ c : NOP_KW
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " = " + ((eval)$3).stmt;
 		writer.print(((eval)$$).stmt+ "\n");	
-		
-		((eval)$$).variables.add(((eval)$1).stmt);
+				
 		((eval)$$).variables.addAll(((eval)$3).variables);
 		
 		boolean check = false;
@@ -332,9 +333,16 @@ c : NOP_KW
 							((eval)$$).node.addToVariablesOfNode(varvar);
 							break;
 						}
-		
 					}
 				}
+				
+				for(Variable varvar : symbolTableOfVariables){
+					if(varvar.name.equals(((eval)$1).stmt)){
+							((eval)$$).node.setAssignedVariable(varvar);
+							break;
+					}
+				}
+				
 				
 				((eval)$$).list = new LinkedList(((eval)$$).node);
 				check = true;
@@ -347,6 +355,8 @@ c : NOP_KW
 			System.err.println("\t"+((eval)$$).stmt);
 			System.exit(0);
 		}
+		
+		((eval)$$).variables.add(((eval)$1).stmt); //not necessary
 
 	};
 	| INL_KW varlist
@@ -371,7 +381,8 @@ c : NOP_KW
 			}
 			
 			((eval)$$).node = new Node(nodeCounter++, currentVar.name);
-			((eval)$$).node.addToVariablesOfNode(currentVar);
+			((eval)$$).node.setAssignedVariable(currentVar);
+			//((eval)$$).node.addToVariablesOfNode(currentVar);
 			
 			if(first){
 				((eval)$$).list = new LinkedList(((eval)$$).node);
@@ -407,7 +418,8 @@ c : NOP_KW
 			}
 			
 			((eval)$$).node = new Node(nodeCounter++, currentVar.name);
-			((eval)$$).node.addToVariablesOfNode(currentVar);
+			((eval)$$).node.setAssignedVariable(currentVar);
+			//((eval)$$).node.addToVariablesOfNode(currentVar);
 			
 			if(first){
 				((eval)$$).list = new LinkedList(((eval)$$).node);

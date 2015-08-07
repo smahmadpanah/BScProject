@@ -24,8 +24,14 @@ public class Node {
     public boolean isVisited;
     private HashSet<Node> PDF, ContolDep; //PDF is related to Control Dependeces, ControlDep is Control Dependeces for the node
     
-    private HashSet<Variable> variablesOfNode;
     
+    /********************************/
+    private HashSet<Variable> variablesOfNode;//All variables except assigned variable.
+    /********************************/
+    
+    private Variable assignedVariable;//The variable that is assigned. Other variables are used.    
+    
+    private HashSet<Node> dataDepsForThisNode; //data dependecies for this node that means which nodes are used this node's assigned variable 
 
     public Node(int nodeID, String statement) {
         this.isVisited = false;
@@ -40,6 +46,8 @@ public class Node {
         PDF = new HashSet<>();
         ContolDep = new HashSet<>();
         variablesOfNode = new HashSet<>();
+        assignedVariable = null;
+        dataDepsForThisNode = new HashSet<>();
     }
 
     public int getNodeID() {
@@ -144,6 +152,18 @@ public class Node {
 
     public void addToVariablesOfNode(Variable variable) {
         this.variablesOfNode.add(variable);
+    }
+
+    public Variable getAssignedVariable() {
+        return assignedVariable;
+    }
+
+    public void setAssignedVariable(Variable assignedVariable) {
+        this.assignedVariable = assignedVariable;
+    }
+
+    public HashSet<Node> getDataDepsForThisNode() {
+        return dataDepsForThisNode;
     }
     
     

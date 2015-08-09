@@ -12,14 +12,16 @@ import GraphViz.*;
 
 /**
  *
- * Forward Dominance Tree and Control Dependence Graph Builder
+ * Forward Dominance Tree and Control Dependence Graph Builder Data Dependence
+ * Graph and Program Dependence Graph Builder
  *
  * @param CFG
+ *
  * @author Mohammad
  */
 public class PDGBuilder {
 
-    private LinkedList cfg, FDTree; //FDTree is equal to PostDomTree
+    private LinkedList cfg, FDTree, PDG; //FDTree is equal to PostDomTree
     private HashSet<Node> FDTNodes;
 
 //    private ArrayList<DataEdge> dataDeps;//data dependencies - by CFG nodes and we just save the relation between them for data dep graph
@@ -61,13 +63,12 @@ public class PDGBuilder {
         //print the Data Dependecies
         printDataDeps();
 
-        /**
-         * ***************************************************
-         */
-//        computePDG();
-        /**
-         * ***************************************************
-         */
+        //merge CDG and DDG together to make PDG
+        computePDG();
+        
+        //print and show the PDG
+        printPDG();
+
     }
 
     private void computePostDominators() {
@@ -432,6 +433,54 @@ public class PDGBuilder {
 
         System.out.println("Data Dependence Graph is ready.");
 
+    }
+
+    private void computePDG() {
+        PDG = cfg; //PDG is equal to CFG , updating some items in each node:
+
+        //Node ID --> FDTNodes
+        //statement --> FDTNodes
+        //Control Dep --> FDTNodes
+        //parentOfContorlDep --> FDTNodes
+        //dataDepForThisNode --> CFG (PDG)
+        //parentOfDataDep --> CFG (PDG)
+        //variablesOfNode --> CFG (PDG)
+        //assignedVariable --> CFG (PDG)
+        for (Node nodeInPDG : PDG.getNodeSet()) {
+            for (Node nodeInFDT : FDTNodes) {
+                if (nodeInPDG.getNodeID() == nodeInFDT.getNodeID()) {
+                    nodeInPDG.setStatement(nodeInFDT.getStatement());
+                    nodeInPDG.setContolDep(nodeInFDT.getContolDep());
+                    nodeInPDG.setParentOfControlDep(nodeInFDT.getParentOfControlDep());
+                    break;
+                }
+            }
+        }
+    }
+
+    private void printPDG() {
+        String PDgraph = "";
+
+        for (Node n : PDG.getNodeSet()) {
+            //Control Deps
+            for (Node w : n.getContolDep()) {
+                PDgraph += "\"" + "#" + n.getNodeID() + "    " + n.getStatement() + "\"" + " -> " + "\"" + "#" + w.getNodeID() + "    " + w.getStatement() + "\"" + ";\n";
+            }
+            //Data Deps
+            for (Node q : n.getDataDepsForThisNode()) {
+                PDgraph += "\"" + "#" + n.getNodeID() + "    " + n.getStatement() + "\"" + " -> " + "\"" + "#" + q.getNodeID() + "    " + q.getStatement() + "\"" + " [style=dashed];\n";
+            }
+        }
+
+        GraphDrawer gd = new GraphDrawer();
+        gd.draw(YYParser.getSourceCodeFileName() + "_PDG.", PDgraph);
+
+        System.out.println("Program Dependence Graph is ready.");
+
+    }
+
+    public LinkedList getPDG() {
+        return PDG;
     }
 
 }

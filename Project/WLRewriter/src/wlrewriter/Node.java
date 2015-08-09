@@ -33,6 +33,10 @@ public class Node {
     
     private HashSet<Node> dataDepsForThisNode; //data dependecies for this node that means which nodes are used this node's assigned variable 
 
+    private Node parentOfControlDep;
+    
+    private HashSet<Node> parentsOfDataDep;
+    
     public Node(int nodeID, String statement) {
         this.isVisited = false;
         this.nodeID = nodeID;
@@ -48,6 +52,8 @@ public class Node {
         variablesOfNode = new HashSet<>();
         assignedVariable = null;
         dataDepsForThisNode = new HashSet<>();
+        parentOfControlDep = null;
+        parentsOfDataDep = new HashSet<>();
     }
 
     public int getNodeID() {
@@ -164,6 +170,22 @@ public class Node {
 
     public HashSet<Node> getDataDepsForThisNode() {
         return dataDepsForThisNode;
+    }
+
+    public Node getParentOfControlDep() {
+        return parentOfControlDep;
+    }
+
+    public void setParentOfControlDep(Node parentOfControlDep) {
+        this.parentOfControlDep = parentOfControlDep;
+    }
+
+    public HashSet<Node> getParentsOfDataDep() {
+        return parentsOfDataDep;
+    }
+
+    public void setParentsOfDataDep(HashSet<Node> parentsOfDataDep) {
+        this.parentsOfDataDep = parentsOfDataDep;
     }
     
     

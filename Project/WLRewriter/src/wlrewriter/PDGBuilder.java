@@ -5,7 +5,6 @@
  */
 package wlrewriter;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -18,13 +17,13 @@ import GraphViz.*;
  * @param CFG
  * @author Mohammad
  */
-public class FDTBuilder {
+public class PDGBuilder {
 
     private LinkedList cfg, FDTree; //FDTree is equal to PostDomTree
     private HashSet<Node> FDTNodes;
 
 //    private ArrayList<DataEdge> dataDeps;//data dependencies - by CFG nodes and we just save the relation between them for data dep graph
-    public FDTBuilder(LinkedList cfg) {
+    public PDGBuilder(LinkedList cfg) {
 
         this.cfg = cfg;
 
@@ -313,6 +312,7 @@ public class FDTBuilder {
                     if (w.getNodeID() == x.getNodeID()) {
                         // mitavanad tekrari bashe [dar sorati ke be khodes nabayad vabastegi dashte bashe, in ja ye if mizarim : if(y.getNodeId()!=x.getNodeId())]
                         x.getContolDep().add(y);
+                        y.setParentOfControlDep(x);
 
                     }
                 }
@@ -359,24 +359,18 @@ public class FDTBuilder {
 
     private void computeDataDep() {
 
-//        System.out.println("\n\n\n\n\n\n\n");
-//        for (Node n : cfg.getNodeSet()) {
-//            System.out.println(n.getNodeID() + "|" + n.getStatement());
-//            for (Variable q : n.getVariablesOfNode()) {
-//                System.out.println("\t" + q.name);
-//            }
-//        }
-
-//        dataDeps = new ArrayList<>();
-        //for each node:
-        //variablesOfNode is the set that contains all variables except assigned variable
-        //assigned variable can be found by assignedVar field.
-        // So: All Variables (Read + Write) = variablesOfNode + assignedVar
         for (Node n : cfg.getNodeSet()) {
             if (n.getAssignedVariable() != null) {
 
+                HashSet<Node> dataDepLimit = new HashSet<>();
                 for (Node zed : cfg.getNodeSet()) {
                     zed.isVisited = false;
+                    if (zed.getAssignedVariable() != null) {
+                        if (zed.getAssignedVariable().name.equals(n.getAssignedVariable().name) && zed.getNodeID() != n.getNodeID()) {
+                            dataDepLimit.add(zed);
+                        }
+                    }
+
                 }
 
                 HashSet<Node> worklist = new HashSet<>();
@@ -387,27 +381,45 @@ public class FDTBuilder {
                     worklist.remove(node);
                     node.isVisited = true;
 
-                    for (Node w : node.succ()) {
-                        if (!w.isVisited) {
-                            worklist.add(w);
+                    boolean isLimit = false;
+
+                    for (Node h : dataDepLimit) {
+                        if (h.getNodeID() == node.getNodeID()) {
+                            isLimit = true;
+                            for (Variable varc : node.getVariablesOfNode()) {
+                                if (n.getAssignedVariable().name.equals(varc.name)) {
+                                    n.getDataDepsForThisNode().add(node);
+                                    node.getParentsOfDataDep().add(n);
+                                    break;
+                                }
+                            }
+                            break;
                         }
                     }
 
-                    for (Variable v : node.getVariablesOfNode()) {
-                        if (v.name.equals(n.getAssignedVariable().name)) {//Is assigned variable used in this node?
-                            n.getDataDepsForThisNode().add(node);
-                            break;
+                    if (!isLimit) {
+                        for (Variable v : node.getVariablesOfNode()) {
+                            if (v.name.equals(n.getAssignedVariable().name)) {//Is assigned variable used in this node?
+                                n.getDataDepsForThisNode().add(node);
+                                node.getParentsOfDataDep().add(n);
+                                break;
+                            }
+                        }
+
+                        for (Node w : node.succ()) {
+                            if (!w.isVisited) {
+                                worklist.add(w);
+                            }
                         }
                     }
                 }
             }
-        }
 
+        }
     }
 
     private void printDataDeps() {
         String DDgraph = "";
-//        System.out.println("\n##################\nprint Data Dependencies ");
 
         for (Node n : cfg.getNodeSet()) {
             for (Node q : n.getDataDepsForThisNode()) {
@@ -417,6 +429,8 @@ public class FDTBuilder {
 
         GraphDrawer gd = new GraphDrawer();
         gd.draw(YYParser.getSourceCodeFileName() + "_DDG.", DDgraph);
+
+        System.out.println("Data Dependence Graph is ready.");
 
     }
 

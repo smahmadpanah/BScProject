@@ -134,8 +134,8 @@ program : PROGRAM_KW ';' clist
 		((eval)$$).list.merge(new LinkedList(new Node(nodeCounter++, "STOP")));
 		System.out.println("the CFG is created.");
 
-		FDTBuilder fdt = new FDTBuilder(((eval)$$).list); //the CFG is input to build the Forward Dominance Tree
-		System.out.println("the FDT is created.");
+		PDGBuilder fdt = new PDGBuilder(((eval)$$).list); //the CFG is input to build the Forward Dominance Tree and after that, CFG and DDG that make PDG! :)
+		
 	};
 
 clist: c

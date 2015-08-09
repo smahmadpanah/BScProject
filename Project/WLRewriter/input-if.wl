@@ -1,7 +1,13 @@
 program;
-inL l1, l2;
-inH h1, k ,n;
+inL l1,l2;
+outL l1;
 if (l1 == 0) then
-l2 = h1 + h1 + k;
-l1 = l2
-endif
+	l1 = 2;
+	outL l1
+endif;
+outL l1;
+l1 = 10;
+outL l1;
+l1 = l1 + 3;
+outL l1;
+outL l2

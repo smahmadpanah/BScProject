@@ -349,7 +349,7 @@ class YYParser
 		//((eval)$$).variables.addAll(((eval)$3).variables);
 		
 		((eval)yyval).node = new Node(nodeCounter++, "START");
-		System.out.println(((eval)((eval)(yystack.valueAt (3-(3))))).nodeIdAndStmt);
+		//System.out.println(((eval)$3).nodeIdAndStmt);
 		((eval)yyval).nodeIdAndStmt += "#" + ((eval)yyval).node.getNodeID() + ":" + "program; \n";
 		((eval)yyval).nodeIdAndStmt += ((eval)((eval)(yystack.valueAt (3-(3))))).nodeIdAndStmt;
 		((eval)yyval).node.setNodeIdAndStmt(((eval)yyval).nodeIdAndStmt);

@@ -115,7 +115,7 @@ program : PROGRAM_KW ';' clist
 		//((eval)$$).variables.addAll(((eval)$3).variables);
 		
 		((eval)$$).node = new Node(nodeCounter++, "START");
-		System.out.println(((eval)$3).nodeIdAndStmt);
+		//System.out.println(((eval)$3).nodeIdAndStmt);
 		((eval)$$).nodeIdAndStmt += "#" + ((eval)$$).node.getNodeID() + ":" + "program; \n";
 		((eval)$$).nodeIdAndStmt += ((eval)$3).nodeIdAndStmt;
 		((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);

@@ -138,6 +138,7 @@ public class PINIRewriter {
     private void printPath(LinkedList<Node> visited) {
         for (Node node : visited) {
             System.out.print("#" + node.getNodeID() + " " + node.getStatement());
+            if(visited.indexOf(node) != visited.size()-1)
             System.out.print("  ->  ");
         }
         System.out.println();

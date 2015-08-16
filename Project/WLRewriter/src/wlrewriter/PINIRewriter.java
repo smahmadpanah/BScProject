@@ -6,8 +6,8 @@
 package wlrewriter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 
 /**
@@ -20,6 +20,7 @@ public class PINIRewriter {
     private String sourceCode, CopyOfSourceCode, rewritedSourceCode; // sourceCode = M | CopyOfSourceCode = M' | rewritedSourceCode = result
     private HashSet<LinkedList<Node>> F; // the set of paths
 
+    private HashMap<LinkedList<Node>, Boolean> typeOfPaths; // each path is explicit (TRUE) or implicit (FALSE)
     private Node sourceNode, destinationNode;
 
     public PINIRewriter(MyLinkedList pdg) {
@@ -28,6 +29,8 @@ public class PINIRewriter {
         sourceCode = pdg.getFirst().getNodeIdAndStmt();
 
         F = new HashSet<>(); // paths
+        typeOfPaths = new HashMap<>();
+        
         initializeF(); //initializing paths
 
         rewritedSourceCode = reWrite(); //algorithm method
@@ -75,14 +78,37 @@ public class PINIRewriter {
                     LinkedList<Node> visited = new LinkedList<>();
                     visited.add(sourceNode);
                     breadthFirst(visited);
+
+                    /*                  // find explicit flows
+                     LinkedList<Node> visitedExplicit = new LinkedList<>();
+                     visitedExplicit.add(sourceNode);
+                     explicitFlows(visitedExplicit);
+                     */
                 }
             }
 
+            /*          System.out.println("Explicit Flows:");
+             for (LinkedList<Node> path : explicitPaths) {
+             path.add(0, pdg.getFirst());
+             printPath(path);
+             }
+             */
             for (LinkedList<Node> path : F) {
+                boolean isExplicitFlow = true;
+                for (int i = 0; i < path.size()-1; i++) {
+                    Node n = path.get(i);
+                    Node q = path.get(i + 1);
+                    if (n.getContolDep().contains(q)) { // ba node ba'di ya control dep dare ya data dep, nemishe joftesh bashe
+                        isExplicitFlow = false;
+                        break;
+                    }
+                }
                 path.add(0, pdg.getFirst());
+                
+                typeOfPaths.put(path, isExplicitFlow);
+                
                 printPath(path);
             }
-
         }
 
     }
@@ -100,8 +126,8 @@ public class PINIRewriter {
 
     private void breadthFirst(LinkedList<Node> visited) {
 
-        HashSet<Node> allDeps = visited.getLast().getContolDep();
-        allDeps.addAll(visited.getLast().getDataDepsForThisNode());
+        HashSet<Node> allDeps = new HashSet<>(visited.getLast().getContolDep());
+        allDeps.addAll(new HashSet<>(visited.getLast().getDataDepsForThisNode()));
 
         LinkedList<Node> nodes = new LinkedList<>();
 
@@ -121,7 +147,6 @@ public class PINIRewriter {
                 break;
             }
         }
-        // in breadth-first, recursion needs to come after visiting adjacent nodes
         for (Node node : nodes) {
             if (visited.contains(node) || node.equals(destinationNode)) {
                 continue;
@@ -134,13 +159,55 @@ public class PINIRewriter {
         }
 
     }
+    /*
+     private void explicitFlows(LinkedList<Node> visited) {
 
-    private void printPath(LinkedList<Node> visited) {
-        for (Node node : visited) {
+     HashSet<Node> dataDeps = visited.getLast().getDataDepsForThisNode();
+
+     LinkedList<Node> nodes = new LinkedList<>();
+
+     for (Node n : dataDeps) {
+     nodes.add(n);
+     }
+
+     for (Node node : nodes) {
+     if (visited.contains(node)) {
+     continue;
+     }
+     if (node.equals(destinationNode)) {
+     visited.add(node);
+     //                printPath(visited);
+     explicitPaths.add(new LinkedList<>(visited));
+     visited.removeLast();
+     break;
+     }
+     }
+     for (Node node : nodes) {
+     if (visited.contains(node) || node.equals(destinationNode)) {
+     continue;
+     }
+
+     visited.addLast(node);
+     explicitFlows(visited);
+
+     visited.removeLast();
+     }
+
+     }
+     */
+
+    private void printPath(LinkedList<Node> path) {
+        if (typeOfPaths.get(path)) {
+            System.out.print("*EXPLICIT ==> ");
+        }
+
+        for (Node node : path) {
             System.out.print("#" + node.getNodeID() + " " + node.getStatement());
-            if(visited.indexOf(node) != visited.size()-1)
-            System.out.print("  ->  ");
+            if (path.indexOf(node) != path.size() - 1) {
+                System.out.print("  ->  ");
+            }
         }
         System.out.println();
+
     }
 }

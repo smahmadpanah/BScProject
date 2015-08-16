@@ -115,8 +115,10 @@ program : PROGRAM_KW ';' clist
 		//((eval)$$).variables.addAll(((eval)$3).variables);
 		
 		((eval)$$).node = new Node(nodeCounter++, "START");
-		
-		
+		System.out.println(((eval)$3).nodeIdAndStmt);
+		((eval)$$).nodeIdAndStmt += "#" + ((eval)$$).node.getNodeID() + ":" + "program; \n";
+		((eval)$$).nodeIdAndStmt += ((eval)$3).nodeIdAndStmt;
+		((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);
 		/*for(String str : ((eval)$$).variables){
 					for(Variable varvar : symbolTableOfVariables){
 						if(str.equals(varvar.name)){
@@ -129,12 +131,14 @@ program : PROGRAM_KW ';' clist
 		*/
 		
 		
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		((eval)$$).list = new MyLinkedList(((eval)$$).node);
 		((eval)$$).list.merge(((eval)$3).list);
-		((eval)$$).list.merge(new LinkedList(new Node(nodeCounter++, "STOP")));
+		((eval)$$).list.merge(new MyLinkedList(new Node(nodeCounter++, "STOP")));
 		System.out.println("the CFG is created.");
 
-		PDGBuilder fdt = new PDGBuilder(((eval)$$).list); //the CFG is input to build the Forward Dominance Tree and after that, CFG and DDG that make PDG! :)
+		PDGBuilder pdg = new PDGBuilder(((eval)$$).list); //the CFG is input to build the Forward Dominance Tree and after that, CFG and DDG that make PDG! :)
+		PINIRewriter pini = new PINIRewriter(pdg.getPDG());
+		
 		
 	};
 
@@ -145,6 +149,7 @@ clist: c
 		((eval)$$).stmt += ((eval)$1).stmt;
 		writer.print(((eval)$$).stmt+ "\n");
 		
+		((eval)$$).nodeIdAndStmt += ((eval)$1).nodeIdAndStmt;
 		//((eval)$$).variables.addAll(((eval)$1).variables);
 		
 		((eval)$$).list = ((eval)$1).list;
@@ -155,6 +160,8 @@ clist: c
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + "; " + ((eval)$4).stmt;
 		writer.print(((eval)$$).stmt+ "\n");
+		
+		((eval)$$).nodeIdAndStmt += ((eval)$1).nodeIdAndStmt + "; \n" + ((eval)$4).nodeIdAndStmt;
 		
 		//((eval)$$).variables.addAll(((eval)$1).variables);
 		//((eval)$$).variables.addAll(((eval)$4).variables);
@@ -310,7 +317,9 @@ c : NOP_KW
 		((eval)$$).stmt += "NOP";
 		writer.print(((eval)$$).stmt+ "\n");	
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		((eval)$$).nodeIdAndStmt += "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$$).stmt;
+		((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);
+		((eval)$$).list = new MyLinkedList(((eval)$$).node);
 
 	};
 	| x ASSIGN_KW exp
@@ -326,6 +335,8 @@ c : NOP_KW
 		for(Variable v : symbolTableOfVariables){
 			if(((eval)$1).stmt.equals(v.name)){
 				((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
+				((eval)$$).nodeIdAndStmt += "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$1).stmt + " = " + ((eval)$3).stmt;
+				((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);
 				
 				for(String str : ((eval)$$).variables){
 					for(Variable varvar : symbolTableOfVariables){
@@ -344,7 +355,7 @@ c : NOP_KW
 				}
 				
 				
-				((eval)$$).list = new LinkedList(((eval)$$).node);
+				((eval)$$).list = new MyLinkedList(((eval)$$).node);
 				check = true;
 				break;
 			}
@@ -385,13 +396,16 @@ c : NOP_KW
 			//((eval)$$).node.addToVariablesOfNode(currentVar);
 			
 			if(first){
-				((eval)$$).list = new LinkedList(((eval)$$).node);
+				((eval)$$).list = new MyLinkedList(((eval)$$).node);
 				first = false;
 			}
 			else{
-				((eval)$$).list.merge(new LinkedList(((eval)$$).node));
+				((eval)$$).list.merge(new MyLinkedList(((eval)$$).node));
 			}
 		}
+		
+			((eval)$$).nodeIdAndStmt += "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$$).stmt;
+			((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);
 		
 		
 
@@ -422,13 +436,15 @@ c : NOP_KW
 			//((eval)$$).node.addToVariablesOfNode(currentVar);
 			
 			if(first){
-				((eval)$$).list = new LinkedList(((eval)$$).node);
+				((eval)$$).list = new MyLinkedList(((eval)$$).node);
 				first = false;
 			}
 			else{
-				((eval)$$).list.merge(new LinkedList(((eval)$$).node));
+				((eval)$$).list.merge(new MyLinkedList(((eval)$$).node));
 			}
 		}
+			((eval)$$).nodeIdAndStmt += "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$$).stmt;
+			((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);
 		
 		
 
@@ -446,6 +462,8 @@ c : NOP_KW
 		for(Variable v : symbolTableOfVariables){
 			if(((eval)$2).stmt.equals(v.name) && v.type.equals("low")){
 				((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
+				((eval)$$).nodeIdAndStmt += "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$$).stmt;
+				((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);
 				
 				for(String str : ((eval)$$).variables){
 					for(Variable varvar : symbolTableOfVariables){
@@ -458,7 +476,7 @@ c : NOP_KW
 				}
 		
 				
-				((eval)$$).list = new LinkedList(((eval)$$).node);
+				((eval)$$).list = new MyLinkedList(((eval)$$).node);
 				check = true;
 				break;
 			}
@@ -486,7 +504,8 @@ c : NOP_KW
 		for(Variable v : symbolTableOfVariables){
 			if(((eval)$2).stmt.equals(v.name) && v.type.equals("high")){
 				((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
-				
+				((eval)$$).nodeIdAndStmt += "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$$).stmt;
+				((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);
 				
 				for(String str : ((eval)$$).variables){
 					for(Variable varvar : symbolTableOfVariables){
@@ -498,7 +517,7 @@ c : NOP_KW
 					}
 				}
 				
-				((eval)$$).list = new LinkedList(((eval)$$).node);
+				((eval)$$).list = new MyLinkedList(((eval)$$).node);
 				check = true;
 				break;
 			}
@@ -519,7 +538,10 @@ c : NOP_KW
 		((eval)$$).stmt += "outL BOT";
 		writer.print(((eval)$$).stmt+ "\n");	
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		((eval)$$).nodeIdAndStmt += "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$$).stmt;
+		((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);
+		
+		((eval)$$).list = new MyLinkedList(((eval)$$).node);
 	
 	};
 	| OUTH_KW BOT_KW
@@ -529,7 +551,9 @@ c : NOP_KW
 		((eval)$$).stmt += "outH BOT";
 		writer.print(((eval)$$).stmt+ "\n");	
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		((eval)$$).nodeIdAndStmt += "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$$).stmt;
+		((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);
+		((eval)$$).list = new MyLinkedList(((eval)$$).node);
 	
 	};
 	| IF_KW exp THEN_KW M clist ENDIF_KW %prec p
@@ -543,6 +567,8 @@ c : NOP_KW
 		//((eval)$$).variables.addAll(((eval)$5).variables);
 		
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$2).stmt);//condition expression node
+		((eval)$$).nodeIdAndStmt += " if " + "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$2).stmt + " then \n" + ((eval)$5).nodeIdAndStmt + " endif";
+		((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);
 		
 		for(String str : ((eval)$$).variables){
 			for(Variable v : symbolTableOfVariables){
@@ -554,7 +580,7 @@ c : NOP_KW
 			}
 		}
 		
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		((eval)$$).list = new MyLinkedList(((eval)$$).node);
 
 		Node dummy = new Node(nodeCounter++, "dummy");//dummy node for last node of if
 		
@@ -562,7 +588,7 @@ c : NOP_KW
 		dummy.addPreviousPointer(((eval)$$).list.getLast()); //backward pointer
 		
 		((eval)$$).list.merge(((eval)$5).list);//if true
-		((eval)$$).list.merge(new LinkedList(dummy));	
+		((eval)$$).list.merge(new MyLinkedList(dummy));	
 	};
 	| IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW
 	{
@@ -576,6 +602,8 @@ c : NOP_KW
 		//((eval)$$).variables.addAll(((eval)$9).variables);
 
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$2).stmt);//condition expression node
+		((eval)$$).nodeIdAndStmt += " if " + "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$2).stmt + " then \n" + ((eval)$5).nodeIdAndStmt + " else \n" + ((eval)$9).nodeIdAndStmt + " endif ";
+		((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);
 		
 		for(String str : ((eval)$$).variables){
 			for(Variable v : symbolTableOfVariables){
@@ -587,10 +615,10 @@ c : NOP_KW
 			}
 		}
 		
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		((eval)$$).list = new MyLinkedList(((eval)$$).node);
 		
 		Node dummy = new Node(nodeCounter++, "dummy");//dummy node for last node of if
-		LinkedList dummyList = new LinkedList(dummy);
+		MyLinkedList dummyList = new MyLinkedList(dummy);
 		
 		((eval)$$).list.getLast().setNextPointer2(((eval)$9).list.getFirst());//if false - else section
 		((eval)$9).list.getFirst().addPreviousPointer(((eval)$$).list.getLast()); //backward pointer
@@ -613,6 +641,8 @@ c : NOP_KW
 	//	((eval)$$).variables.addAll(((eval)$5).variables);
 	
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$2).stmt);//condition expression node
+		((eval)$$).nodeIdAndStmt += "while " + "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$2).stmt + " do \n" + ((eval)$5).nodeIdAndStmt + " done ";
+		((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);
 		
 		for(String str : ((eval)$$).variables){
 			for(Variable v : symbolTableOfVariables){
@@ -625,10 +655,10 @@ c : NOP_KW
 		}
 		
 		
-		((eval)$$).list = new LinkedList(((eval)$$).node);
+		((eval)$$).list = new MyLinkedList(((eval)$$).node);
 		
 		Node dummy = new Node(nodeCounter++, "dummy");//dummy node for last node of if
-		LinkedList dummyList = new LinkedList(dummy);
+		MyLinkedList dummyList = new MyLinkedList(dummy);
 		
 		((eval)$$).list.getLast().setNextPointer2(dummy);//while condition false
 		dummy.addPreviousPointer(((eval)$$).list.getLast()); //backward pointer	
@@ -737,10 +767,12 @@ N : //lambda
 class eval {
 	
 	public String stmt="";
+	public String nodeIdAndStmt="";
+	
 	
 	public HashSet<String> variables = new HashSet<String>();
 	
 	public Node node;
-	public LinkedList list;
+	public MyLinkedList list;
 
 }

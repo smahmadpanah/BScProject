@@ -37,6 +37,8 @@ public class Node {
     
     private HashSet<Node> parentsOfDataDep;
     
+    private String nodeIdAndStmt;
+    
     public Node(int nodeID, String statement) {
         this.isVisited = false;
         this.nodeID = nodeID;
@@ -186,6 +188,22 @@ public class Node {
 
     public void setParentsOfDataDep(HashSet<Node> parentsOfDataDep) {
         this.parentsOfDataDep = parentsOfDataDep;
+    }
+
+    public String getNodeIdAndStmt() {
+        return nodeIdAndStmt;
+    }
+
+    public void setNodeIdAndStmt(String nodeIdAndStmt) {
+        this.nodeIdAndStmt = nodeIdAndStmt;
+    }
+
+    public void setVariablesOfNode(HashSet<Variable> variablesOfNode) {
+        this.variablesOfNode = variablesOfNode;
+    }
+
+    public void setDataDepsForThisNode(HashSet<Node> dataDepsForThisNode) {
+        this.dataDepsForThisNode = dataDepsForThisNode;
     }
     
     

@@ -13,12 +13,12 @@ import java.util.Iterator;
  *
  * @author Mohammad
  */
-public class LinkedList {
+public class MyLinkedList {
 
     private Node first, last;
     private HashSet<Node> nodeSet; //list of nodes    
     
-    public LinkedList(Node node) {
+    public MyLinkedList(Node node) {
 
         first = node;
         last = node;
@@ -32,7 +32,7 @@ public class LinkedList {
      *
      * @param list
      */
-    public void merge(LinkedList list) {
+    public void merge(MyLinkedList list) {
         last.setNextPointer1(list.getFirst());
         list.getFirst().addPreviousPointer(last);
         last = list.getLast();

@@ -1,12 +1,14 @@
 program;
 inL l1, l2;
 inH h1;
-if (l1 == 0) then
+if (h1 == 0) then
 	l2 = h1;
-	l1 = l2
+	l1 = l2;
+	outL l1
 else 
 	NOP;
 	l1 = 3;
-	outH h1
+	outH h1;
+	outL l2
 endif;
 outL l1

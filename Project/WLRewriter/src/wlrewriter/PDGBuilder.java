@@ -21,11 +21,11 @@ import GraphViz.*;
  */
 public class PDGBuilder {
 
-    private LinkedList cfg, FDTree, PDG; //FDTree is equal to PostDomTree
+    private MyLinkedList cfg, FDTree, PDG; //FDTree is equal to PostDomTree
     private HashSet<Node> FDTNodes;
 
 //    private ArrayList<DataEdge> dataDeps;//data dependencies - by CFG nodes and we just save the relation between them for data dep graph
-    public PDGBuilder(LinkedList cfg) {
+    public PDGBuilder(MyLinkedList cfg) {
 
         this.cfg = cfg;
 
@@ -65,7 +65,7 @@ public class PDGBuilder {
 
         //merge CDG and DDG together to make PDG
         computePDG();
-        
+
         //print and show the PDG
         printPDG();
 
@@ -137,18 +137,18 @@ public class PDGBuilder {
 
         }
 
-        HashSet<LinkedList> listOfFDTNodes = new HashSet<>();
+        HashSet<MyLinkedList> listOfFDTNodes = new HashSet<>();
 
         for (Iterator<Node> it = FDTNodes.iterator(); it.hasNext();) {
             Node temp = it.next();
 
-            listOfFDTNodes.add(new LinkedList(temp));
+            listOfFDTNodes.add(new MyLinkedList(temp));
 
         }
 
-        FDTree = new LinkedList(null);
-        for (Iterator<LinkedList> it = listOfFDTNodes.iterator(); it.hasNext();) {
-            LinkedList temp = it.next();
+        FDTree = new MyLinkedList(null);
+        for (Iterator<MyLinkedList> it = listOfFDTNodes.iterator(); it.hasNext();) {
+            MyLinkedList temp = it.next();
             Node tempNode = temp.getFirst();
 
             if (tempNode.getStatement().equals("STOP")) {
@@ -161,8 +161,8 @@ public class PDGBuilder {
                 for (Iterator<Node> it2 = cfg.getNodeSet().iterator(); it2.hasNext();) {
                     Node temp2 = it2.next();
                     if (tempNode.getPostDominators().equals(temp2.getPostDominators())) {
-                        for (Iterator<LinkedList> it3 = listOfFDTNodes.iterator(); it3.hasNext();) {
-                            LinkedList temp3 = it3.next();
+                        for (Iterator<MyLinkedList> it3 = listOfFDTNodes.iterator(); it3.hasNext();) {
+                            MyLinkedList temp3 = it3.next();
                             Node tempNode3 = temp3.getFirst();
                             if (tempNode3.getNodeID() == temp2.getNodeID()) {
                                 mergeLists(temp3, temp);
@@ -178,7 +178,7 @@ public class PDGBuilder {
 //        System.out.println("Post-Dom Tree is created");
     }
 
-    private void mergeLists(LinkedList first, LinkedList second) {
+    private void mergeLists(MyLinkedList first, MyLinkedList second) {
         first.getFirst().addNextPointersForPostDomTree(second.getFirst());
         second.getFirst().addPreviousPointer(first.getFirst());
     }
@@ -450,8 +450,23 @@ public class PDGBuilder {
             for (Node nodeInFDT : FDTNodes) {
                 if (nodeInPDG.getNodeID() == nodeInFDT.getNodeID()) {
                     nodeInPDG.setStatement(nodeInFDT.getStatement());
-                    nodeInPDG.setContolDep(nodeInFDT.getContolDep());
-                    nodeInPDG.setParentOfControlDep(nodeInFDT.getParentOfControlDep());
+
+                    for (Node temp : nodeInFDT.getContolDep()) {
+                        for (Node temp2 : PDG.getNodeSet()) {
+                            if (temp.getNodeID() == temp2.getNodeID()) {
+                                nodeInPDG.getContolDep().add(temp2);
+                            }
+                        }
+                    }
+
+                    for (Node temp : nodeInFDT.getDataDepsForThisNode()) {
+                        for (Node temp2 : PDG.getNodeSet()) {
+                            if (temp.getNodeID() == temp2.getNodeID()) {
+                                nodeInPDG.getDataDepsForThisNode().add(temp2);
+                            }
+                        }
+                    }
+
                     break;
                 }
             }
@@ -479,7 +494,7 @@ public class PDGBuilder {
 
     }
 
-    public LinkedList getPDG() {
+    public MyLinkedList getPDG() {
         return PDG;
     }
 

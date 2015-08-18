@@ -7,4 +7,4 @@ while (m>0) do
 	l2 = 1;
 	l3 = 5
 done;
-outL l2
+outL l1

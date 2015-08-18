@@ -33,7 +33,7 @@ public class Node {
     
     private HashSet<Node> dataDepsForThisNode; //data dependecies for this node that means which nodes are used this node's assigned variable 
 
-    private Node parentOfControlDep;
+    private HashSet<Node> parentOfControlDep;
     
     private HashSet<Node> parentsOfDataDep;
     
@@ -56,6 +56,7 @@ public class Node {
         dataDepsForThisNode = new HashSet<>();
         parentOfControlDep = null;
         parentsOfDataDep = new HashSet<>();
+        parentOfControlDep = new HashSet<>();
     }
 
     public int getNodeID() {
@@ -174,11 +175,11 @@ public class Node {
         return dataDepsForThisNode;
     }
 
-    public Node getParentOfControlDep() {
+    public HashSet<Node> getParentOfControlDep() {
         return parentOfControlDep;
     }
 
-    public void setParentOfControlDep(Node parentOfControlDep) {
+    public void setParentOfControlDep(HashSet parentOfControlDep) {
         this.parentOfControlDep = parentOfControlDep;
     }
 

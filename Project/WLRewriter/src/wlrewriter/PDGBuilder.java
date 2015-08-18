@@ -313,7 +313,7 @@ public class PDGBuilder {
                     if (w.getNodeID() == x.getNodeID()) {
                         // mitavanad tekrari bashe [dar sorati ke be khodes nabayad vabastegi dashte bashe, in ja ye if mizarim : if(y.getNodeId()!=x.getNodeId())]
                         x.getContolDep().add(y);
-                        y.setParentOfControlDep(x);
+                        y.getParentOfControlDep().add(x);
 
                     }
                 }
@@ -454,10 +454,28 @@ public class PDGBuilder {
                     for (Node temp : nodeInFDT.getContolDep()) {
                         for (Node temp2 : PDG.getNodeSet()) {
                             if (temp.getNodeID() == temp2.getNodeID()) {
+
+                                for (Node temp3 : cfg.getNodeSet()) {
+                                    if (temp3.getNodeID() == temp2.getNodeID()) {
+//                                        temp2.setNextPointer1(temp3.getNextPointer1());
+//                                        temp2.setNextPointer2(temp3.getNextPointer2());
+                                    }
+                                }
+
                                 nodeInPDG.getContolDep().add(temp2);
                             }
                         }
                     }
+
+                    for (Node temp3 : cfg.getNodeSet()) {
+                        for (Node tempq : nodeInFDT.getParentOfControlDep()) {
+                            if (temp3.getNodeID() == tempq.getNodeID()) {
+                                tempq.setNextPointer1(temp3.getNextPointer1());
+                                tempq.setNextPointer2(temp3.getNextPointer2());
+                            }
+                        }
+                    }
+                    nodeInPDG.setParentOfControlDep(nodeInFDT.getParentOfControlDep());
 
                     for (Node temp : nodeInFDT.getDataDepsForThisNode()) {
                         for (Node temp2 : PDG.getNodeSet()) {
@@ -466,6 +484,8 @@ public class PDGBuilder {
                             }
                         }
                     }
+
+                    nodeInPDG.setParentsOfDataDep(nodeInFDT.getParentsOfDataDep());
 
                     break;
                 }

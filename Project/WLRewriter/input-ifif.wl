@@ -6,6 +6,8 @@ if (l1 == 0) then
 	l2 = h1;
 	if (l2>5) then
 		l1 = l2
+	else
+		l1 = l2+2
 	endif
 endif;
 outL l1

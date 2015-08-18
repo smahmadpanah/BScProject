@@ -22,6 +22,7 @@ public class PINIRewriter {
 
     private HashMap<LinkedList<Node>, Boolean> typeOfPaths; // each path is explicit (TRUE) or implicit (FALSE)
     private HashMap<LinkedList<Node>, ArrayList<String>> executionConditions; // execution conditions for nodes N satisfying... 
+    private HashMap<LinkedList<Node>, String> pathConditions; // conjunction of executionConditions for each path
     private Node sourceNode, destinationNode;
 
     public PINIRewriter(MyLinkedList pdg) {
@@ -32,6 +33,7 @@ public class PINIRewriter {
         F = new HashSet<>(); // paths
         typeOfPaths = new HashMap<>();
         executionConditions = new HashMap<>();
+        pathConditions = new HashMap<>();
 
         initializeF(); //initializing paths
 
@@ -100,7 +102,7 @@ public class PINIRewriter {
                 for (int i = 0; i < path.size() - 1; i++) {
                     Node n = path.get(i);
                     Node q = path.get(i + 1);
-                    
+
                     if (n.getContolDep().contains(q)) { // ba node ba'di ya control dep dare ya data dep, nemishe joftesh bashe
                         isExplicitFlow = false;
                         break;
@@ -132,8 +134,34 @@ public class PINIRewriter {
                         executionConditionsForThisPath.add(findExecutionCondition(N));
                     }
                 }
+//                executionConditions.put(path, executionConditionsForThisPath);
+//                System.out.println("old" + executionConditionsForThisPath);
+
+                // omit "TRUE"s that are extra
+                for (int j = 0; j < executionConditionsForThisPath.size(); j++) {
+                    if (executionConditionsForThisPath.get(j).equals("TRUE")) {
+                        executionConditionsForThisPath.remove(executionConditionsForThisPath.get(j));
+                    }
+                }
+
+                if (executionConditionsForThisPath.isEmpty()) {
+                    executionConditionsForThisPath.add("TRUE");
+                }
+
                 executionConditions.put(path, executionConditionsForThisPath);
-                System.out.println(executionConditionsForThisPath);
+//                System.out.println(executionConditionsForThisPath);
+
+                String pathCond = "";
+                for (int j = 0; j < executionConditionsForThisPath.size(); j++) {
+                    pathCond += executionConditionsForThisPath.get(j);
+                    if (j < executionConditionsForThisPath.size() - 1) {
+                        pathCond += " and ";
+                    }
+                }
+
+                pathConditions.put(path, pathCond);
+                System.out.println(pathCond);
+
             }
 
             return CopyOfSourceCode;
@@ -226,7 +254,7 @@ public class PINIRewriter {
                     }
                 }
                 if (found) {
-                    executionCondition += " (" + parent.getStatement() + " : TRUE) &&";
+                    executionCondition += " (" + parent.getStatement() + " : TRUE) and";
                 }
             }
             if (!found && parent.getNextPointer2() != null) {
@@ -250,7 +278,7 @@ public class PINIRewriter {
                     }
                 }
                 if (found) {
-                    executionCondition += " (" + parent.getStatement() + " : FALSE) &&";
+                    executionCondition += " (" + parent.getStatement() + " : FALSE) and";
                 }
             }
             Node maybeParent = null;
@@ -263,8 +291,8 @@ public class PINIRewriter {
         }
         executionCondition += "TRUE";
 
-        if (executionCondition.endsWith("&&TRUE")) {
-            executionCondition = executionCondition.replace("&&TRUE", "");
+        if (executionCondition.endsWith("andTRUE")) {
+            executionCondition = executionCondition.replace("andTRUE", "");
         }
 
         return executionCondition;

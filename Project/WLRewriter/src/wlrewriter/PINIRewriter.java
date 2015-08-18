@@ -153,10 +153,19 @@ public class PINIRewriter {
 
                 String pathCond = "";
                 for (int j = 0; j < executionConditionsForThisPath.size(); j++) {
-                    pathCond += executionConditionsForThisPath.get(j);
+                    String str = executionConditionsForThisPath.get(j);
+                    if (str.contains(" : TRUE) ")) {
+                        str = str.replace(" : TRUE) ", ") ");
+                    }
+                    if (str.contains(": FALSE) ")) {
+                        str = str.replace(" : FALSE) ", ") ");
+                        str = str.replace(" (", " !(");
+                    }
+                    pathCond += str;
                     if (j < executionConditionsForThisPath.size() - 1) {
                         pathCond += " and ";
                     }
+               
                 }
 
                 pathConditions.put(path, pathCond);

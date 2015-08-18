@@ -90,6 +90,7 @@ static PrintStream writer;
 /*-------------------------------------------------------------------------------------------*/	
 }
 
+%nonassoc q
 %left AND_KW OR_KW
 %right ASSIGN_KW
 %left EQ_KW
@@ -309,11 +310,11 @@ writer.print(((eval)$$).stmt+ "\n");
 	((eval)$$).variables.addAll(((eval)$1).variables);
 	((eval)$$).variables.addAll(((eval)$4).variables);
 	};
-	| NEG_KW exp %prec p
+	| NEG_KW exp %prec q
 	{
 		writer.print("\t exp -> NEG_KW exp \n") ;
 		$$=new eval();
-		((eval)$$).stmt += "! "+ ((eval)$2).stmt;
+		((eval)$$).stmt += "!("+ ((eval)$2).stmt + ")";
 	
 		writer.print(((eval)$$).stmt+ "\n");	
 

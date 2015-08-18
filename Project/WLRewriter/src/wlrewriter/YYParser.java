@@ -122,7 +122,9 @@ class YYParser
   /** Token number, to be returned by the scanner.  */
   public static final int IDENTIFIER = 285;
   /** Token number, to be returned by the scanner.  */
-  public static final int p = 286;
+  public static final int q = 286;
+  /** Token number, to be returned by the scanner.  */
+  public static final int p = 287;
 
 
 
@@ -338,7 +340,7 @@ class YYParser
   if (yyn == 2)
     
 /* Line 351 of lalr1.java  */
-/* Line 106 of "YYParser.y"  */
+/* Line 107 of "YYParser.y"  */
     {
 		writer.print("\t program -> PROGRAM_KW ';' clist \n") ;
 		writer.print("###Hooray! - Your program is syntactically correct### \n");
@@ -384,7 +386,7 @@ class YYParser
   if (yyn == 3)
     
 /* Line 351 of lalr1.java  */
-/* Line 146 of "YYParser.y"  */
+/* Line 147 of "YYParser.y"  */
     {
 		writer.print("\t clist -> c \n") ;
 		yyval=new eval();
@@ -403,7 +405,7 @@ class YYParser
   if (yyn == 4)
     
 /* Line 351 of lalr1.java  */
-/* Line 158 of "YYParser.y"  */
+/* Line 159 of "YYParser.y"  */
     {
 		writer.print("\t clist -> clist ; M c \n") ;
 		yyval=new eval();
@@ -427,7 +429,7 @@ class YYParser
   if (yyn == 5)
     
 /* Line 351 of lalr1.java  */
-/* Line 176 of "YYParser.y"  */
+/* Line 177 of "YYParser.y"  */
     {
 	
 		writer.print("\t exp -> b \n") ;
@@ -442,7 +444,7 @@ class YYParser
   if (yyn == 6)
     
 /* Line 351 of lalr1.java  */
-/* Line 184 of "YYParser.y"  */
+/* Line 185 of "YYParser.y"  */
     {
 		writer.print("\t exp -> n \n") ;
 		yyval=new eval();
@@ -456,7 +458,7 @@ class YYParser
   if (yyn == 7)
     
 /* Line 351 of lalr1.java  */
-/* Line 191 of "YYParser.y"  */
+/* Line 192 of "YYParser.y"  */
     {
 		writer.print("\t exp -> x \n") ;
 		yyval=new eval();
@@ -487,7 +489,7 @@ class YYParser
   if (yyn == 8)
     
 /* Line 351 of lalr1.java  */
-/* Line 215 of "YYParser.y"  */
+/* Line 216 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp EQ_KW exp \n") ;
 		yyval=new eval();
@@ -505,7 +507,7 @@ class YYParser
   if (yyn == 9)
     
 /* Line 351 of lalr1.java  */
-/* Line 226 of "YYParser.y"  */
+/* Line 227 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp LT_KW exp \n") ;
 		yyval=new eval();
@@ -523,7 +525,7 @@ class YYParser
   if (yyn == 10)
     
 /* Line 351 of lalr1.java  */
-/* Line 237 of "YYParser.y"  */
+/* Line 238 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp LE_KW exp \n") ;
 		yyval=new eval();
@@ -541,7 +543,7 @@ class YYParser
   if (yyn == 11)
     
 /* Line 351 of lalr1.java  */
-/* Line 248 of "YYParser.y"  */
+/* Line 249 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp GE_KW exp \n") ;
 		yyval=new eval();
@@ -559,7 +561,7 @@ class YYParser
   if (yyn == 12)
     
 /* Line 351 of lalr1.java  */
-/* Line 259 of "YYParser.y"  */
+/* Line 260 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp GT_KW exp \n") ;
 	yyval=new eval();
@@ -577,7 +579,7 @@ class YYParser
   if (yyn == 13)
     
 /* Line 351 of lalr1.java  */
-/* Line 270 of "YYParser.y"  */
+/* Line 271 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp PLUS_KW exp \n") ;
 	yyval=new eval();
@@ -595,7 +597,7 @@ class YYParser
   if (yyn == 14)
     
 /* Line 351 of lalr1.java  */
-/* Line 281 of "YYParser.y"  */
+/* Line 282 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp MINUS_KW exp \n") ;
 		yyval=new eval();
@@ -612,7 +614,7 @@ class YYParser
   if (yyn == 15)
     
 /* Line 351 of lalr1.java  */
-/* Line 291 of "YYParser.y"  */
+/* Line 292 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp AND_KW exp \n") ;
 		yyval=new eval();
@@ -629,7 +631,7 @@ class YYParser
   if (yyn == 16)
     
 /* Line 351 of lalr1.java  */
-/* Line 301 of "YYParser.y"  */
+/* Line 302 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp OR_KW exp \n") ;
 			yyval=new eval();
@@ -648,11 +650,11 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 17)
     
 /* Line 351 of lalr1.java  */
-/* Line 313 of "YYParser.y"  */
+/* Line 314 of "YYParser.y"  */
     {
 		writer.print("\t exp -> NEG_KW exp \n") ;
 		yyval=new eval();
-		((eval)yyval).stmt += "! "+ ((eval)((eval)(yystack.valueAt (2-(2))))).stmt;
+		((eval)yyval).stmt += "!("+ ((eval)((eval)(yystack.valueAt (2-(2))))).stmt + ")";
 	
 		writer.print(((eval)yyval).stmt+ "\n");	
 
@@ -665,7 +667,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 18)
     
 /* Line 351 of lalr1.java  */
-/* Line 324 of "YYParser.y"  */
+/* Line 325 of "YYParser.y"  */
     {
 		writer.print("\t c -> NOP_KW \n") ;
 		yyval=new eval();
@@ -684,7 +686,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 19)
     
 /* Line 351 of lalr1.java  */
-/* Line 336 of "YYParser.y"  */
+/* Line 337 of "YYParser.y"  */
     {
 		writer.print("\t c -> x ASSIGN_KW exp \n") ;
 		yyval=new eval();
@@ -739,7 +741,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 20)
     
 /* Line 351 of lalr1.java  */
-/* Line 384 of "YYParser.y"  */
+/* Line 385 of "YYParser.y"  */
     {
 		writer.print("\t c -> INL_KW varlist \n") ;
 		yyval=new eval();
@@ -786,7 +788,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 21)
     
 /* Line 351 of lalr1.java  */
-/* Line 424 of "YYParser.y"  */
+/* Line 425 of "YYParser.y"  */
     {
 		writer.print("\t c -> INH_KW varlist \n") ;
 		yyval=new eval();
@@ -832,7 +834,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 22)
     
 /* Line 351 of lalr1.java  */
-/* Line 463 of "YYParser.y"  */
+/* Line 464 of "YYParser.y"  */
     {
 		writer.print("\t c -> OUTL_KW x \n") ;
 		yyval=new eval();
@@ -881,7 +883,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 23)
     
 /* Line 351 of lalr1.java  */
-/* Line 505 of "YYParser.y"  */
+/* Line 506 of "YYParser.y"  */
     {
 		writer.print("\t c -> OUTH_KW x \n") ;
 		yyval=new eval();
@@ -928,7 +930,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 24)
     
 /* Line 351 of lalr1.java  */
-/* Line 545 of "YYParser.y"  */
+/* Line 546 of "YYParser.y"  */
     {
 		writer.print("\t c -> OUTL_KW BOT_KW \n") ;
 		yyval=new eval();
@@ -948,7 +950,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 25)
     
 /* Line 351 of lalr1.java  */
-/* Line 558 of "YYParser.y"  */
+/* Line 559 of "YYParser.y"  */
     {
 		writer.print("\t c -> OUTH_KW BOT_KW \n") ;	
 		yyval=new eval();
@@ -967,7 +969,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 26)
     
 /* Line 351 of lalr1.java  */
-/* Line 570 of "YYParser.y"  */
+/* Line 571 of "YYParser.y"  */
     {
 		writer.print("\t c -> IF_KW exp THEN_KW M clist ENDIF_KW \n") ;
 		yyval=new eval();
@@ -1008,7 +1010,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 27)
     
 /* Line 351 of lalr1.java  */
-/* Line 604 of "YYParser.y"  */
+/* Line 605 of "YYParser.y"  */
     {
 		writer.print("\t c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW \n") ;
 		yyval=new eval();
@@ -1055,7 +1057,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 28)
     
 /* Line 351 of lalr1.java  */
-/* Line 644 of "YYParser.y"  */
+/* Line 645 of "YYParser.y"  */
     {
 		writer.print("\t c -> WHILE_KW exp DO_KW M clist DONE_KW \n") ;
 		yyval=new eval();
@@ -1103,7 +1105,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 29)
     
 /* Line 351 of lalr1.java  */
-/* Line 686 of "YYParser.y"  */
+/* Line 687 of "YYParser.y"  */
     {
 		writer.print("\t varlist -> x \n") ;
 		yyval=new eval();
@@ -1136,7 +1138,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 30)
     
 /* Line 351 of lalr1.java  */
-/* Line 712 of "YYParser.y"  */
+/* Line 713 of "YYParser.y"  */
     {
 		writer.print("\t varlist -> x , varlist \n") ;
 		yyval=new eval();
@@ -1170,7 +1172,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 31)
     
 /* Line 351 of lalr1.java  */
-/* Line 740 of "YYParser.y"  */
+/* Line 741 of "YYParser.y"  */
     {
 		writer.print("\t b -> BOOL_CONSTANT \n") ;
 		yyval=new eval();
@@ -1184,7 +1186,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 32)
     
 /* Line 351 of lalr1.java  */
-/* Line 748 of "YYParser.y"  */
+/* Line 749 of "YYParser.y"  */
     {
 		writer.print("\t n -> INTEGER_NUMBER \n") ;
 		yyval=new eval();
@@ -1198,7 +1200,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 33)
     
 /* Line 351 of lalr1.java  */
-/* Line 756 of "YYParser.y"  */
+/* Line 757 of "YYParser.y"  */
     {
 		writer.print("\t x -> IDENTIFIER \n") ;
 		yyval=new eval();
@@ -1212,7 +1214,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 34)
     
 /* Line 351 of lalr1.java  */
-/* Line 764 of "YYParser.y"  */
+/* Line 765 of "YYParser.y"  */
     {
 	
 	};
@@ -1223,7 +1225,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 35)
     
 /* Line 351 of lalr1.java  */
-/* Line 769 of "YYParser.y"  */
+/* Line 770 of "YYParser.y"  */
     {
 	
 	};
@@ -1233,7 +1235,7 @@ writer.print(((eval)yyval).stmt+ "\n");
 
 
 /* Line 351 of lalr1.java  */
-/* Line 1237 of "YYParser.java"  */
+/* Line 1239 of "YYParser.java"  */
 	default: break;
       }
 
@@ -1640,17 +1642,17 @@ writer.print(((eval)yyval).stmt+ "\n");
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
      STATE-NUM.  */
-  private static final byte yypact_ninf_ = -40;
+  private static final byte yypact_ninf_ = -48;
   private static final byte yypact_[] =
   {
-        10,   -15,    20,    77,   -40,    21,    21,   -40,    -7,    -7,
-       2,    82,   -40,     9,   -40,    22,    21,   -40,   -40,    48,
-     -40,   -40,   -40,    55,   -40,    13,   -40,   -40,   -40,   -40,
-     -40,   -40,    21,   -40,   -40,   -40,   -40,    21,    21,    21,
-      21,    21,    21,    21,   -40,    -7,    77,    79,    21,    21,
-      77,   -40,   -40,    40,     4,    99,    40,     4,    77,   -40,
-     -40,    92,    92,    -1,   -11,   -40,   -40,   -40,   -40,    77,
-     -10,   -40
+        10,   -15,    25,    77,   -48,    21,    21,   -48,    -9,    -9,
+       1,    82,   -48,    -7,   -48,    22,    21,   -48,   -48,    48,
+     -48,   -48,   -48,    55,   -48,     7,   -48,   -48,   -48,   -48,
+     -48,   -48,    21,    79,   -48,   -48,   -48,    21,    21,    21,
+      21,    21,    21,    21,   -48,    -9,    77,    79,    21,    21,
+      77,   -48,   -48,    40,    -2,    99,    40,    -2,    77,   -48,
+     -48,    92,    92,    -1,    32,   -48,   -48,   -48,   -48,    77,
+     -10,   -48
   };
 
   /* YYDEFACT[S] -- default reduction number in state S.  Performed when
@@ -1671,8 +1673,8 @@ writer.print(((eval)yyval).stmt+ "\n");
   /* YYPGOTO[NTERM-NUM].  */
   private static final byte yypgoto_[] =
   {
-       -40,   -40,   -39,    -4,     8,    -5,   -40,   -40,    -3,   -20,
-     -40
+       -48,   -48,   -47,    -4,   -16,    -5,   -48,   -48,    -3,   -20,
+     -48
   };
 
   /* YYDEFGOTO[NTERM-NUM].  */
@@ -1690,13 +1692,13 @@ writer.print(((eval)yyval).stmt+ "\n");
   private static final byte
   yytable_[] =
   {
-        15,    71,    23,    67,    26,    25,    25,    28,    30,    65,
-      66,    63,    33,     1,    48,    49,    50,     3,    27,    64,
-       4,    31,    31,    12,    58,    37,    38,    16,    47,    32,
-      70,    31,    12,    51,    52,    53,    54,    55,    56,    57,
-      59,    31,    25,    15,    61,    62,    45,    15,    69,    17,
-      18,    12,    34,    35,    60,    15,     0,    36,     0,    34,
-      35,    37,    38,     0,    40,     0,    15,    43,    44,    37,
+        15,    71,    23,    63,    26,    25,    25,    28,    30,    65,
+      66,    64,    33,     1,    48,    49,    50,    27,     3,    37,
+      38,    12,    70,    31,    58,     4,    31,    16,    47,    32,
+      60,    12,    31,    51,    52,    53,    54,    55,    56,    57,
+      59,    45,    25,    15,    61,    62,    67,    15,    69,    17,
+      18,    12,    34,    35,     0,    15,     0,    36,     0,    34,
+      35,    37,    38,     0,    40,    31,    15,    43,    44,    37,
       38,    39,    40,    41,    42,    43,    37,    38,    39,    40,
       41,    42,    43,    34,    35,     5,     0,     0,     0,     6,
        0,     0,     7,     0,     8,     9,    10,    11,    29,     0,
@@ -1709,13 +1711,13 @@ writer.print(((eval)yyval).stmt+ "\n");
   private static final byte
   yycheck_[] =
   {
-         3,    11,     6,    14,     9,     8,     9,    10,    11,    10,
-      11,    50,    16,     3,    34,    35,    36,    32,    16,    58,
-       0,    32,    32,    30,    44,    21,    22,     6,    32,     7,
-      69,    32,    30,    37,    38,    39,    40,    41,    42,    43,
-      45,    32,    45,    46,    48,    49,    33,    50,    68,    28,
-      29,    30,     4,     5,    46,    58,    -1,     9,    -1,     4,
-       5,    21,    22,    -1,    24,    -1,    69,    27,    13,    21,
+         3,    11,     6,    50,     9,     8,     9,    10,    11,    10,
+      11,    58,    16,     3,    34,    35,    36,    16,    33,    21,
+      22,    30,    69,    33,    44,     0,    33,     6,    32,     7,
+      46,    30,    33,    37,    38,    39,    40,    41,    42,    43,
+      45,    34,    45,    46,    48,    49,    14,    50,    68,    28,
+      29,    30,     4,     5,    -1,    58,    -1,     9,    -1,     4,
+       5,    21,    22,    -1,    24,    33,    69,    27,    13,    21,
       22,    23,    24,    25,    26,    27,    21,    22,    23,    24,
       25,    26,    27,     4,     5,     8,    -1,    -1,    -1,    12,
       -1,    -1,    15,    -1,    17,    18,    19,    20,    16,    -1,
@@ -1729,14 +1731,14 @@ writer.print(((eval)yyval).stmt+ "\n");
   private static final byte
   yystos_[] =
   {
-         0,     3,    35,    32,     0,     8,    12,    15,    17,    18,
-      19,    20,    30,    36,    38,    42,     6,    28,    29,    37,
-      40,    41,    42,    37,    39,    42,    39,    16,    42,    16,
-      42,    32,     7,    37,     4,     5,     9,    21,    22,    23,
-      24,    25,    26,    27,    13,    33,    43,    37,    43,    43,
-      43,    37,    37,    37,    37,    37,    37,    37,    43,    39,
-      38,    37,    37,    36,    36,    10,    11,    14,    44,    43,
-      36,    11
+         0,     3,    36,    33,     0,     8,    12,    15,    17,    18,
+      19,    20,    30,    37,    39,    43,     6,    28,    29,    38,
+      41,    42,    43,    38,    40,    43,    40,    16,    43,    16,
+      43,    33,     7,    38,     4,     5,     9,    21,    22,    23,
+      24,    25,    26,    27,    13,    34,    44,    38,    44,    44,
+      44,    38,    38,    38,    38,    38,    38,    38,    44,    40,
+      39,    38,    38,    37,    37,    10,    11,    14,    45,    44,
+      37,    11
   };
 
   /* TOKEN_NUMBER_[YYLEX-NUM] -- Internal symbol number corresponding
@@ -1747,17 +1749,17 @@ writer.print(((eval)yyval).stmt+ "\n");
          0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
-     285,   286,    59,    44
+     285,   286,   287,    59,    44
   };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
   private static final byte
   yyr1_[] =
   {
-         0,    34,    35,    36,    36,    37,    37,    37,    37,    37,
-      37,    37,    37,    37,    37,    37,    37,    37,    38,    38,
-      38,    38,    38,    38,    38,    38,    38,    38,    38,    39,
-      39,    40,    41,    42,    43,    44
+         0,    35,    36,    37,    37,    38,    38,    38,    38,    38,
+      38,    38,    38,    38,    38,    38,    38,    38,    39,    39,
+      39,    39,    39,    39,    39,    39,    39,    39,    39,    40,
+      40,    41,    42,    43,    44,    45
   };
 
   /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -1778,26 +1780,26 @@ writer.print(((eval)yyval).stmt+ "\n");
   "NEG_KW", "ASSIGN_KW", "IF_KW", "THEN_KW", "ELSE_KW", "ENDIF_KW",
   "WHILE_KW", "DO_KW", "DONE_KW", "NOP_KW", "BOT_KW", "INL_KW", "INH_KW",
   "OUTL_KW", "OUTH_KW", "PLUS_KW", "MINUS_KW", "LT_KW", "LE_KW", "EQ_KW",
-  "GT_KW", "GE_KW", "INTEGER_NUMBER", "BOOL_CONSTANT", "IDENTIFIER", "p",
-  "';'", "','", "$accept", "program", "clist", "exp", "c", "varlist", "b",
-  "n", "x", "M", "N", null
+  "GT_KW", "GE_KW", "INTEGER_NUMBER", "BOOL_CONSTANT", "IDENTIFIER", "q",
+  "p", "';'", "','", "$accept", "program", "clist", "exp", "c", "varlist",
+  "b", "n", "x", "M", "N", null
   };
 
   /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
   private static final byte yyrhs_[] =
   {
-        35,     0,    -1,     3,    32,    36,    -1,    38,    -1,    36,
-      32,    43,    38,    -1,    40,    -1,    41,    -1,    42,    -1,
-      37,    25,    37,    -1,    37,    23,    37,    -1,    37,    24,
-      37,    -1,    37,    27,    37,    -1,    37,    26,    37,    -1,
-      37,    21,    37,    -1,    37,    22,    37,    -1,    37,     4,
-      43,    37,    -1,    37,     5,    43,    37,    -1,     6,    37,
-      -1,    15,    -1,    42,     7,    37,    -1,    17,    39,    -1,
-      18,    39,    -1,    19,    42,    -1,    20,    42,    -1,    19,
-      16,    -1,    20,    16,    -1,     8,    37,     9,    43,    36,
-      11,    -1,     8,    37,     9,    43,    36,    10,    44,    43,
-      36,    11,    -1,    12,    37,    13,    43,    36,    14,    -1,
-      42,    -1,    42,    33,    39,    -1,    29,    -1,    28,    -1,
+        36,     0,    -1,     3,    33,    37,    -1,    39,    -1,    37,
+      33,    44,    39,    -1,    41,    -1,    42,    -1,    43,    -1,
+      38,    25,    38,    -1,    38,    23,    38,    -1,    38,    24,
+      38,    -1,    38,    27,    38,    -1,    38,    26,    38,    -1,
+      38,    21,    38,    -1,    38,    22,    38,    -1,    38,     4,
+      44,    38,    -1,    38,     5,    44,    38,    -1,     6,    38,
+      -1,    15,    -1,    43,     7,    38,    -1,    17,    40,    -1,
+      18,    40,    -1,    19,    43,    -1,    20,    43,    -1,    19,
+      16,    -1,    20,    16,    -1,     8,    38,     9,    44,    37,
+      11,    -1,     8,    38,     9,    44,    37,    10,    45,    44,
+      37,    11,    -1,    12,    38,    13,    44,    37,    14,    -1,
+      43,    -1,    43,    34,    40,    -1,    29,    -1,    28,    -1,
       30,    -1,    -1,    -1
   };
 
@@ -1814,10 +1816,10 @@ writer.print(((eval)yyval).stmt+ "\n");
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
   private static final short yyrline_[] =
   {
-         0,   105,   105,   145,   157,   175,   183,   190,   214,   225,
-     236,   247,   258,   269,   280,   290,   300,   312,   323,   335,
-     383,   423,   462,   504,   544,   557,   569,   603,   643,   685,
-     711,   739,   747,   755,   764,   769
+         0,   106,   106,   146,   158,   176,   184,   191,   215,   226,
+     237,   248,   259,   270,   281,   291,   301,   313,   324,   336,
+     384,   424,   463,   505,   545,   558,   570,   604,   644,   686,
+     712,   740,   748,   756,   765,   770
   };
 
   // Report on the debug stream that the rule yyrule is going to be reduced.
@@ -1846,8 +1848,8 @@ writer.print(((eval)yyval).stmt+ "\n");
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,    33,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    32,
+       2,     2,     2,     2,    34,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    33,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -1870,7 +1872,7 @@ writer.print(((eval)yyval).stmt+ "\n");
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
-      25,    26,    27,    28,    29,    30,    31
+      25,    26,    27,    28,    29,    30,    31,    32
   };
 
   private static final byte yytranslate_ (int t)
@@ -1887,9 +1889,9 @@ writer.print(((eval)yyval).stmt+ "\n");
   private static final int yyfinal_ = 4;
   private static final int yyterror_ = 1;
   private static final int yyerrcode_ = 256;
-  private static final int yyntokens_ = 34;
+  private static final int yyntokens_ = 35;
 
-  private static final int yyuser_token_number_max_ = 286;
+  private static final int yyuser_token_number_max_ = 287;
   private static final int yyundef_token_ = 2;
 
 /* User implementation code.  */
@@ -1975,13 +1977,13 @@ static PrintStream writer;
 
 
 /* Line 927 of lalr1.java  */
-/* Line 1979 of "YYParser.java"  */
+/* Line 1981 of "YYParser.java"  */
 
 }
 
 
 /* Line 931 of lalr1.java  */
-/* Line 774 of "YYParser.y"  */
+/* Line 775 of "YYParser.y"  */
 
 
 /*************************************** eval ************************************/

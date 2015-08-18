@@ -12,76 +12,22 @@ inL l1, l2
 inL l1, l2
 	 x -> IDENTIFIER 
 h1
-	 x -> IDENTIFIER 
-h2
 	 varlist -> x 
-h2
-	 varlist -> x , varlist 
-h1, h2
+h1
 	 c -> INH_KW varlist 
-inH h1, h2
+inH h1
 	 clist -> clist ; M c 
-inL l1, l2; inH h1, h2
+inL l1, l2; inH h1
 	 x -> IDENTIFIER 
-l1
+h1
 	 exp -> x 
-l1
-	 exp -> NEG_KW exp 
-! l1
+h1
 	 n -> INTEGER_NUMBER 
 0
 	 exp -> n 
 0
 	 exp -> exp EQ_KW exp 
-! l1 == 0
-	 x -> IDENTIFIER 
-l1
-	 exp -> x 
-l1
-	 n -> INTEGER_NUMBER 
-0
-	 exp -> n 
-0
-	 exp -> exp GT_KW exp 
-l1 > 0
-	 exp -> exp AND_KW exp 
-! l1 == 0 and l1 > 0
-	 x -> IDENTIFIER 
-l1
-	 n -> INTEGER_NUMBER 
-2
-	 exp -> n 
-2
-	 x -> IDENTIFIER 
-l1
-	 exp -> x 
-l1
-	 exp -> exp PLUS_KW exp 
-2 + l1
-	 c -> x ASSIGN_KW exp 
-l1 = 2 + l1
-	 clist -> c 
-l1 = 2 + l1
-	 x -> IDENTIFIER 
-l2
-	 x -> IDENTIFIER 
-h1
-	 exp -> x 
-h1
-	 c -> x ASSIGN_KW exp 
-l2 = h1
-	 clist -> clist ; M c 
-l1 = 2 + l1; l2 = h1
-	 x -> IDENTIFIER 
-l2
-	 exp -> x 
-l2
-	 n -> INTEGER_NUMBER 
-5
-	 exp -> n 
-5
-	 exp -> exp GT_KW exp 
-l2 > 5
+h1 == 0
 	 x -> IDENTIFIER 
 l1
 	 x -> IDENTIFIER 
@@ -92,36 +38,48 @@ l2
 l1 = l2
 	 clist -> c 
 l1 = l2
-	 x -> IDENTIFIER 
-l1
-	 x -> IDENTIFIER 
-l2
-	 exp -> x 
-l2
-	 n -> INTEGER_NUMBER 
-2
-	 exp -> n 
-2
-	 exp -> exp PLUS_KW exp 
-l2 + 2
-	 c -> x ASSIGN_KW exp 
-l1 = l2 + 2
-	 clist -> c 
-l1 = l2 + 2
-	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
- if l2 > 5 then l1 = l2 else l1 = l2 + 2 endif 
-	 clist -> clist ; M c 
-l1 = 2 + l1; l2 = h1;  if l2 > 5 then l1 = l2 else l1 = l2 + 2 endif 
-	 c -> IF_KW exp THEN_KW M clist ENDIF_KW 
- if ! l1 == 0 and l1 > 0 then l1 = 2 + l1; l2 = h1;  if l2 > 5 then l1 = l2 else l1 = l2 + 2 endif  endif
-	 clist -> clist ; M c 
-inL l1, l2; inH h1, h2;  if ! l1 == 0 and l1 > 0 then l1 = 2 + l1; l2 = h1;  if l2 > 5 then l1 = l2 else l1 = l2 + 2 endif  endif
 	 x -> IDENTIFIER 
 l1
 	 c -> OUTL_KW x 
 outL l1
 	 clist -> clist ; M c 
-inL l1, l2; inH h1, h2;  if ! l1 == 0 and l1 > 0 then l1 = 2 + l1; l2 = h1;  if l2 > 5 then l1 = l2 else l1 = l2 + 2 endif  endif; outL l1
+l1 = l2; outL l1
+	 c -> NOP_KW 
+NOP
+	 clist -> c 
+NOP
+	 x -> IDENTIFIER 
+l1
+	 n -> INTEGER_NUMBER 
+3
+	 exp -> n 
+3
+	 c -> x ASSIGN_KW exp 
+l1 = 3
+	 clist -> clist ; M c 
+NOP; l1 = 3
+	 x -> IDENTIFIER 
+h1
+	 c -> OUTH_KW x 
+outH h1
+	 clist -> clist ; M c 
+NOP; l1 = 3; outH h1
+	 x -> IDENTIFIER 
+l2
+	 c -> OUTL_KW x 
+outL l2
+	 clist -> clist ; M c 
+NOP; l1 = 3; outH h1; outL l2
+	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
+ if h1 == 0 then l1 = l2; outL l1 else NOP; l1 = 3; outH h1; outL l2 endif 
+	 clist -> clist ; M c 
+inL l1, l2; inH h1;  if h1 == 0 then l1 = l2; outL l1 else NOP; l1 = 3; outH h1; outL l2 endif 
+	 x -> IDENTIFIER 
+l1
+	 c -> OUTL_KW x 
+outL l1
+	 clist -> clist ; M c 
+inL l1, l2; inH h1;  if h1 == 0 then l1 = l2; outL l1 else NOP; l1 = 3; outH h1; outL l2 endif ; outL l1
 	 program -> PROGRAM_KW ';' clist 
 ###Hooray! - Your program is syntactically correct### 
-program; inL l1, l2; inH h1, h2;  if ! l1 == 0 and l1 > 0 then l1 = 2 + l1; l2 = h1;  if l2 > 5 then l1 = l2 else l1 = l2 + 2 endif  endif; outL l1
+program; inL l1, l2; inH h1;  if h1 == 0 then l1 = l2; outL l1 else NOP; l1 = 3; outH h1; outL l2 endif ; outL l1

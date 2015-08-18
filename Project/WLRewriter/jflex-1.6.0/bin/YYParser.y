@@ -313,7 +313,7 @@ writer.print(((eval)$$).stmt+ "\n");
 	{
 		writer.print("\t exp -> NEG_KW exp \n") ;
 		$$=new eval();
-		((eval)$$).stmt += " ! "+ ((eval)$2).stmt;
+		((eval)$$).stmt += "! "+ ((eval)$2).stmt;
 	
 		writer.print(((eval)$$).stmt+ "\n");	
 

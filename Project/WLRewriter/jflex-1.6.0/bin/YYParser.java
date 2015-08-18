@@ -652,7 +652,7 @@ writer.print(((eval)yyval).stmt+ "\n");
     {
 		writer.print("\t exp -> NEG_KW exp \n") ;
 		yyval=new eval();
-		((eval)yyval).stmt += " ! "+ ((eval)((eval)(yystack.valueAt (2-(2))))).stmt;
+		((eval)yyval).stmt += "! "+ ((eval)((eval)(yystack.valueAt (2-(2))))).stmt;
 	
 		writer.print(((eval)yyval).stmt+ "\n");	
 

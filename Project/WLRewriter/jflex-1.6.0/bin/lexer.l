@@ -15,6 +15,7 @@ PROGRAM_KW = (program)
 
 AND_KW = (and)
 OR_KW = (or)
+NEG_KW = [!]
 
 ASSIGN_KW = [=]
 
@@ -64,6 +65,9 @@ LineTerminator = \r|\n|\r\n
 }
 {OR_KW} {
 	return YYParser.OR_KW;
+}
+{NEG_KW} {
+	return YYParser.NEG_KW;
 }
 
 {ASSIGN_KW} {

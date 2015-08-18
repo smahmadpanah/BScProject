@@ -9,7 +9,7 @@
 
 %type <eval> program exp c clist varlist b n x M N
 
-%token <eval> PROGRAM_KW AND_KW OR_KW ASSIGN_KW IF_KW THEN_KW ELSE_KW ENDIF_KW WHILE_KW DO_KW DONE_KW NOP_KW BOT_KW INL_KW INH_KW OUTL_KW OUTH_KW PLUS_KW MINUS_KW LT_KW LE_KW EQ_KW GT_KW GE_KW 
+%token <eval> PROGRAM_KW AND_KW OR_KW NEG_KW ASSIGN_KW IF_KW THEN_KW ELSE_KW ENDIF_KW WHILE_KW DO_KW DONE_KW NOP_KW BOT_KW INL_KW INH_KW OUTL_KW OUTH_KW PLUS_KW MINUS_KW LT_KW LE_KW EQ_KW GT_KW GE_KW 
 %token <eval> INTEGER_NUMBER 
 %token <eval> BOOL_CONSTANT
 %token <eval> IDENTIFIER
@@ -309,7 +309,17 @@ writer.print(((eval)$$).stmt+ "\n");
 	((eval)$$).variables.addAll(((eval)$1).variables);
 	((eval)$$).variables.addAll(((eval)$4).variables);
 	};
+	| NEG_KW exp %prec p
+	{
+		writer.print("\t exp -> NEG_KW exp \n") ;
+		$$=new eval();
+		((eval)$$).stmt += " ! "+ ((eval)$2).stmt;
+	
+		writer.print(((eval)$$).stmt+ "\n");	
 
+		((eval)$$).variables.addAll(((eval)$2).variables);
+	};
+	
 c : NOP_KW
 	{
 		writer.print("\t c -> NOP_KW \n") ;

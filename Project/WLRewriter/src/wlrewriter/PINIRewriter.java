@@ -151,23 +151,19 @@ public class PINIRewriter {
                 executionConditions.put(path, executionConditionsForThisPath);
 //                System.out.println(executionConditionsForThisPath);
 
+                
+                
+                
                 String pathCond = "";
                 for (int j = 0; j < executionConditionsForThisPath.size(); j++) {
                     String str = executionConditionsForThisPath.get(j);
-                    if (str.contains(" : TRUE) ")) {
-                        str = str.replace(" : TRUE) ", ") ");
-                    }
-                    if (str.contains(": FALSE) ")) {
-                        str = str.replace(" : FALSE) ", ") ");
-                        str = str.replace(" (", " !(");
-                    }
                     pathCond += str;
                     if (j < executionConditionsForThisPath.size() - 1) {
                         pathCond += " and ";
                     }
                
                 }
-
+                
                 pathConditions.put(path, pathCond);
                 System.out.println(pathCond);
 
@@ -263,7 +259,7 @@ public class PINIRewriter {
                     }
                 }
                 if (found) {
-                    executionCondition += " (" + parent.getStatement() + " : TRUE) and";
+                    executionCondition += " (" + parent.getStatement() + ") and";
                 }
             }
             if (!found && parent.getNextPointer2() != null) {
@@ -287,7 +283,7 @@ public class PINIRewriter {
                     }
                 }
                 if (found) {
-                    executionCondition += " (" + parent.getStatement() + " : FALSE) and";
+                    executionCondition += " !(" + parent.getStatement() + ") and";
                 }
             }
             Node maybeParent = null;

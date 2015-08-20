@@ -90,8 +90,8 @@ static PrintStream writer;
 /*-------------------------------------------------------------------------------------------*/	
 }
 
-%nonassoc q
 %left AND_KW OR_KW
+%nonassoc q
 %right ASSIGN_KW
 %left EQ_KW
 %left LT_KW GT_KW

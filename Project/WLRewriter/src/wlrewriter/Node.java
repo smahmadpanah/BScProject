@@ -25,6 +25,8 @@ public class Node {
     private HashSet<Node> PDF, ContolDep; //PDF is related to Control Dependeces, ControlDep is Control Dependeces for the node
     
     
+    public Boolean isComeFromTrue;
+    
     /********************************/
     private HashSet<Variable> variablesOfNode;//All variables except assigned variable.
     /********************************/

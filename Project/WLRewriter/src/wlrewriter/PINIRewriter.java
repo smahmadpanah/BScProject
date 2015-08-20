@@ -149,21 +149,25 @@ public class PINIRewriter {
                 }
 
                 executionConditions.put(path, executionConditionsForThisPath);
-//                System.out.println(executionConditionsForThisPath);
+                System.out.println(executionConditionsForThisPath);
 
-                
-                
-                
                 String pathCond = "";
                 for (int j = 0; j < executionConditionsForThisPath.size(); j++) {
                     String str = executionConditionsForThisPath.get(j);
+//                    if (str.contains(" : TRUE) ")) {
+//                        str = str.replace(" : TRUE) ", ") ");
+//                    }
+//                    if (str.contains(": FALSE) ")) {
+//                        str = str.replace(" : FALSE) ", ") ");
+//                        str = str.replace(" (", " !(");
+//                    }
                     pathCond += str;
                     if (j < executionConditionsForThisPath.size() - 1) {
                         pathCond += " and ";
                     }
-               
+//               
                 }
-                
+
                 pathConditions.put(path, pathCond);
                 System.out.println(pathCond);
 
@@ -237,55 +241,50 @@ public class PINIRewriter {
             boolean found = false;
             for (Node n : pdg.getNodeSet()) {
                 n.isVisited = false;
+                n.isComeFromTrue = null;
             }
-            if (parent.getNextPointer1() != null) {
 
+            MyQueue queue = new MyQueue();
+            if (parent.getNextPointer1() != null) {
                 Node temp = parent.getNextPointer1(); //agar sharte bargharar Bood
-                HashSet<Node> worklist = new HashSet<>();
-                worklist.add(temp);
-                while (!found && !temp.getStatement().equals("STOP") && !worklist.isEmpty()) {
-                    temp = worklist.iterator().next();
-                    temp.isVisited = true;
-                    if (temp.getNodeID() == node.getNodeID()) {
-                        found = true;
-                    }
-                    else {
-                        worklist.remove(temp);
-                        for (Node l : temp.succ()) {
-                            if (!l.isVisited) {
-                                worklist.add(l);
-                            }
-                        }
-                    }
-                }
-                if (found) {
-                    executionCondition += " (" + parent.getStatement() + ") and";
-                }
+                temp.isComeFromTrue = true;
+                queue.add(temp);
+
             }
-            if (!found && parent.getNextPointer2() != null) {
+            if (parent.getNextPointer2() != null) {
 
                 Node temp = parent.getNextPointer2(); //agar sharte bargharar Nabood
-                HashSet<Node> worklist = new HashSet<>();
-                worklist.add(temp);
-                while (!found && !temp.getStatement().equals("STOP") && !worklist.isEmpty()) {
-                    temp = worklist.iterator().next();
-                    temp.isVisited = true;
-                    if (temp.getNodeID() == node.getNodeID()) {
-                        found = true;
+                temp.isComeFromTrue = false;
+                queue.add(temp);
+            }
+
+            while (!queue.isEmpty() && !found) {
+                Node nodeTemp = queue.peek();
+                nodeTemp.isVisited = true;
+                if (nodeTemp.getNodeID() == node.getNodeID()) {
+                    found = true;
+                    if (nodeTemp.isComeFromTrue) {
+                        executionCondition += " (" + parent.getStatement() + ") and";
                     }
                     else {
-                        worklist.remove(temp);
-                        for (Node l : temp.succ()) {
-                            if (!l.isVisited) {
-                                worklist.add(l);
+                        executionCondition += " !(" + parent.getStatement() + ") and";
+                    }
+                }
+                else {
+                    for (Node r : nodeTemp.succ()) {
+                        if (!r.isVisited) {
+                            if (nodeTemp.isComeFromTrue) {
+                                r.isComeFromTrue = true;
                             }
+                            else {
+                                r.isComeFromTrue = false;
+                            }
+                            queue.add(r);
                         }
                     }
                 }
-                if (found) {
-                    executionCondition += " !(" + parent.getStatement() + ") and";
-                }
             }
+
             Node maybeParent = null;
             for (Node beta : parent.getParentOfControlDep()) {
                 if (beta.getNodeID() != parent.getNodeID()) {

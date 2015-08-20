@@ -5,6 +5,11 @@ inH k , m;
 while (m>0) do
 	l1 = l2 + 2;
 	l2 = 1;
-	l3 = 5
+	l3 = 5;
+	if l2 >3 then
+		NOP
+	else
+		l1 = k
+	endif
 done;
 outL l1

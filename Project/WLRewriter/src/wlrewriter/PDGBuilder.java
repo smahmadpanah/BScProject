@@ -24,10 +24,14 @@ public class PDGBuilder {
     private MyLinkedList cfg, FDTree, PDG; //FDTree is equal to PostDomTree
     private HashSet<Node> FDTNodes;
 
+    private String fileName;
 //    private ArrayList<DataEdge> dataDeps;//data dependencies - by CFG nodes and we just save the relation between them for data dep graph
+
     public PDGBuilder(MyLinkedList cfg) {
 
         this.cfg = cfg;
+
+        fileName = YYParser.getSourceCodeFileName().replace(".wl", "");
 
         this.cfg.getFirst().setNextPointer2(this.cfg.getLast()); //according to the article, it needs to connect START to STOP
 
@@ -334,13 +338,13 @@ public class PDGBuilder {
                         if (u.getVariablesOfNode().size() > 0) {
                             for (Variable v : u.getVariablesOfNode()) {
                                 if (v.type.equals("high")) {
-                                    CDgraph += " \"" + "#" + q.getNodeID() + "    " + q.getStatement() + "\"" + " [style=bold color=purple];\n";
+                                    CDgraph += " \"" + "#" + q.getNodeID() + "    " + q.getStatement() + "\"" + ";\n";
                                 }
                             }
                         }
                         if (u.getAssignedVariable() != null) {
                             if (u.getAssignedVariable().type.equals("high")) {
-                                CDgraph += " \"" + "#" + q.getNodeID() + "    " + q.getStatement() + "\"" + " [style=bold color=purple];\n";
+                                CDgraph += " \"" + "#" + q.getNodeID() + "    " + q.getStatement() + "\"" + ";\n";
                             }
                         }
                     }
@@ -353,7 +357,7 @@ public class PDGBuilder {
 //        System.out.println("******************\n");
 
         GraphDrawer gd = new GraphDrawer();
-        gd.draw(YYParser.getSourceCodeFileName() + "_CDG.", CDgraph);
+        gd.draw(fileName + "_CDG.", CDgraph);
 
         System.out.println("Control Dependence Graph is ready.");
     }
@@ -429,7 +433,7 @@ public class PDGBuilder {
         }
 
         GraphDrawer gd = new GraphDrawer();
-        gd.draw(YYParser.getSourceCodeFileName() + "_DDG.", DDgraph);
+        gd.draw(fileName + "_DDG.", DDgraph);
 
         System.out.println("Data Dependence Graph is ready.");
 
@@ -508,7 +512,7 @@ public class PDGBuilder {
         }
 
         GraphDrawer gd = new GraphDrawer();
-        gd.draw(YYParser.getSourceCodeFileName() + "_PDG.", PDgraph);
+        gd.draw(fileName + "_PDG.", PDgraph);
 
         System.out.println("Program Dependence Graph is ready.");
 

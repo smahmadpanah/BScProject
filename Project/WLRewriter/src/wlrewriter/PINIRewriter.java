@@ -5,10 +5,15 @@
  */
 package wlrewriter;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -25,6 +30,8 @@ public class PINIRewriter {
     private HashMap<LinkedList<Node>, String> pathConditions; // conjunction of executionConditions for each path
     private Node sourceNode, destinationNode;
 
+    private ArrayList<Node> lowOutputs;
+
     public PINIRewriter(MyLinkedList pdg) {
 
         this.pdg = pdg;
@@ -38,11 +45,25 @@ public class PINIRewriter {
         initializeF(); //initializing paths
 
         rewritedSourceCode = reWrite(); //algorithm method
+        //omit Node IDs 
+        String pattern = "#[0-9]+:";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(rewritedSourceCode);
+        rewritedSourceCode = m.replaceAll("");
 
+        try {
+            String fileName = YYParser.getSourceCodeFileName().replace(".wl", "");
+            PrintStream writer = new PrintStream(new File(fileName + "-PINI.wl"));
+            writer.print(rewritedSourceCode);
+            writer.close();
+            System.out.println("$$$PINI REWRITER --> Check out: " + fileName + "-PINI.wl");
+        } catch (FileNotFoundException e) {
+            System.err.println("File Not Found!");
+        }
     }
 
     private void initializeF() {
-        ArrayList<Node> lowOutputs = new ArrayList<>();
+        lowOutputs = new ArrayList<>();
 
         for (Node node : pdg.getNodeSet()) {
             node.isVisited = false;
@@ -112,7 +133,7 @@ public class PINIRewriter {
 
                 typeOfPaths.put(path, isExplicitFlow);
 
-                printPath(path);
+//                printPath(path);
             }
         }
 
@@ -149,7 +170,7 @@ public class PINIRewriter {
                 }
 
                 executionConditions.put(path, executionConditionsForThisPath);
-                System.out.println(executionConditionsForThisPath);
+//                System.out.println(executionConditionsForThisPath);
 
                 String pathCond = "";
                 for (int j = 0; j < executionConditionsForThisPath.size(); j++) {
@@ -169,10 +190,70 @@ public class PINIRewriter {
                 }
 
                 pathConditions.put(path, pathCond);
-                System.out.println(pathCond);
+//                System.out.println(pathCond);
 
             }
 
+            // felan bar asase NODE ID hast, na NODE STATEMENT
+            for (Node n : lowOutputs) {
+                int currentNodeId = n.getNodeID();
+
+                boolean isExistedAPathForThisNode = false;
+                for (LinkedList<Node> tempPath : pathConditions.keySet()) {
+                    if (tempPath.getLast().getNodeID() == currentNodeId) {
+                        isExistedAPathForThisNode = true;
+                        break;
+                    }
+                }
+
+                if (isExistedAPathForThisNode) { //for example : basic.wl test case
+
+                    boolean isAllExplicit = true;
+                    boolean flag = false; //flag for OR TRUE that means TRUE!
+                    String c = ""; //the disjunction of path conditions for this OUTL command
+                    for (LinkedList<Node> currentPath : pathConditions.keySet()) {
+                        if (currentPath.getLast().getNodeID() == currentNodeId) {
+                            String condTemp = pathConditions.get(currentPath);
+
+                            if (!typeOfPaths.get(currentPath)) { //is not explicit
+                                isAllExplicit = false;
+                            }
+
+                            if (condTemp.equals("TRUE")) { // agar dar condition ha, TRUE bashad; or kardan nadare dige
+                                c = "TRUE";
+                                flag = true;
+                            }
+                            else {
+                                if (!flag) {
+                                    c += "(" + condTemp + ") or ";
+                                }
+                            }
+
+                        }
+                    }
+                    c += "END";
+                    c = c.replace(") or END", ") ");
+                    c = c.replace("TRUEEND", "TRUE");
+
+//                    System.out.println("#" + n.getNodeID() + " " + n.getStatement() + " :\n\t" + c);
+//                    System.out.println(n.getNodeIdAndStmt());
+                    if (isAllExplicit) {
+                        // replace OutL l with the statement "if c then OutL BOT else OutL l endif"
+                        CopyOfSourceCode = CopyOfSourceCode.replace(n.getNodeIdAndStmt() + ";", "if " + c + " then \n\t outL BOT \n else \n\t outL " + n.getVariablesOfNode().iterator().next().name + " \nendif;\n");
+                        CopyOfSourceCode = CopyOfSourceCode.replace(n.getNodeIdAndStmt(), "if " + c + " then \n\t outL BOT \n else \n\t outL " + n.getVariablesOfNode().iterator().next().name + " \nendif\n");
+                    }
+                    else {
+                        // replace OutL l with the statement "if c then NOP else OutL l endif"
+                        CopyOfSourceCode = CopyOfSourceCode.replace(n.getNodeIdAndStmt() + ";", "if " + c + " then \n\t NOP \n else \n\t outL " + n.getVariablesOfNode().iterator().next().name + " \nendif;\n");
+                        CopyOfSourceCode = CopyOfSourceCode.replace(n.getNodeIdAndStmt(), "if " + c + " then \n\t NOP \n else \n\t outL " + n.getVariablesOfNode().iterator().next().name + " \nendif\n");
+
+                    }
+
+                }
+            }
+
+//            System.out.println("\nSOURCE CODE:\n");
+//            System.out.println(CopyOfSourceCode);
             return CopyOfSourceCode;
         }
     }

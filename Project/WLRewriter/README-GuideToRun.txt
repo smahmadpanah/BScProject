@@ -11,5 +11,6 @@
 	and save it.
 6) Now, you can run the YYParser.java correctly.
 8) After run the program, enter your source code file path as the input. It will make three .png file for Control Dependence Graph, Data Dependence Graph and at last, Program Dependence Graph.
+9) Check out filename-PINI.wl, the rewrited source code of the input file.
 
 Enjoy it! :)

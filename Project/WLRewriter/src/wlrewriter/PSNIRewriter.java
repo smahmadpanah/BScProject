@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -210,7 +212,6 @@ public class PSNIRewriter {
 
     }
 
-    // junk function - درست شود
     private String loop(Node n) {
         return n.getNodeIdAndStmt();
     }
@@ -222,14 +223,16 @@ public class PSNIRewriter {
 //        }
         return "FALSE";
     }
-    // junk function - درست شود
+
     private String guard(Node n) {
         return n.getStatement();
     }
-    
-    // junk function - درست شود
+
     private String body(Node n) {
-        return n.getNodeIdAndStmt();
+        String body = n.getNodeIdAndStmt();
+        body = body.replace("while #" + n.getNodeID() + ":" + n.getStatement() + " do \n", "");
+
+        return body;
     }
 
 }

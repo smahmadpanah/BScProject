@@ -73,6 +73,18 @@ r
 	 exp -> exp GT_KW exp 
 r > 9
 	 x -> IDENTIFIER 
+l1
+	 exp -> x 
+l1
+	 n -> INTEGER_NUMBER 
+3
+	 exp -> n 
+3
+	 exp -> exp LE_KW exp 
+l1 <= 3
+	 exp -> exp AND_KW exp 
+r > 9 and l1 <= 3
+	 x -> IDENTIFIER 
 r
 	 n -> INTEGER_NUMBER 
 2
@@ -101,9 +113,9 @@ outL l1
 	 clist -> clist ; M c 
 r = 2 + k; outH k; outL l1
 	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
-while r > 9 do r = 2 + k; outH k; outL l1 done 
+while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done 
 	 clist -> c 
-while r > 9 do r = 2 + k; outH k; outL l1 done 
+while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done 
 	 x -> IDENTIFIER 
 k
 	 x -> IDENTIFIER 
@@ -119,17 +131,17 @@ k - r
 	 c -> x ASSIGN_KW exp 
 k = k - r
 	 clist -> clist ; M c 
-while r > 9 do r = 2 + k; outH k; outL l1 done ; k = k - r
+while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done ; k = k - r
 	 x -> IDENTIFIER 
 r
 	 c -> OUTH_KW x 
 outH r
 	 clist -> clist ; M c 
-while r > 9 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r
+while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r
 	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
-while k > 0 do while r > 9 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r done 
+while k > 0 do while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r done 
 	 clist -> clist ; M c 
-inH k, r; inL l1, l2; while l2 > 0 do l1 = l1 + 1 done ; while k > 0 do while r > 9 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r done 
+inH k, r; inL l1, l2; while l2 > 0 do l1 = l1 + 1 done ; while k > 0 do while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r done 
 	 program -> PROGRAM_KW ';' clist 
 ###Hooray! - Your program is syntactically correct### 
-program; inH k, r; inL l1, l2; while l2 > 0 do l1 = l1 + 1 done ; while k > 0 do while r > 9 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r done 
+program; inH k, r; inL l1, l2; while l2 > 0 do l1 = l1 + 1 done ; while k > 0 do while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r done 

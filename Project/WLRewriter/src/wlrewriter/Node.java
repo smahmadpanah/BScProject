@@ -27,6 +27,8 @@ public class Node {
     
     public Boolean isComeFromTrue;
     
+    public int height;
+    
     /********************************/
     private HashSet<Variable> variablesOfNode;//All variables except assigned variable.
     /********************************/

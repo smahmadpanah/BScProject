@@ -6,7 +6,9 @@ while k>0 do
 		r = r + 1
 	else 
 		k = k - 1;
+		if l > 1 then
 		l = k
+		endif
 endif;
 outH k;
 outL l

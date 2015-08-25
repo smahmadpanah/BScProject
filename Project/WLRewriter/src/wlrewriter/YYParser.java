@@ -441,6 +441,7 @@ class YYParser {
 
                     PDGBuilder pdg = new PDGBuilder(((eval) yyval).list); //the CFG is input to build the Forward Dominance Tree and after that, CFG and DDG that make PDG! :)
                     PINIRewriter pini = new PINIRewriter(pdg.getPDG());
+                    PSNIRewriter psni = new PSNIRewriter(pini);
 
                 }
                 ;

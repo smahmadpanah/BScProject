@@ -139,6 +139,7 @@ program : PROGRAM_KW ';' clist
 
 		PDGBuilder pdg = new PDGBuilder(((eval)$$).list); //the CFG is input to build the Forward Dominance Tree and after that, CFG and DDG that make PDG! :)
 		PINIRewriter pini = new PINIRewriter(pdg.getPDG());
+        PSNIRewriter psni = new PSNIRewriter(pini);
 		
 		
 	};

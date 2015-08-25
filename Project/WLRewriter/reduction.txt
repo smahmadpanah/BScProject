@@ -1,123 +1,135 @@
 	 x -> IDENTIFIER 
-h
+k
+	 x -> IDENTIFIER 
+r
 	 varlist -> x 
-h
+r
+	 varlist -> x , varlist 
+k, r
 	 c -> INH_KW varlist 
-inH h
+inH k, r
 	 clist -> c 
-inH h
+inH k, r
 	 x -> IDENTIFIER 
 l1
 	 x -> IDENTIFIER 
 l2
-	 x -> IDENTIFIER 
-l3
 	 varlist -> x 
-l3
+l2
 	 varlist -> x , varlist 
-l2, l3
-	 varlist -> x , varlist 
-l1, l2, l3
+l1, l2
 	 c -> INL_KW varlist 
-inL l1, l2, l3
+inL l1, l2
 	 clist -> clist ; M c 
-inH h; inL l1, l2, l3
+inH k, r; inL l1, l2
 	 x -> IDENTIFIER 
-k
-	 x -> IDENTIFIER 
-m
-	 varlist -> x 
-m
-	 varlist -> x , varlist 
-k, m
-	 c -> INH_KW varlist 
-inH k, m
-	 clist -> clist ; M c 
-inH h; inL l1, l2, l3; inH k, m
-	 x -> IDENTIFIER 
-m
+l2
 	 exp -> x 
-m
+l2
 	 n -> INTEGER_NUMBER 
 0
 	 exp -> n 
 0
 	 exp -> exp GT_KW exp 
-m > 0
+l2 > 0
 	 x -> IDENTIFIER 
 l1
 	 x -> IDENTIFIER 
-l2
+l1
 	 exp -> x 
-l2
+l1
 	 n -> INTEGER_NUMBER 
-2
+1
 	 exp -> n 
-2
+1
 	 exp -> exp PLUS_KW exp 
-l2 + 2
+l1 + 1
 	 c -> x ASSIGN_KW exp 
-l1 = l2 + 2
+l1 = l1 + 1
 	 clist -> c 
-l1 = l2 + 2
-	 x -> IDENTIFIER 
-l2
-	 n -> INTEGER_NUMBER 
-1
-	 exp -> n 
-1
-	 c -> x ASSIGN_KW exp 
-l2 = 1
-	 clist -> clist ; M c 
-l1 = l2 + 2; l2 = 1
-	 x -> IDENTIFIER 
-l3
-	 n -> INTEGER_NUMBER 
-5
-	 exp -> n 
-5
-	 c -> x ASSIGN_KW exp 
-l3 = 5
-	 clist -> clist ; M c 
-l1 = l2 + 2; l2 = 1; l3 = 5
-	 x -> IDENTIFIER 
-l2
-	 exp -> x 
-l2
-	 n -> INTEGER_NUMBER 
-3
-	 exp -> n 
-3
-	 exp -> exp GT_KW exp 
-l2 > 3
-	 c -> NOP_KW 
-NOP
-	 clist -> c 
-NOP
-	 x -> IDENTIFIER 
-l1
-	 x -> IDENTIFIER 
-k
-	 exp -> x 
-k
-	 c -> x ASSIGN_KW exp 
-l1 = k
-	 clist -> c 
-l1 = k
-	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
- if l2 > 3 then NOP else l1 = k endif 
-	 clist -> clist ; M c 
-l1 = l2 + 2; l2 = 1; l3 = 5;  if l2 > 3 then NOP else l1 = k endif 
+l1 = l1 + 1
 	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
-while m > 0 do l1 = l2 + 2; l2 = 1; l3 = 5;  if l2 > 3 then NOP else l1 = k endif  done 
+while l2 > 0 do l1 = l1 + 1 done 
 	 clist -> clist ; M c 
-inH h; inL l1, l2, l3; inH k, m; while m > 0 do l1 = l2 + 2; l2 = 1; l3 = 5;  if l2 > 3 then NOP else l1 = k endif  done 
+inH k, r; inL l1, l2; while l2 > 0 do l1 = l1 + 1 done 
+	 x -> IDENTIFIER 
+k
+	 exp -> x 
+k
+	 n -> INTEGER_NUMBER 
+0
+	 exp -> n 
+0
+	 exp -> exp GT_KW exp 
+k > 0
+	 x -> IDENTIFIER 
+r
+	 exp -> x 
+r
+	 n -> INTEGER_NUMBER 
+9
+	 exp -> n 
+9
+	 exp -> exp GT_KW exp 
+r > 9
+	 x -> IDENTIFIER 
+r
+	 n -> INTEGER_NUMBER 
+2
+	 exp -> n 
+2
+	 x -> IDENTIFIER 
+k
+	 exp -> x 
+k
+	 exp -> exp PLUS_KW exp 
+2 + k
+	 c -> x ASSIGN_KW exp 
+r = 2 + k
+	 clist -> c 
+r = 2 + k
+	 x -> IDENTIFIER 
+k
+	 c -> OUTH_KW x 
+outH k
+	 clist -> clist ; M c 
+r = 2 + k; outH k
 	 x -> IDENTIFIER 
 l1
 	 c -> OUTL_KW x 
 outL l1
 	 clist -> clist ; M c 
-inH h; inL l1, l2, l3; inH k, m; while m > 0 do l1 = l2 + 2; l2 = 1; l3 = 5;  if l2 > 3 then NOP else l1 = k endif  done ; outL l1
+r = 2 + k; outH k; outL l1
+	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
+while r > 9 do r = 2 + k; outH k; outL l1 done 
+	 clist -> c 
+while r > 9 do r = 2 + k; outH k; outL l1 done 
+	 x -> IDENTIFIER 
+k
+	 x -> IDENTIFIER 
+k
+	 exp -> x 
+k
+	 x -> IDENTIFIER 
+r
+	 exp -> x 
+r
+	 exp -> exp MINUS_KW exp 
+k - r
+	 c -> x ASSIGN_KW exp 
+k = k - r
+	 clist -> clist ; M c 
+while r > 9 do r = 2 + k; outH k; outL l1 done ; k = k - r
+	 x -> IDENTIFIER 
+r
+	 c -> OUTH_KW x 
+outH r
+	 clist -> clist ; M c 
+while r > 9 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r
+	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
+while k > 0 do while r > 9 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r done 
+	 clist -> clist ; M c 
+inH k, r; inL l1, l2; while l2 > 0 do l1 = l1 + 1 done ; while k > 0 do while r > 9 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r done 
 	 program -> PROGRAM_KW ';' clist 
 ###Hooray! - Your program is syntactically correct### 
-program; inH h; inL l1, l2, l3; inH k, m; while m > 0 do l1 = l2 + 2; l2 = 1; l3 = 5;  if l2 > 3 then NOP else l1 = k endif  done ; outL l1
+program; inH k, r; inL l1, l2; while l2 > 0 do l1 = l1 + 1 done ; while k > 0 do while r > 9 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r done 

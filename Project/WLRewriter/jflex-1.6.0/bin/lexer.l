@@ -46,8 +46,11 @@ EQ_KW =(==)
 GT_KW =[>]
 GE_KW =(>=)
 
+LPAR_KW = [(]
+RPAR_KW = [)]
+
 INTEGER_NUMBER ="0"|({NONZERO_DIGIT}{DIGIT}*)
-BOOL_CONSTANT ="true"|"false"
+BOOL_CONSTANT ="true"|"false"|"TRUE"|"FALSE"
 IDENTIFIER ={LETTER}+|{LETTER}({LETTER}|{DIGIT})*
 	
 LineTerminator = \r|\n|\r\n
@@ -155,6 +158,14 @@ LineTerminator = \r|\n|\r\n
 {IDENTIFIER} {
 	YYParser.stmt=yytext();	
 	return YYParser.IDENTIFIER;
+}
+
+{LPAR_KW} {
+	return YYParser.LPAR_KW;
+}
+
+{RPAR_KW} {
+	return YYParser.RPAR_KW;
 }
 
 "," {

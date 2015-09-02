@@ -143,7 +143,7 @@ public class PSNIRewriter {
         for (int h = H; h > 0; h--) { //for h = H to 1 do
             for (Node n : loopsInD) {
                 if (n.height == h) {
-                    String r = loopAnalyzer(loop(n));
+                    String r = loopAnalyzer(n); //loop method here does not need to be exists
 
                     if (r.equals("FALSE")) {
                         boolean flag = false;
@@ -217,7 +217,39 @@ public class PSNIRewriter {
     }
 
     // junk function
-    private String loopAnalyzer(String loop) {
+    private String loopAnalyzer(Node loopNode) {
+
+        if (guard(loopNode).equals("TRUE") || guard(loopNode).equals("true")) {
+            return "FALSE";
+        }
+        if (guard(loopNode).equals("FALSE") || guard(loopNode).equals("false")) {
+            return "TRUE";
+        }
+        
+        ////////human analysis:
+        
+        
+        ////////if human analysis does not work, now use AProvE:
+        String loopTemp = loopNode.getNodeIdAndStmt();
+//        String pattern = "#[0-9]+:";
+//        Pattern r = Pattern.compile(pattern);
+//        Matcher m = r.matcher(loopTemp);
+//        loopTemp = m.replaceAll("");
+
+//        loopTemp = loopTemp.replace("or", "||");
+//        loopTemp = loopTemp.replace("and", "&&");
+//        loopTemp = loopTemp.replace("NOP", "");
+////        loopTemp = loopTemp.replace("inL", "int");
+//loopTemp = loopTemp.replace("inH", "int");
+//loopTemp = loopTemp.replace("outL", "printf");
+//loopTemp = loopTemp.replace("outH", "printf");        
+//loopTemp = loopTemp.replace("outH BOT", "");
+//loopTemp = loopTemp.replace("outL BOT", "");
+//loopTemp = loopTemp.replace("if", "if(");
+//loopTemp = loopTemp.replace("then", ") {");
+//loopTemp = loopTemp.replace("endif", "}");
+        AProvE ape = new AProvE(loopTemp);
+
 //        if (Math.random() > 0.5) {
 //            return "TRUE";
 //        }

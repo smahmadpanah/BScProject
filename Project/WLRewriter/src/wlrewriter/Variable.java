@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package wlrewriter;
+
+import java.util.ArrayList;
 
 /**
  *
@@ -14,7 +15,7 @@ public class Variable {
 
     public String name;
     public String type;
-    
+
     public Variable(String name) {
         this.name = name;
         type = "";
@@ -25,6 +26,5 @@ public class Variable {
         this.type = type;
     }
     
-    
-    
+
 }

@@ -1,5 +1,5 @@
-
-%{package wlrewriter;
+%{
+package wlrewriter;
 
   import java.io.*;
   import java.lang.*;
@@ -9,7 +9,7 @@
 
 %type <eval> program exp c clist varlist b n x M N
 
-%token <eval> PROGRAM_KW AND_KW OR_KW NEG_KW ASSIGN_KW IF_KW THEN_KW ELSE_KW ENDIF_KW WHILE_KW DO_KW DONE_KW NOP_KW BOT_KW INL_KW INH_KW OUTL_KW OUTH_KW PLUS_KW MINUS_KW LT_KW LE_KW EQ_KW GT_KW GE_KW 
+%token <eval> PROGRAM_KW AND_KW OR_KW NEG_KW LPAR_KW RPAR_KW ASSIGN_KW IF_KW THEN_KW ELSE_KW ENDIF_KW WHILE_KW DO_KW DONE_KW NOP_KW BOT_KW INL_KW INH_KW OUTL_KW OUTH_KW PLUS_KW MINUS_KW LT_KW LE_KW EQ_KW GT_KW GE_KW 
 %token <eval> INTEGER_NUMBER 
 %token <eval> BOOL_CONSTANT
 %token <eval> IDENTIFIER
@@ -111,6 +111,7 @@ program : PROGRAM_KW ';' clist
 	
 		$$ = new eval();
 		((eval)$$).stmt += "program; " + ((eval)$3).stmt;
+		((eval)$$).cSourceCode += "#include<stdio.h> \n \n void main() { " + ((eval)$3).cSourceCode + "}"; 
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		//((eval)$$).variables.addAll(((eval)$3).variables);
@@ -149,6 +150,7 @@ clist: c
 		writer.print("\t clist -> c \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode + ";";
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		((eval)$$).nodeIdAndStmt += ((eval)$1).nodeIdAndStmt;
@@ -161,6 +163,7 @@ clist: c
 		writer.print("\t clist -> clist ; M c \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + "; " + ((eval)$4).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode + "; " + ((eval)$4).cSourceCode + ";";
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		((eval)$$).nodeIdAndStmt += ((eval)$1).nodeIdAndStmt + "; \n" + ((eval)$4).nodeIdAndStmt;
@@ -180,6 +183,7 @@ exp : b
 		writer.print("\t exp -> b \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode;
 	writer.print(((eval)$$).stmt+ "\n");
 	};
 	| n
@@ -187,6 +191,7 @@ exp : b
 		writer.print("\t exp -> n \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode;
 	writer.print(((eval)$$).stmt+ "\n");
 	};
 	| x
@@ -194,6 +199,7 @@ exp : b
 		writer.print("\t exp -> x \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode;
 
 		((eval)$$).variables.add(((eval)$1).stmt);
 		
@@ -218,6 +224,7 @@ exp : b
 		writer.print("\t exp -> exp EQ_KW exp \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " == "+ ((eval)$3).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode + " == "+ ((eval)$3).cSourceCode;
 
 		writer.print(((eval)$$).stmt+ "\n");
 	
@@ -229,6 +236,7 @@ exp : b
 		writer.print("\t exp -> exp LT_KW exp \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " < "+ ((eval)$3).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode + " < "+ ((eval)$3).cSourceCode;
 
 		writer.print(((eval)$$).stmt+ "\n");
 	
@@ -240,6 +248,7 @@ exp : b
 		writer.print("\t exp -> exp LE_KW exp \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " <= "+ ((eval)$3).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode + " <= "+ ((eval)$3).cSourceCode;
 
 		writer.print(((eval)$$).stmt+ "\n");
 	
@@ -251,6 +260,7 @@ exp : b
 		writer.print("\t exp -> exp GE_KW exp \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " >= "+ ((eval)$3).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode + " >= "+ ((eval)$3).cSourceCode;
 
 		writer.print(((eval)$$).stmt+ "\n");
 	
@@ -262,6 +272,7 @@ exp : b
 		writer.print("\t exp -> exp GT_KW exp \n") ;
 	$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " > "+ ((eval)$3).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode + " > "+ ((eval)$3).cSourceCode;
 
 	writer.print(((eval)$$).stmt+ "\n");
 	
@@ -273,6 +284,7 @@ exp : b
 		writer.print("\t exp -> exp PLUS_KW exp \n") ;
 	$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " + "+ ((eval)$3).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode + " + "+ ((eval)$3).cSourceCode;
 
 	writer.print(((eval)$$).stmt+ "\n");
 	
@@ -284,6 +296,7 @@ exp : b
 		writer.print("\t exp -> exp MINUS_KW exp \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " - "+ ((eval)$3).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode + " - "+ ((eval)$3).cSourceCode;
 	writer.print(((eval)$$).stmt+ "\n");
 	
 	((eval)$$).variables.addAll(((eval)$1).variables);
@@ -294,6 +307,7 @@ exp : b
 		writer.print("\t exp -> exp AND_KW exp \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " and "+ ((eval)$4).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode + " && "+ ((eval)$4).cSourceCode;
 	writer.print(((eval)$$).stmt+ "\n");
 
 	((eval)$$).variables.addAll(((eval)$1).variables);
@@ -304,6 +318,7 @@ exp : b
 		writer.print("\t exp -> exp OR_KW exp \n") ;
 			$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " or "+ ((eval)$4).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode + " || "+ ((eval)$4).cSourceCode;
 	
 writer.print(((eval)$$).stmt+ "\n");	
 
@@ -316,10 +331,23 @@ writer.print(((eval)$$).stmt+ "\n");
 		writer.print("\t exp -> NEG_KW exp \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "!("+ ((eval)$2).stmt + ")";
+		((eval)$$).cSourceCode += "!("+ ((eval)$2).cSourceCode + ")";
 	
 		writer.print(((eval)$$).stmt+ "\n");	
 
 		((eval)$$).variables.addAll(((eval)$2).variables);
+	};
+	| LPAR_KW exp RPAR_KW %prec p
+	{
+		writer.print("\t exp -> LPAR_KW exp RPAR_KW \n") ;
+		$$=new eval();
+		((eval)$$).stmt += "("+ ((eval)$2).stmt + ")";
+		((eval)$$).cSourceCode += "("+ ((eval)$2).cSourceCode + ")";
+		writer.print(((eval)$$).stmt+ "\n");	
+
+		((eval)$$).variables.addAll(((eval)$2).variables);
+	
+	
 	};
 	
 c : NOP_KW
@@ -327,6 +355,7 @@ c : NOP_KW
 		writer.print("\t c -> NOP_KW \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "NOP";
+		((eval)$$).cSourceCode += ";";
 		writer.print(((eval)$$).stmt+ "\n");	
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
 		((eval)$$).nodeIdAndStmt += "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$$).stmt;
@@ -339,6 +368,7 @@ c : NOP_KW
 		writer.print("\t c -> x ASSIGN_KW exp \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + " = " + ((eval)$3).stmt;
+		((eval)$$).cSourceCode += ((eval)$1).cSourceCode + " = " + ((eval)$3).cSourceCode;
 		writer.print(((eval)$$).stmt+ "\n");	
 				
 		((eval)$$).variables.addAll(((eval)$3).variables);
@@ -387,6 +417,7 @@ c : NOP_KW
 		writer.print("\t c -> INL_KW varlist \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "inL "+((eval)$2).stmt;	
+		((eval)$$).cSourceCode += "int "+((eval)$2).cSourceCode;
 		writer.print(((eval)$$).stmt+ "\n");	
 		
 		((eval)$$).variables.addAll(((eval)$2).variables);
@@ -427,6 +458,7 @@ c : NOP_KW
 		writer.print("\t c -> INH_KW varlist \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "inH "+((eval)$2).stmt;
+		((eval)$$).cSourceCode += "int "+((eval)$2).cSourceCode;
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		((eval)$$).variables.addAll(((eval)$2).variables);
@@ -466,6 +498,7 @@ c : NOP_KW
 		writer.print("\t c -> OUTL_KW x \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "outL " + ((eval)$2).stmt;
+		((eval)$$).cSourceCode += "printf(\"%d\n\","+((eval)$2).cSourceCode+")";
 		writer.print(((eval)$$).stmt+ "\n");	
 		
 		((eval)$$).variables.add(((eval)$2).stmt);
@@ -508,6 +541,7 @@ c : NOP_KW
 		writer.print("\t c -> OUTH_KW x \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "outH " + ((eval)$2).stmt;
+		((eval)$$).cSourceCode += "printf(\"%d\n\","+((eval)$2).cSourceCode+")";
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		((eval)$$).variables.add(((eval)$2).stmt);
@@ -548,6 +582,7 @@ c : NOP_KW
 		writer.print("\t c -> OUTL_KW BOT_KW \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "outL BOT";
+		((eval)$$).cSourceCode += "printf(\"BOT\n\")";
 		writer.print(((eval)$$).stmt+ "\n");	
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
 		((eval)$$).nodeIdAndStmt += "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$$).stmt;
@@ -561,6 +596,7 @@ c : NOP_KW
 		writer.print("\t c -> OUTH_KW BOT_KW \n") ;	
 		$$=new eval();
 		((eval)$$).stmt += "outH BOT";
+		((eval)$$).cSourceCode += "printf(\"BOT\n\")";
 		writer.print(((eval)$$).stmt+ "\n");	
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$$).stmt);
 		((eval)$$).nodeIdAndStmt += "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$$).stmt;
@@ -573,6 +609,7 @@ c : NOP_KW
 		writer.print("\t c -> IF_KW exp THEN_KW M clist ENDIF_KW \n") ;
 		$$=new eval();
 		((eval)$$).stmt += " if " + ((eval)$2).stmt + " then " + ((eval)$5).stmt + " endif";
+		((eval)$$).cSourceCode += " if (" + ((eval)$2).cSourceCode + ") { " + ((eval)$5).cSourceCode + "}";
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		((eval)$$).variables.addAll(((eval)$2).variables);
@@ -607,6 +644,7 @@ c : NOP_KW
 		writer.print("\t c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW \n") ;
 		$$=new eval();
 		((eval)$$).stmt += " if " + ((eval)$2).stmt + " then " + ((eval)$5).stmt + " else " + ((eval)$9).stmt + " endif ";
+		((eval)$$).cSourceCode += " if (" + ((eval)$2).cSourceCode + ") { " + ((eval)$5).cSourceCode + "} else {" + ((eval)$9).cSourceCode + "} ";
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		((eval)$$).variables.addAll(((eval)$2).variables);
@@ -647,6 +685,7 @@ c : NOP_KW
 		writer.print("\t c -> WHILE_KW exp DO_KW M clist DONE_KW \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "while " + ((eval)$2).stmt + " do " + ((eval)$5).stmt + " done ";
+		((eval)$$).cSourceCode += "while (" + ((eval)$2).cSourceCode + ") { " + ((eval)$5).cSourceCode + "\n} ";
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		((eval)$$).variables.addAll(((eval)$2).variables);
@@ -689,6 +728,7 @@ varlist : x
 		writer.print("\t varlist -> x \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt;
+		((eval)$$).cSourceCode += ((eval)$$).stmt;
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		Variable tempVar = new Variable(((eval)$1).stmt);
@@ -715,6 +755,7 @@ varlist : x
 		writer.print("\t varlist -> x , varlist \n") ;
 		$$=new eval();
 		((eval)$$).stmt += ((eval)$1).stmt + ", " + ((eval)$3).stmt;
+		((eval)$$).cSourceCode += ((eval)$$).stmt;
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		Variable tempVar = new Variable(((eval)$1).stmt);
@@ -743,6 +784,7 @@ b : BOOL_CONSTANT
 		writer.print("\t b -> BOOL_CONSTANT \n") ;
 		$$=new eval();
 		((eval)$$).stmt += this.stmt;
+		((eval)$$).cSourceCode += ((eval)$$).stmt;
 		writer.print(((eval)$$).stmt+ "\n");
 	};
 	
@@ -751,6 +793,7 @@ n : INTEGER_NUMBER
 		writer.print("\t n -> INTEGER_NUMBER \n") ;
 		$$=new eval();
 		((eval)$$).stmt += this.stmt;
+		((eval)$$).cSourceCode += ((eval)$$).stmt;
 		writer.print(((eval)$$).stmt+ "\n");
 	};
 
@@ -759,6 +802,7 @@ x : IDENTIFIER
 		writer.print("\t x -> IDENTIFIER \n") ;
 		$$=new eval();
 		((eval)$$).stmt += this.stmt;
+		((eval)$$).cSourceCode += ((eval)$$).stmt;
 		writer.print(((eval)$$).stmt+ "\n");
 	};
 	
@@ -781,6 +825,7 @@ class eval {
 	public String stmt="";
 	public String nodeIdAndStmt="";
 	
+	public String cSourceCode = "";
 	
 	public HashSet<String> variables = new HashSet<String>();
 	

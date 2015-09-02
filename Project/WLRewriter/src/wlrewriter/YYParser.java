@@ -33,7 +33,8 @@
 /* First part of user declarations.  */
 
 /* Line 32 of lalr1.java  */
-/* Line 2 of "YYParser.y"  */
+/* Line 1 of "YYParser.y"  */
+
 package wlrewriter;
 
   import java.io.*;
@@ -352,6 +353,8 @@ class YYParser
 	
 		yyval = new eval();
 		((eval)yyval).stmt += "program; " + ((eval)((eval)(yystack.valueAt (3-(3))))).stmt;
+		((eval)yyval).cSourceCode += "#include<stdio.h> \n \n void main() { " + ((eval)((eval)(yystack.valueAt (3-(3))))).cSourceCode + "}"; 
+		System.out.print(((eval)yyval).cSourceCode);
 		writer.print(((eval)yyval).stmt+ "\n");
 		
 		//((eval)$$).variables.addAll(((eval)$3).variables);
@@ -391,11 +394,13 @@ class YYParser
   if (yyn == 3)
     
 /* Line 351 of lalr1.java  */
-/* Line 148 of "YYParser.y"  */
+/* Line 150 of "YYParser.y"  */
     {
 		writer.print("\t clist -> c \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (1-(1))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (1-(1))))).cSourceCode;
+		
 		writer.print(((eval)yyval).stmt+ "\n");
 		
 		((eval)yyval).nodeIdAndStmt += ((eval)((eval)(yystack.valueAt (1-(1))))).nodeIdAndStmt;
@@ -410,11 +415,14 @@ class YYParser
   if (yyn == 4)
     
 /* Line 351 of lalr1.java  */
-/* Line 160 of "YYParser.y"  */
+/* Line 164 of "YYParser.y"  */
     {
 		writer.print("\t clist -> clist ; M c \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (4-(1))))).stmt + "; " + ((eval)((eval)(yystack.valueAt (4-(4))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (4-(1))))).cSourceCode + "; " + ((eval)((eval)(yystack.valueAt (4-(4))))).cSourceCode;
+		((eval)yyval).cSourceCode += "\n";
+		
 		writer.print(((eval)yyval).stmt+ "\n");
 		
 		((eval)yyval).nodeIdAndStmt += ((eval)((eval)(yystack.valueAt (4-(1))))).nodeIdAndStmt + "; \n" + ((eval)((eval)(yystack.valueAt (4-(4))))).nodeIdAndStmt;
@@ -434,12 +442,13 @@ class YYParser
   if (yyn == 5)
     
 /* Line 351 of lalr1.java  */
-/* Line 178 of "YYParser.y"  */
+/* Line 185 of "YYParser.y"  */
     {
 	
 		writer.print("\t exp -> b \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (1-(1))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (1-(1))))).cSourceCode;
 	writer.print(((eval)yyval).stmt+ "\n");
 	};
   break;
@@ -449,11 +458,12 @@ class YYParser
   if (yyn == 6)
     
 /* Line 351 of lalr1.java  */
-/* Line 186 of "YYParser.y"  */
+/* Line 194 of "YYParser.y"  */
     {
 		writer.print("\t exp -> n \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (1-(1))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (1-(1))))).cSourceCode;
 	writer.print(((eval)yyval).stmt+ "\n");
 	};
   break;
@@ -463,11 +473,12 @@ class YYParser
   if (yyn == 7)
     
 /* Line 351 of lalr1.java  */
-/* Line 193 of "YYParser.y"  */
+/* Line 202 of "YYParser.y"  */
     {
 		writer.print("\t exp -> x \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (1-(1))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (1-(1))))).cSourceCode;
 
 		((eval)yyval).variables.add(((eval)((eval)(yystack.valueAt (1-(1))))).stmt);
 		
@@ -494,11 +505,12 @@ class YYParser
   if (yyn == 8)
     
 /* Line 351 of lalr1.java  */
-/* Line 217 of "YYParser.y"  */
+/* Line 227 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp EQ_KW exp \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (3-(1))))).stmt + " == "+ ((eval)((eval)(yystack.valueAt (3-(3))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (3-(1))))).cSourceCode + " == "+ ((eval)((eval)(yystack.valueAt (3-(3))))).cSourceCode;
 
 		writer.print(((eval)yyval).stmt+ "\n");
 	
@@ -512,11 +524,12 @@ class YYParser
   if (yyn == 9)
     
 /* Line 351 of lalr1.java  */
-/* Line 228 of "YYParser.y"  */
+/* Line 239 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp LT_KW exp \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (3-(1))))).stmt + " < "+ ((eval)((eval)(yystack.valueAt (3-(3))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (3-(1))))).cSourceCode + " < "+ ((eval)((eval)(yystack.valueAt (3-(3))))).cSourceCode;
 
 		writer.print(((eval)yyval).stmt+ "\n");
 	
@@ -530,11 +543,12 @@ class YYParser
   if (yyn == 10)
     
 /* Line 351 of lalr1.java  */
-/* Line 239 of "YYParser.y"  */
+/* Line 251 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp LE_KW exp \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (3-(1))))).stmt + " <= "+ ((eval)((eval)(yystack.valueAt (3-(3))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (3-(1))))).cSourceCode + " <= "+ ((eval)((eval)(yystack.valueAt (3-(3))))).cSourceCode;
 
 		writer.print(((eval)yyval).stmt+ "\n");
 	
@@ -548,11 +562,12 @@ class YYParser
   if (yyn == 11)
     
 /* Line 351 of lalr1.java  */
-/* Line 250 of "YYParser.y"  */
+/* Line 263 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp GE_KW exp \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (3-(1))))).stmt + " >= "+ ((eval)((eval)(yystack.valueAt (3-(3))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (3-(1))))).cSourceCode + " >= "+ ((eval)((eval)(yystack.valueAt (3-(3))))).cSourceCode;
 
 		writer.print(((eval)yyval).stmt+ "\n");
 	
@@ -566,11 +581,12 @@ class YYParser
   if (yyn == 12)
     
 /* Line 351 of lalr1.java  */
-/* Line 261 of "YYParser.y"  */
+/* Line 275 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp GT_KW exp \n") ;
 	yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (3-(1))))).stmt + " > "+ ((eval)((eval)(yystack.valueAt (3-(3))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (3-(1))))).cSourceCode + " > "+ ((eval)((eval)(yystack.valueAt (3-(3))))).cSourceCode;
 
 	writer.print(((eval)yyval).stmt+ "\n");
 	
@@ -584,11 +600,12 @@ class YYParser
   if (yyn == 13)
     
 /* Line 351 of lalr1.java  */
-/* Line 272 of "YYParser.y"  */
+/* Line 287 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp PLUS_KW exp \n") ;
 	yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (3-(1))))).stmt + " + "+ ((eval)((eval)(yystack.valueAt (3-(3))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (3-(1))))).cSourceCode + " + "+ ((eval)((eval)(yystack.valueAt (3-(3))))).cSourceCode;
 
 	writer.print(((eval)yyval).stmt+ "\n");
 	
@@ -602,11 +619,12 @@ class YYParser
   if (yyn == 14)
     
 /* Line 351 of lalr1.java  */
-/* Line 283 of "YYParser.y"  */
+/* Line 299 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp MINUS_KW exp \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (3-(1))))).stmt + " - "+ ((eval)((eval)(yystack.valueAt (3-(3))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (3-(1))))).cSourceCode + " - "+ ((eval)((eval)(yystack.valueAt (3-(3))))).cSourceCode;
 	writer.print(((eval)yyval).stmt+ "\n");
 	
 	((eval)yyval).variables.addAll(((eval)((eval)(yystack.valueAt (3-(1))))).variables);
@@ -619,11 +637,12 @@ class YYParser
   if (yyn == 15)
     
 /* Line 351 of lalr1.java  */
-/* Line 293 of "YYParser.y"  */
+/* Line 310 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp AND_KW exp \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (4-(1))))).stmt + " and "+ ((eval)((eval)(yystack.valueAt (4-(4))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (4-(1))))).cSourceCode + " && "+ ((eval)((eval)(yystack.valueAt (4-(4))))).cSourceCode;
 	writer.print(((eval)yyval).stmt+ "\n");
 
 	((eval)yyval).variables.addAll(((eval)((eval)(yystack.valueAt (4-(1))))).variables);
@@ -636,11 +655,12 @@ class YYParser
   if (yyn == 16)
     
 /* Line 351 of lalr1.java  */
-/* Line 303 of "YYParser.y"  */
+/* Line 321 of "YYParser.y"  */
     {
 		writer.print("\t exp -> exp OR_KW exp \n") ;
 			yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (4-(1))))).stmt + " or "+ ((eval)((eval)(yystack.valueAt (4-(4))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (4-(1))))).cSourceCode + " || "+ ((eval)((eval)(yystack.valueAt (4-(4))))).cSourceCode;
 	
 writer.print(((eval)yyval).stmt+ "\n");	
 
@@ -655,11 +675,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 17)
     
 /* Line 351 of lalr1.java  */
-/* Line 315 of "YYParser.y"  */
+/* Line 334 of "YYParser.y"  */
     {
 		writer.print("\t exp -> NEG_KW exp \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += "!("+ ((eval)((eval)(yystack.valueAt (2-(2))))).stmt + ")";
+		((eval)yyval).cSourceCode += "!("+ ((eval)((eval)(yystack.valueAt (2-(2))))).cSourceCode + ")";
 	
 		writer.print(((eval)yyval).stmt+ "\n");	
 
@@ -672,12 +693,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 18)
     
 /* Line 351 of lalr1.java  */
-/* Line 325 of "YYParser.y"  */
+/* Line 345 of "YYParser.y"  */
     {
 		writer.print("\t exp -> LPAR_KW exp RPAR_KW \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += "("+ ((eval)((eval)(yystack.valueAt (3-(2))))).stmt + ")";
-	
+		((eval)yyval).cSourceCode += "("+ ((eval)((eval)(yystack.valueAt (3-(2))))).cSourceCode + ")";
 		writer.print(((eval)yyval).stmt+ "\n");	
 
 		((eval)yyval).variables.addAll(((eval)((eval)(yystack.valueAt (3-(2))))).variables);
@@ -691,11 +712,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 19)
     
 /* Line 351 of lalr1.java  */
-/* Line 338 of "YYParser.y"  */
+/* Line 358 of "YYParser.y"  */
     {
 		writer.print("\t c -> NOP_KW \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += "NOP";
+		((eval)yyval).cSourceCode += ";";
 		writer.print(((eval)yyval).stmt+ "\n");	
 		((eval)yyval).node = new Node(nodeCounter++, ((eval)yyval).stmt);
 		((eval)yyval).nodeIdAndStmt += "#" + ((eval)yyval).node.getNodeID() + ":" + ((eval)yyval).stmt;
@@ -710,11 +732,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 20)
     
 /* Line 351 of lalr1.java  */
-/* Line 350 of "YYParser.y"  */
+/* Line 371 of "YYParser.y"  */
     {
 		writer.print("\t c -> x ASSIGN_KW exp \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (3-(1))))).stmt + " = " + ((eval)((eval)(yystack.valueAt (3-(3))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (3-(1))))).cSourceCode + " = " + ((eval)((eval)(yystack.valueAt (3-(3))))).cSourceCode;
 		writer.print(((eval)yyval).stmt+ "\n");	
 				
 		((eval)yyval).variables.addAll(((eval)((eval)(yystack.valueAt (3-(3))))).variables);
@@ -765,11 +788,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 21)
     
 /* Line 351 of lalr1.java  */
-/* Line 398 of "YYParser.y"  */
+/* Line 420 of "YYParser.y"  */
     {
 		writer.print("\t c -> INL_KW varlist \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += "inL "+((eval)((eval)(yystack.valueAt (2-(2))))).stmt;	
+		((eval)yyval).cSourceCode += "int "+((eval)((eval)(yystack.valueAt (2-(2))))).cSourceCode;
 		writer.print(((eval)yyval).stmt+ "\n");	
 		
 		((eval)yyval).variables.addAll(((eval)((eval)(yystack.valueAt (2-(2))))).variables);
@@ -812,11 +836,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 22)
     
 /* Line 351 of lalr1.java  */
-/* Line 438 of "YYParser.y"  */
+/* Line 461 of "YYParser.y"  */
     {
 		writer.print("\t c -> INH_KW varlist \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += "inH "+((eval)((eval)(yystack.valueAt (2-(2))))).stmt;
+		((eval)yyval).cSourceCode += "int "+((eval)((eval)(yystack.valueAt (2-(2))))).cSourceCode;
 		writer.print(((eval)yyval).stmt+ "\n");
 		
 		((eval)yyval).variables.addAll(((eval)((eval)(yystack.valueAt (2-(2))))).variables);
@@ -858,11 +883,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 23)
     
 /* Line 351 of lalr1.java  */
-/* Line 477 of "YYParser.y"  */
+/* Line 501 of "YYParser.y"  */
     {
 		writer.print("\t c -> OUTL_KW x \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += "outL " + ((eval)((eval)(yystack.valueAt (2-(2))))).stmt;
+		((eval)yyval).cSourceCode += "printf(\"%d\\n\","+((eval)((eval)(yystack.valueAt (2-(2))))).cSourceCode+")";
 		writer.print(((eval)yyval).stmt+ "\n");	
 		
 		((eval)yyval).variables.add(((eval)((eval)(yystack.valueAt (2-(2))))).stmt);
@@ -907,11 +933,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 24)
     
 /* Line 351 of lalr1.java  */
-/* Line 519 of "YYParser.y"  */
+/* Line 544 of "YYParser.y"  */
     {
 		writer.print("\t c -> OUTH_KW x \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += "outH " + ((eval)((eval)(yystack.valueAt (2-(2))))).stmt;
+		((eval)yyval).cSourceCode += "printf(\"%d\\n\","+((eval)((eval)(yystack.valueAt (2-(2))))).cSourceCode+")";
 		writer.print(((eval)yyval).stmt+ "\n");
 		
 		((eval)yyval).variables.add(((eval)((eval)(yystack.valueAt (2-(2))))).stmt);
@@ -954,11 +981,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 25)
     
 /* Line 351 of lalr1.java  */
-/* Line 559 of "YYParser.y"  */
+/* Line 585 of "YYParser.y"  */
     {
 		writer.print("\t c -> OUTL_KW BOT_KW \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += "outL BOT";
+		((eval)yyval).cSourceCode += "printf(\"BOT\\n\")";
 		writer.print(((eval)yyval).stmt+ "\n");	
 		((eval)yyval).node = new Node(nodeCounter++, ((eval)yyval).stmt);
 		((eval)yyval).nodeIdAndStmt += "#" + ((eval)yyval).node.getNodeID() + ":" + ((eval)yyval).stmt;
@@ -974,11 +1002,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 26)
     
 /* Line 351 of lalr1.java  */
-/* Line 572 of "YYParser.y"  */
+/* Line 599 of "YYParser.y"  */
     {
 		writer.print("\t c -> OUTH_KW BOT_KW \n") ;	
 		yyval=new eval();
 		((eval)yyval).stmt += "outH BOT";
+		((eval)yyval).cSourceCode += "printf(\"BOT\\n\")";
 		writer.print(((eval)yyval).stmt+ "\n");	
 		((eval)yyval).node = new Node(nodeCounter++, ((eval)yyval).stmt);
 		((eval)yyval).nodeIdAndStmt += "#" + ((eval)yyval).node.getNodeID() + ":" + ((eval)yyval).stmt;
@@ -993,11 +1022,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 27)
     
 /* Line 351 of lalr1.java  */
-/* Line 584 of "YYParser.y"  */
+/* Line 612 of "YYParser.y"  */
     {
 		writer.print("\t c -> IF_KW exp THEN_KW M clist ENDIF_KW \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += " if " + ((eval)((eval)(yystack.valueAt (6-(2))))).stmt + " then " + ((eval)((eval)(yystack.valueAt (6-(5))))).stmt + " endif";
+		((eval)yyval).cSourceCode += " if (" + ((eval)((eval)(yystack.valueAt (6-(2))))).cSourceCode + ") { " + ((eval)((eval)(yystack.valueAt (6-(5))))).cSourceCode + ";}";
 		writer.print(((eval)yyval).stmt+ "\n");
 		
 		((eval)yyval).variables.addAll(((eval)((eval)(yystack.valueAt (6-(2))))).variables);
@@ -1034,11 +1064,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 28)
     
 /* Line 351 of lalr1.java  */
-/* Line 618 of "YYParser.y"  */
+/* Line 647 of "YYParser.y"  */
     {
 		writer.print("\t c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += " if " + ((eval)((eval)(yystack.valueAt (10-(2))))).stmt + " then " + ((eval)((eval)(yystack.valueAt (10-(5))))).stmt + " else " + ((eval)((eval)(yystack.valueAt (10-(9))))).stmt + " endif ";
+		((eval)yyval).cSourceCode += " if (" + ((eval)((eval)(yystack.valueAt (10-(2))))).cSourceCode + ") { " + ((eval)((eval)(yystack.valueAt (10-(5))))).cSourceCode + ";} else {" + ((eval)((eval)(yystack.valueAt (10-(9))))).cSourceCode + ";}";
 		writer.print(((eval)yyval).stmt+ "\n");
 		
 		((eval)yyval).variables.addAll(((eval)((eval)(yystack.valueAt (10-(2))))).variables);
@@ -1081,11 +1112,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 29)
     
 /* Line 351 of lalr1.java  */
-/* Line 658 of "YYParser.y"  */
+/* Line 688 of "YYParser.y"  */
     {
 		writer.print("\t c -> WHILE_KW exp DO_KW M clist DONE_KW \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += "while " + ((eval)((eval)(yystack.valueAt (6-(2))))).stmt + " do " + ((eval)((eval)(yystack.valueAt (6-(5))))).stmt + " done ";
+		((eval)yyval).cSourceCode += "while (" + ((eval)((eval)(yystack.valueAt (6-(2))))).cSourceCode + ") { " + ((eval)((eval)(yystack.valueAt (6-(5))))).cSourceCode + ";\n}";
 		writer.print(((eval)yyval).stmt+ "\n");
 		
 		((eval)yyval).variables.addAll(((eval)((eval)(yystack.valueAt (6-(2))))).variables);
@@ -1129,11 +1161,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 30)
     
 /* Line 351 of lalr1.java  */
-/* Line 700 of "YYParser.y"  */
+/* Line 731 of "YYParser.y"  */
     {
 		writer.print("\t varlist -> x \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (1-(1))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (1-(1))))).cSourceCode;
 		writer.print(((eval)yyval).stmt+ "\n");
 		
 		Variable tempVar = new Variable(((eval)((eval)(yystack.valueAt (1-(1))))).stmt);
@@ -1162,11 +1195,13 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 31)
     
 /* Line 351 of lalr1.java  */
-/* Line 726 of "YYParser.y"  */
+/* Line 758 of "YYParser.y"  */
     {
 		writer.print("\t varlist -> x , varlist \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += ((eval)((eval)(yystack.valueAt (3-(1))))).stmt + ", " + ((eval)((eval)(yystack.valueAt (3-(3))))).stmt;
+		((eval)yyval).cSourceCode += ((eval)((eval)(yystack.valueAt (3-(1))))).cSourceCode + ", " + ((eval)((eval)(yystack.valueAt (3-(3))))).cSourceCode;
+		
 		writer.print(((eval)yyval).stmt+ "\n");
 		
 		Variable tempVar = new Variable(((eval)((eval)(yystack.valueAt (3-(1))))).stmt);
@@ -1196,11 +1231,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 32)
     
 /* Line 351 of lalr1.java  */
-/* Line 754 of "YYParser.y"  */
+/* Line 788 of "YYParser.y"  */
     {
 		writer.print("\t b -> BOOL_CONSTANT \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += this.stmt;
+		((eval)yyval).cSourceCode += ((eval)yyval).stmt;
 		writer.print(((eval)yyval).stmt+ "\n");
 	};
   break;
@@ -1210,11 +1246,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 33)
     
 /* Line 351 of lalr1.java  */
-/* Line 762 of "YYParser.y"  */
+/* Line 797 of "YYParser.y"  */
     {
 		writer.print("\t n -> INTEGER_NUMBER \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += this.stmt;
+		((eval)yyval).cSourceCode += ((eval)yyval).stmt;
 		writer.print(((eval)yyval).stmt+ "\n");
 	};
   break;
@@ -1224,11 +1261,12 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 34)
     
 /* Line 351 of lalr1.java  */
-/* Line 770 of "YYParser.y"  */
+/* Line 806 of "YYParser.y"  */
     {
 		writer.print("\t x -> IDENTIFIER \n") ;
 		yyval=new eval();
 		((eval)yyval).stmt += this.stmt;
+		((eval)yyval).cSourceCode += ((eval)yyval).stmt;
 		writer.print(((eval)yyval).stmt+ "\n");
 	};
   break;
@@ -1238,7 +1276,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 35)
     
 /* Line 351 of lalr1.java  */
-/* Line 778 of "YYParser.y"  */
+/* Line 815 of "YYParser.y"  */
     {
 	
 	};
@@ -1249,7 +1287,7 @@ writer.print(((eval)yyval).stmt+ "\n");
   if (yyn == 36)
     
 /* Line 351 of lalr1.java  */
-/* Line 783 of "YYParser.y"  */
+/* Line 820 of "YYParser.y"  */
     {
 	
 	};
@@ -1259,7 +1297,7 @@ writer.print(((eval)yyval).stmt+ "\n");
 
 
 /* Line 351 of lalr1.java  */
-/* Line 1263 of "YYParser.java"  */
+/* Line 1301 of "YYParser.java"  */
 	default: break;
       }
 
@@ -1845,10 +1883,10 @@ writer.print(((eval)yyval).stmt+ "\n");
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
   private static final short yyrline_[] =
   {
-         0,   106,   106,   147,   159,   177,   185,   192,   216,   227,
-     238,   249,   260,   271,   282,   292,   302,   314,   324,   337,
-     349,   397,   437,   476,   518,   558,   571,   583,   617,   657,
-     699,   725,   753,   761,   769,   778,   783
+         0,   106,   106,   149,   163,   184,   193,   201,   226,   238,
+     250,   262,   274,   286,   298,   309,   320,   333,   344,   357,
+     370,   419,   460,   500,   543,   584,   598,   611,   646,   687,
+     730,   757,   787,   796,   805,   815,   820
   };
 
   // Report on the debug stream that the rule yyrule is going to be reduced.
@@ -2006,13 +2044,13 @@ static PrintStream writer;
 
 
 /* Line 927 of lalr1.java  */
-/* Line 2010 of "YYParser.java"  */
+/* Line 2048 of "YYParser.java"  */
 
 }
 
 
 /* Line 931 of lalr1.java  */
-/* Line 788 of "YYParser.y"  */
+/* Line 825 of "YYParser.y"  */
 
 
 /*************************************** eval ************************************/
@@ -2021,6 +2059,7 @@ class eval {
 	public String stmt="";
 	public String nodeIdAndStmt="";
 	
+	public String cSourceCode = "";
 	
 	public HashSet<String> variables = new HashSet<String>();
 	

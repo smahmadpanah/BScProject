@@ -24,6 +24,8 @@ public class Node {
     public boolean isVisited;
     private HashSet<Node> PDF, ContolDep; //PDF is related to Control Dependeces, ControlDep is Control Dependeces for the node
     
+    public int whileID;
+    
     
     public Boolean isComeFromTrue;
     

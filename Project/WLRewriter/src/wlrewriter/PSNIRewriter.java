@@ -5,12 +5,18 @@
  */
 package wlrewriter;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import static wlrewriter.YYParser.writer;
 
 /**
  *
@@ -23,10 +29,63 @@ public class PSNIRewriter {
     private String sourceCode; //source code : M' that output of PINIRewriter
     private ArrayList<Node> loopGuardNodes;
     private Node sourceNode, destinationNode;
+    private String sourceCodeForLoop; // YOU CAN WRITE IT ON A FILE FOR PINI.c FILE
+    private ArrayList<Variable> symbolTableOfVariables;
 
     public PSNIRewriter(PINIRewriter pini) {
         pdg = pini.getPdg();
+//        sourceCodeForLoop = pini.getRewritedSourceCodeOutputFile();
         sourceCode = pini.getRewritedSourceCode();
+
+        YYParser yyparser;
+        Yylex lexer;
+        Yylex yylexTemp = null;
+        try {
+            yylexTemp = new Yylex(new InputStreamReader(new FileInputStream(pini.getFileName() + "-PINI.wl")));
+        } catch (Exception ex) {
+            System.err.println("Source code file not found!");
+            System.exit(0);
+        }
+
+        lexer = yylexTemp;
+
+        yyparser = new YYParser(new YYParser.Lexer() {
+            @Override
+            public int yylex() {
+                int yyl_return = -1;
+                try {
+
+                    yyl_return = lexer.yylex();
+                } catch (IOException e) {
+                    System.err.println("IO error : " + e);
+                }
+                return yyl_return;
+            }
+
+            @Override
+            public void yyerror(String error) {
+                //System.err.println ("Error : " + error);
+                System.err.println("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
+                writer.print("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
+
+            }
+
+            @Override
+            public Object getLVal() {
+                return null;
+            }
+
+        });
+        try {
+            yyparser.controlFlag = true;
+            yyparser.parse();
+            sourceCodeForLoop = yyparser.cSourceCodeForPSNI;
+            symbolTableOfVariables = yyparser.symbolTableOfVariables;
+
+        } catch (IOException ex) {
+            Logger.getLogger(PSNIRewriter.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        writer.close();
 
         D = new HashSet<>(); // paths
 
@@ -225,35 +284,62 @@ public class PSNIRewriter {
         if (guard(loopNode).equals("FALSE") || guard(loopNode).equals("false")) {
             return "TRUE";
         }
-        
+
         ////////human analysis:
-        
-        
+        ///
+        ///
         ////////if human analysis does not work, now use AProvE:
-        String loopTemp = loopNode.getNodeIdAndStmt();
-//        String pattern = "#[0-9]+:";
-//        Pattern r = Pattern.compile(pattern);
-//        Matcher m = r.matcher(loopTemp);
-//        loopTemp = m.replaceAll("");
+        String startLoop = "~WhileID" + loopNode.whileID + "~";
+        int startLoopIndex = sourceCodeForLoop.indexOf(startLoop);
+        String endLoop = "~ENDWhileID" + loopNode.whileID + "~";
+        int endLoopIndex = sourceCodeForLoop.indexOf(endLoop);
 
-//        loopTemp = loopTemp.replace("or", "||");
-//        loopTemp = loopTemp.replace("and", "&&");
-//        loopTemp = loopTemp.replace("NOP", "");
-////        loopTemp = loopTemp.replace("inL", "int");
-//loopTemp = loopTemp.replace("inH", "int");
-//loopTemp = loopTemp.replace("outL", "printf");
-//loopTemp = loopTemp.replace("outH", "printf");        
-//loopTemp = loopTemp.replace("outH BOT", "");
-//loopTemp = loopTemp.replace("outL BOT", "");
-//loopTemp = loopTemp.replace("if", "if(");
-//loopTemp = loopTemp.replace("then", ") {");
-//loopTemp = loopTemp.replace("endif", "}");
-        AProvE ape = new AProvE(loopTemp);
+        String loopEntire = sourceCodeForLoop.substring(startLoopIndex, endLoopIndex);
+        //omit Node IDs 
+        String pattern = "~WhileID[0-9]+~";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(loopEntire);
+        loopEntire = m.replaceAll("");
+        pattern = "~ENDWhileID[0-9]+~";
+        r = Pattern.compile(pattern);
+        m = r.matcher(loopEntire);
+        loopEntire = m.replaceAll("");
 
+        String tempInts = "int ";
+        int countertemp = 0;
+        for (Variable v : symbolTableOfVariables) {
+            tempInts += v.name;
+            if (countertemp != symbolTableOfVariables.size() - 1) {
+                tempInts += ", ";
+            }
+            countertemp++;
+        }
+        tempInts += ";\n";
+
+        loopEntire = tempInts + loopEntire;
+
+        loopEntire = "#include <stdio.h>\n"
+                     + "#define TRUE 1\n"
+                     + "#define true 1\n"
+                     + "#define FALSE 0\n"
+                     + "#define false 0\n\n"
+                     + "int main(){\n"
+                     + loopEntire
+                     + "return 0;\n}";
+
+//        System.out.println("\n\n\n\n****" + loopEntire);
+        AProvE ape = new AProvE(loopEntire);
+
+        if (ape.isTerminated) {
+            return "TRUE";
+        }
+        else {
+            return "FALSE";
+        }
 //        if (Math.random() > 0.5) {
 //            return "TRUE";
 //        }
-        return "FALSE";
+//        return "FALSE";
     }
 
     private String guard(Node n) {

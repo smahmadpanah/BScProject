@@ -11,13 +11,47 @@ inH k, r
 	 clist -> c 
 inH k, r
 	 x -> IDENTIFIER 
-l
+l1
+	 x -> IDENTIFIER 
+l2
 	 varlist -> x 
-l
+l2
+	 varlist -> x , varlist 
+l1, l2
 	 c -> INL_KW varlist 
-inL l
+inL l1, l2
 	 clist -> clist ; M c 
-inH k, r; inL l
+inH k, r; inL l1, l2
+	 x -> IDENTIFIER 
+l2
+	 exp -> x 
+l2
+	 n -> INTEGER_NUMBER 
+0
+	 exp -> n 
+0
+	 exp -> exp GT_KW exp 
+l2 > 0
+	 x -> IDENTIFIER 
+l1
+	 x -> IDENTIFIER 
+l1
+	 exp -> x 
+l1
+	 n -> INTEGER_NUMBER 
+1
+	 exp -> n 
+1
+	 exp -> exp PLUS_KW exp 
+l1 + 1
+	 c -> x ASSIGN_KW exp 
+l1 = l1 + 1
+	 clist -> c 
+l1 = l1 + 1
+	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
+while l2 > 0 do l1 = l1 + 1 done 
+	 clist -> clist ; M c 
+inH k, r; inL l1, l2; while l2 > 0 do l1 = l1 + 1 done 
 	 x -> IDENTIFIER 
 k
 	 exp -> x 
@@ -36,83 +70,237 @@ r
 9
 	 exp -> n 
 9
-	 exp -> exp EQ_KW exp 
-r == 9
-	 x -> IDENTIFIER 
-r
-	 x -> IDENTIFIER 
-r
-	 exp -> x 
-r
-	 n -> INTEGER_NUMBER 
-1
-	 exp -> n 
-1
-	 exp -> exp PLUS_KW exp 
-r + 1
-	 c -> x ASSIGN_KW exp 
-r = r + 1
-	 clist -> c 
-r = r + 1
-	 x -> IDENTIFIER 
-k
-	 x -> IDENTIFIER 
-k
-	 exp -> x 
-k
-	 n -> INTEGER_NUMBER 
-1
-	 exp -> n 
-1
-	 exp -> exp MINUS_KW exp 
-k - 1
-	 c -> x ASSIGN_KW exp 
-k = k - 1
-	 clist -> c 
-k = k - 1
-	 x -> IDENTIFIER 
-l
-	 exp -> x 
-l
-	 n -> INTEGER_NUMBER 
-1
-	 exp -> n 
-1
 	 exp -> exp GT_KW exp 
-l > 1
+r > 9
 	 x -> IDENTIFIER 
-l
+l1
+	 exp -> x 
+l1
+	 n -> INTEGER_NUMBER 
+3
+	 exp -> n 
+3
+	 exp -> exp LE_KW exp 
+l1 <= 3
+	 exp -> exp AND_KW exp 
+r > 9 and l1 <= 3
+	 x -> IDENTIFIER 
+r
+	 n -> INTEGER_NUMBER 
+2
+	 exp -> n 
+2
 	 x -> IDENTIFIER 
 k
 	 exp -> x 
 k
+	 exp -> exp PLUS_KW exp 
+2 + k
 	 c -> x ASSIGN_KW exp 
-l = k
+r = 2 + k
 	 clist -> c 
-l = k
-	 c -> IF_KW exp THEN_KW M clist ENDIF_KW 
- if l > 1 then l = k endif
-	 clist -> clist ; M c 
-k = k - 1;  if l > 1 then l = k endif
-	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
- if r == 9 then r = r + 1 else k = k - 1;  if l > 1 then l = k endif endif 
-	 clist -> c 
- if r == 9 then r = r + 1 else k = k - 1;  if l > 1 then l = k endif endif 
+r = 2 + k
 	 x -> IDENTIFIER 
 k
 	 c -> OUTH_KW x 
 outH k
 	 clist -> clist ; M c 
- if r == 9 then r = r + 1 else k = k - 1;  if l > 1 then l = k endif endif ; outH k
+r = 2 + k; outH k
 	 x -> IDENTIFIER 
-l
+l1
 	 c -> OUTL_KW x 
-outL l
+outL l1
 	 clist -> clist ; M c 
- if r == 9 then r = r + 1 else k = k - 1;  if l > 1 then l = k endif endif ; outH k; outL l
+r = 2 + k; outH k; outL l1
 	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
-while k > 0 do  if r == 9 then r = r + 1 else k = k - 1;  if l > 1 then l = k endif endif ; outH k; outL l done 
+while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done 
+	 clist -> c 
+while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done 
+	 x -> IDENTIFIER 
+k
+	 x -> IDENTIFIER 
+k
+	 exp -> x 
+k
+	 x -> IDENTIFIER 
+r
+	 exp -> x 
+r
+	 exp -> exp MINUS_KW exp 
+k - r
+	 c -> x ASSIGN_KW exp 
+k = k - r
 	 clist -> clist ; M c 
-inH k, r; inL l; while k > 0 do  if r == 9 then r = r + 1 else k = k - 1;  if l > 1 then l = k endif endif ; outH k; outL l done 
+while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done ; k = k - r
+	 x -> IDENTIFIER 
+r
+	 c -> OUTH_KW x 
+outH r
+	 clist -> clist ; M c 
+while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r
+	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
+while k > 0 do while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r done 
+	 clist -> clist ; M c 
+inH k, r; inL l1, l2; while l2 > 0 do l1 = l1 + 1 done ; while k > 0 do while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r done 
 	 program -> PROGRAM_KW ';' clist 
 ###Hooray! - Your program is syntactically correct### 
+program; inH k, r; inL l1, l2; while l2 > 0 do l1 = l1 + 1 done ; while k > 0 do while r > 9 and l1 <= 3 do r = 2 + k; outH k; outL l1 done ; k = k - r; outH r done 
+	 x -> IDENTIFIER 
+k
+	 x -> IDENTIFIER 
+r
+	 varlist -> x 
+r
+	 varlist -> x , varlist 
+k, r
+	 c -> INH_KW varlist 
+inH k, r
+	 clist -> c 
+inH k, r
+	 x -> IDENTIFIER 
+l1
+	 x -> IDENTIFIER 
+l2
+	 varlist -> x 
+l2
+	 varlist -> x , varlist 
+l1, l2
+	 c -> INL_KW varlist 
+inL l1, l2
+	 clist -> clist ; M c 
+inH k, r; inL l1, l2
+	 x -> IDENTIFIER 
+l2
+	 exp -> x 
+l2
+	 n -> INTEGER_NUMBER 
+0
+	 exp -> n 
+0
+	 exp -> exp GT_KW exp 
+l2 > 0
+	 x -> IDENTIFIER 
+l1
+	 x -> IDENTIFIER 
+l1
+	 exp -> x 
+l1
+	 n -> INTEGER_NUMBER 
+1
+	 exp -> n 
+1
+	 exp -> exp PLUS_KW exp 
+l1 + 1
+	 c -> x ASSIGN_KW exp 
+l1 = l1 + 1
+	 clist -> c 
+l1 = l1 + 1
+	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
+while l2 > 0 do l1 = l1 + 1 done 
+	 clist -> clist ; M c 
+inH k, r; inL l1, l2; while l2 > 0 do l1 = l1 + 1 done 
+	 x -> IDENTIFIER 
+k
+	 exp -> x 
+k
+	 n -> INTEGER_NUMBER 
+0
+	 exp -> n 
+0
+	 exp -> exp GT_KW exp 
+k > 0
+	 x -> IDENTIFIER 
+r
+	 exp -> x 
+r
+	 n -> INTEGER_NUMBER 
+9
+	 exp -> n 
+9
+	 exp -> exp GT_KW exp 
+r > 9
+	 x -> IDENTIFIER 
+l1
+	 exp -> x 
+l1
+	 n -> INTEGER_NUMBER 
+3
+	 exp -> n 
+3
+	 exp -> exp LE_KW exp 
+l1 <= 3
+	 exp -> exp AND_KW exp 
+r > 9 and l1 <= 3
+	 x -> IDENTIFIER 
+r
+	 n -> INTEGER_NUMBER 
+2
+	 exp -> n 
+2
+	 x -> IDENTIFIER 
+k
+	 exp -> x 
+k
+	 exp -> exp PLUS_KW exp 
+2 + k
+	 c -> x ASSIGN_KW exp 
+r = 2 + k
+	 clist -> c 
+r = 2 + k
+	 x -> IDENTIFIER 
+k
+	 c -> OUTH_KW x 
+outH k
+	 clist -> clist ; M c 
+r = 2 + k; outH k
+	 b -> BOOL_CONSTANT 
+TRUE
+	 exp -> b 
+TRUE
+	 c -> NOP_KW 
+NOP
+	 clist -> c 
+NOP
+	 x -> IDENTIFIER 
+l1
+	 c -> OUTL_KW x 
+outL l1
+	 clist -> c 
+outL l1
+	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
+ if TRUE then NOP else outL l1 endif 
+	 clist -> clist ; M c 
+r = 2 + k; outH k;  if TRUE then NOP else outL l1 endif 
+	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
+while r > 9 and l1 <= 3 do r = 2 + k; outH k;  if TRUE then NOP else outL l1 endif  done 
+	 clist -> c 
+while r > 9 and l1 <= 3 do r = 2 + k; outH k;  if TRUE then NOP else outL l1 endif  done 
+	 x -> IDENTIFIER 
+k
+	 x -> IDENTIFIER 
+k
+	 exp -> x 
+k
+	 x -> IDENTIFIER 
+r
+	 exp -> x 
+r
+	 exp -> exp MINUS_KW exp 
+k - r
+	 c -> x ASSIGN_KW exp 
+k = k - r
+	 clist -> clist ; M c 
+while r > 9 and l1 <= 3 do r = 2 + k; outH k;  if TRUE then NOP else outL l1 endif  done ; k = k - r
+	 x -> IDENTIFIER 
+r
+	 c -> OUTH_KW x 
+outH r
+	 clist -> clist ; M c 
+while r > 9 and l1 <= 3 do r = 2 + k; outH k;  if TRUE then NOP else outL l1 endif  done ; k = k - r; outH r
+	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
+while k > 0 do while r > 9 and l1 <= 3 do r = 2 + k; outH k;  if TRUE then NOP else outL l1 endif  done ; k = k - r; outH r done 
+	 clist -> clist ; M c 
+inH k, r; inL l1, l2; while l2 > 0 do l1 = l1 + 1 done ; while k > 0 do while r > 9 and l1 <= 3 do r = 2 + k; outH k;  if TRUE then NOP else outL l1 endif  done ; k = k - r; outH r done 
+	 program -> PROGRAM_KW ';' clist 
+###Hooray! - Your program is syntactically correct### 
+program; inH k, r; inL l1, l2; while l2 > 0 do l1 = l1 + 1 done ; while k > 0 do while r > 9 and l1 <= 3 do r = 2 + k; outH k;  if TRUE then NOP else outL l1 endif  done ; k = k - r; outH r done 

@@ -32,6 +32,9 @@ public class PINIRewriter {
     
     private ArrayList<Node> lowOutputs;
     
+    public String fileName;
+    
+    
     public PINIRewriter(MyLinkedList pdg) {
         
         this.pdg = pdg;
@@ -54,7 +57,7 @@ public class PINIRewriter {
         rewritedSourceCode = m.replaceAll("");
         
         try {
-            String fileName = YYParser.getSourceCodeFileName().replace(".wl", "");
+            fileName = YYParser.getSourceCodeFileName().replace(".wl", "");
             PrintStream writer = new PrintStream(new File(fileName + "-PINI.wl"));
             writer.print(rewritedSourceCode);
             writer.close();
@@ -390,9 +393,17 @@ public class PINIRewriter {
     public String getRewritedSourceCode() {
         return sourceCodeForPSNI;
     }
+    
+    public String getRewritedSourceCodeOutputFile(){
+        return rewritedSourceCode;
+    }
 
     public MyLinkedList getPdg() {
         return pdg;
+    }
+    
+    public String getFileName(){
+        return fileName;
     }
     
     

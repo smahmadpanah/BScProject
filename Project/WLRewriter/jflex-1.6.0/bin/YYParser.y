@@ -4,6 +4,8 @@ package wlrewriter;
   import java.io.*;
   import java.lang.*;
   import java.util.*; 
+  import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 %}
 
@@ -22,7 +24,15 @@ static PrintStream writer;
     private int nodeCounter = 0;
     private static String sourceCodeFileName;
 	
-	private static ArrayList<Variable> symbolTableOfVariables = new ArrayList<Variable>();
+	private String cSourceCodeOfInput="";
+	public String cSourceCodeForPSNI="";
+	
+	private int whileID = 0;
+	
+	public boolean controlFlag = false;
+	
+	
+	public ArrayList<Variable> symbolTableOfVariables = new ArrayList<Variable>(); //static bood ghablan
     
     
     public static void main(String args[]) throws IOException, FileNotFoundException {
@@ -111,8 +121,24 @@ program : PROGRAM_KW ';' clist
 	
 		$$ = new eval();
 		((eval)$$).stmt += "program; " + ((eval)$3).stmt;
-		((eval)$$).cSourceCode += "#include<stdio.h> \n \n void main() { " + ((eval)$3).cSourceCode + "}"; 
-		System.out.print(((eval)$$).cSourceCode);
+		((eval)$$).cSourceCode += "#include<stdio.h> \n \n int main() { " + ((eval)$3).cSourceCode + "return 0;}"; 
+		//System.out.print(((eval)$$).cSourceCode);
+		
+		cSourceCodeForPSNI = ((eval)$$).cSourceCode;
+		
+		//omit WhileIDs 
+        String pattern = "~WhileID[0-9]+~";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(((eval)$$).cSourceCode);
+        cSourceCodeOfInput = m.replaceAll("");
+		pattern = "~ENDWhileID[0-9]+~";
+        r = Pattern.compile(pattern);
+        m = r.matcher(cSourceCodeOfInput);
+        cSourceCodeOfInput = m.replaceAll("");
+		//System.out.println("\n\n*******\n\n" + cSourceCodeOfInput);
+		
+		//**********WE CAN USE cSourceCodeOfInput TO MAKE A .c FILE FOR COMPILE IT IN C LANGUAGE.
+		
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		//((eval)$$).variables.addAll(((eval)$3).variables);
@@ -137,12 +163,13 @@ program : PROGRAM_KW ';' clist
 		((eval)$$).list = new MyLinkedList(((eval)$$).node);
 		((eval)$$).list.merge(((eval)$3).list);
 		((eval)$$).list.merge(new MyLinkedList(new Node(nodeCounter++, "STOP")));
+		if(!controlFlag){
 		System.out.println("the CFG is created.");
 
 		PDGBuilder pdg = new PDGBuilder(((eval)$$).list); //the CFG is input to build the Forward Dominance Tree and after that, CFG and DDG that make PDG! :)
 		PINIRewriter pini = new PINIRewriter(pdg.getPDG());
         PSNIRewriter psni = new PSNIRewriter(pini);
-		
+		}
 		
 	};
 
@@ -689,13 +716,14 @@ c : NOP_KW
 		writer.print("\t c -> WHILE_KW exp DO_KW M clist DONE_KW \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "while " + ((eval)$2).stmt + " do " + ((eval)$5).stmt + " done ";
-		((eval)$$).cSourceCode += "while (" + ((eval)$2).cSourceCode + ") { " + ((eval)$5).cSourceCode + ";\n}";
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		((eval)$$).variables.addAll(((eval)$2).variables);
 	//	((eval)$$).variables.addAll(((eval)$5).variables);
 	
 		((eval)$$).node = new Node(nodeCounter++, ((eval)$2).stmt);//condition expression node
+		((eval)$$).node.whileID = whileID++;
+		((eval)$$).cSourceCode += "~WhileID"+((eval)$$).node.whileID+"~while (" + ((eval)$2).cSourceCode + ") { " + ((eval)$5).cSourceCode + ";\n}"+"~ENDWhileID"+((eval)$$).node.whileID+"~";
 		((eval)$$).nodeIdAndStmt += "while " + "#" + ((eval)$$).node.getNodeID() + ":" + ((eval)$2).stmt + " do \n" + ((eval)$5).nodeIdAndStmt + " done ";
 		((eval)$$).node.setNodeIdAndStmt(((eval)$$).nodeIdAndStmt);
 		

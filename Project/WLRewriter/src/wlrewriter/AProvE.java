@@ -5,7 +5,6 @@ package wlrewriter;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,6 +17,8 @@ import java.net.URL;
  * @author Mohammad
  */
 public class AProvE {
+
+    public boolean isTerminated = false;
 
     public AProvE(String loop) {
         try {
@@ -49,6 +50,7 @@ public class AProvE {
                 is.close();
                 if (os.contains("Termination</b> of the given <i>C Problem</i> could be <font color=\"#00cc00\">proven")) {
                     System.out.println("PROVEN");
+                    isTerminated = true;
                 }
 
                 else {
@@ -59,6 +61,8 @@ public class AProvE {
                     else {
                         System.out.println("MAYBE");
                     }
+
+                    isTerminated = false;
                 }
 
                 hConnection.disconnect();

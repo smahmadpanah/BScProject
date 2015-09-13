@@ -5,9 +5,12 @@
  */
 package wlrewriter;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -91,8 +94,22 @@ public class PSNIRewriter {
 
         initializeD(); //initializing paths
 
-        reWrite();
-
+        String rewritedSourceCode = reWrite();
+//        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n"+rewritedSourceCode);
+        String pattern = "#[0-9]+:";
+        Pattern r = Pattern.compile(pattern);
+        Matcher m = r.matcher(rewritedSourceCode);
+        rewritedSourceCode = m.replaceAll("");
+        
+        try {
+            String fileName = YYParser.getSourceCodeFileName().replace(".wl", "");
+            PrintStream writer = new PrintStream(new File(fileName + "-PSNI.wl"));
+            writer.print(rewritedSourceCode);
+            writer.close();
+            System.out.println("$$$PSNI REWRITER --> Check out: " + fileName + "-PSNI.wl");
+        } catch (FileNotFoundException e) {
+            System.err.println("File Not Found!");
+        }
     }
 
     private void initializeD() {
@@ -170,9 +187,9 @@ public class PSNIRewriter {
 
     }
 
-    private void reWrite() {
+    private String reWrite() {
         if (D.isEmpty()) { // if there is no path, finished!
-            return;
+            return sourceCode;
         }
 
         int H = 0; // H = max{height(n) | n is a node on the PDG}
@@ -228,14 +245,14 @@ public class PSNIRewriter {
                     }
                     else {
                         if (!r.equals("TRUE")) {
-                            sourceCode = sourceCode.replace(loop(n), "if " + r + " then " + loop(n) + "\nendif");
+                            sourceCode = sourceCode.replace(loop(n), "if " + r + " then \n" + loop(n) + "\nendif");
                         }
                     }
 
                 }
             }
         }
-
+        return sourceCode;
     }
 
     private int computeHeight(Node n) {
@@ -278,6 +295,10 @@ public class PSNIRewriter {
     // junk function
     private String loopAnalyzer(Node loopNode) {
 
+        boolean alaki = true;
+        if (alaki) {
+            return "l1 <= h1 or l1 < 0";
+        }
         if (guard(loopNode).equals("TRUE") || guard(loopNode).equals("true")) {
             return "FALSE";
         }
@@ -327,7 +348,14 @@ public class PSNIRewriter {
                      + loopEntire
                      + "return 0;\n}";
 
-//        System.out.println("\n\n\n\n****" + loopEntire);
+        loopEntire = loopEntire.replace("{", "{\n");
+        loopEntire = loopEntire.replace("}", "}\n");
+        loopEntire = loopEntire.replace("\n;", ";");
+        loopEntire = loopEntire.replace(";", ";\n");
+
+        loopEntire = loopEntire.replace("\n", "\r\n");
+
+        System.out.println("\n\n\n\n****\n" + loopEntire + "\n\n\n\n#####");
         AProvE ape = new AProvE(loopEntire);
 
         if (ape.isTerminated) {

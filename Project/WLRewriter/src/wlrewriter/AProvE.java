@@ -141,8 +141,8 @@ public class AProvE {
                 hConnection.disconnect();
             }
         } catch (Exception ex) {
-//            System.err.println("Connection Failed.");
             ex.printStackTrace();
+            System.err.println("Connection Failed.");
         }
     }
 }

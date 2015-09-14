@@ -34,6 +34,7 @@ public class PSNIRewriter {
     private Node sourceNode, destinationNode;
     private String sourceCodeForLoop; // YOU CAN WRITE IT ON A FILE FOR PINI.c FILE
     private ArrayList<Variable> symbolTableOfVariables;
+    private MyLinkedList piniCfg;//just for replace method
 
     public PSNIRewriter(PINIRewriter pini) {
         pdg = pini.getPdg();
@@ -78,9 +79,9 @@ public class PSNIRewriter {
                 return null;
             }
 
-        });
+        }, this);
         try {
-            yyparser.controlFlag = true;
+            yyparser.controlFlag = 1;
             yyparser.parse();
             sourceCodeForLoop = yyparser.cSourceCodeForPSNI;
             symbolTableOfVariables = yyparser.symbolTableOfVariables;
@@ -100,7 +101,7 @@ public class PSNIRewriter {
         Pattern r = Pattern.compile(pattern);
         Matcher m = r.matcher(rewritedSourceCode);
         rewritedSourceCode = m.replaceAll("");
-        
+
         try {
             String fileName = YYParser.getSourceCodeFileName().replace(".wl", "");
             PrintStream writer = new PrintStream(new File(fileName + "-PSNI.wl"));
@@ -110,6 +111,8 @@ public class PSNIRewriter {
         } catch (FileNotFoundException e) {
             System.err.println("File Not Found!");
         }
+
+        new PSNItoC(pini);
     }
 
     private void initializeD() {
@@ -216,6 +219,8 @@ public class PSNIRewriter {
 //        for(Node nodenode : loopsInD){
 //            System.out.println(nodenode.getNodeID());
 //        }
+        sourceCode = piniCfg.getFirst().getNodeIdAndStmt();
+
         for (int h = H; h > 0; h--) { //for h = H to 1 do
             for (Node n : loopsInD) {
                 if (n.height == h) {
@@ -223,7 +228,6 @@ public class PSNIRewriter {
 
                     if (r.equals("FALSE")) {
                         boolean flag = false;
-
                         for (LinkedList<Node> f : D) {
                             for (int i = 0; i < f.size() - 1; i++) {
                                 Node p = f.get(i);
@@ -239,13 +243,30 @@ public class PSNIRewriter {
                         }
 
                         if (flag) { //if X -c-> n appears on at least one path f exists in D
-                            sourceCode = sourceCode.replace(loop(n), "if " + guard(n) + " then \n" + body(n) + "\nendif");
+
+                            for (Node nodeInPiniCFG : piniCfg.getNodeSet()) {
+                                if (n.whileID == nodeInPiniCFG.whileID) {
+//                                    System.out.println(loop(nodeInPiniCFG));
+//                                    System.out.println(guard(nodeInPiniCFG));
+//                                    System.out.println(body(nodeInPiniCFG));
+//                                    System.out.println(sourceCode.contains(loop(nodeInPiniCFG)));
+                                    sourceCode = sourceCode.replace(loop(nodeInPiniCFG), "if " + guard(nodeInPiniCFG) + " then \n" + body(nodeInPiniCFG) + "\nendif");
+                                    break;
+                                }
+                            }
                         }
 
                     }
                     else {
                         if (!r.equals("TRUE")) {
-                            sourceCode = sourceCode.replace(loop(n), "if " + r + " then \n" + loop(n) + "\nendif");
+                            for (Node nodeInPiniCFG : piniCfg.getNodeSet()) {
+//                                System.out.println(nodeInPiniCFG.whileID);
+                                if (n.whileID == nodeInPiniCFG.whileID) {
+                                    sourceCode = sourceCode.replace(loop(nodeInPiniCFG), "if " + r + " then \n" + loop(nodeInPiniCFG) + "\nendif");
+                                    break;
+                                }
+                            }
+
                         }
                     }
 
@@ -295,10 +316,10 @@ public class PSNIRewriter {
     // junk function
     private String loopAnalyzer(Node loopNode) {
 
-        boolean alaki = true;
-        if (alaki) {
-            return "l1 <= h1 or l1 < 0";
-        }
+//        boolean alaki = true;
+//        if (alaki) {
+//            return "l1 <= h1 or l1 < 0";
+//        }
         if (guard(loopNode).equals("TRUE") || guard(loopNode).equals("true")) {
             return "FALSE";
         }
@@ -377,8 +398,69 @@ public class PSNIRewriter {
     private String body(Node n) {
         String body = n.getNodeIdAndStmt();
         body = body.replace("while #" + n.getNodeID() + ":" + n.getStatement() + " do \n", "");
-
+        int lastIndexDone = body.lastIndexOf("done");
+        body = body.substring(0, lastIndexDone);
         return body;
     }
 
+    public void setPSNICFG(MyLinkedList list) {
+        piniCfg = list;
+    }
+
+    private class PSNItoC {
+
+        PSNItoC(PINIRewriter pini) {
+
+            YYParser yyparser;
+            Yylex lexer;
+            Yylex yylexTemp = null;
+
+            try {
+                yylexTemp = new Yylex(new InputStreamReader(new FileInputStream(pini.getFileName() + "-PSNI.wl")));
+            } catch (Exception ex) {
+                System.err.println("Source code file not found!");
+                System.exit(0);
+            }
+
+            lexer = yylexTemp;
+
+            yyparser = new YYParser(new YYParser.Lexer() {
+                @Override
+                public int yylex() {
+                    int yyl_return = -1;
+                    try {
+
+                        yyl_return = lexer.yylex();
+                    } catch (IOException e) {
+                        System.err.println("IO error : " + e);
+                    }
+                    return yyl_return;
+                }
+
+                @Override
+                public void yyerror(String error) {
+                    //System.err.println ("Error : " + error);
+                    System.err.println("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
+                    writer.print("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
+
+                }
+
+                @Override
+                public Object getLVal() {
+                    return null;
+                }
+
+            });
+            try {
+                yyparser.controlFlag = 2;
+                yyparser.parse();
+                sourceCodeForLoop = yyparser.cSourceCodeForPSNI;
+                symbolTableOfVariables = yyparser.symbolTableOfVariables;
+
+            } catch (IOException ex) {
+                Logger.getLogger(PSNIRewriter.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
 }

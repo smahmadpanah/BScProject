@@ -29,7 +29,7 @@ static PrintStream writer;
 	
 	private int whileID = 0;
 	
-	public boolean controlFlag = false;
+	public int controlFlag = 0;
 	
 	
 	public ArrayList<Variable> symbolTableOfVariables = new ArrayList<Variable>(); //static bood ghablan
@@ -163,12 +163,41 @@ program : PROGRAM_KW ';' clist
 		((eval)$$).list = new MyLinkedList(((eval)$$).node);
 		((eval)$$).list.merge(((eval)$3).list);
 		((eval)$$).list.merge(new MyLinkedList(new Node(nodeCounter++, "STOP")));
-		if(!controlFlag){
+				
+		
+		if(controlFlag==2){
+		try{
+			PrintStream writer3 = new PrintStream(new File(sourceCodeFileName+"-PSNI.c"));
+			String tempcSourceCodeOfInput = cSourceCodeOfInput;
+			tempcSourceCodeOfInput = tempcSourceCodeOfInput.replace
+			writer3.print(tempcSourceCodeOfInput);
+		}
+		catch (Exception e){
+			System.out.println("ERROR in FILE.");
+		}
+		}
+		if(controlFlag==1){
+		psni.setPSNICFG(((eval)$$).list);
+		try{
+			PrintStream writer1 = new PrintStream(new File(sourceCodeFileName+"-PINI.c"));
+			writer1.print(cSourceCodeOfInput);
+		}
+		catch (Exception e){
+			System.out.println("ERROR in FILE.");
+		}
+		}
+		if(controlFlag==0){
 		System.out.println("the CFG is created.");
-
+		try{
+			PrintStream writer2 = new PrintStream(new File(sourceCodeFileName+".c"));
+			writer2.print(cSourceCodeOfInput);
+		}
+		catch (Exception e){
+			System.out.println("ERROR in FILE.");
+		}
 		PDGBuilder pdg = new PDGBuilder(((eval)$$).list); //the CFG is input to build the Forward Dominance Tree and after that, CFG and DDG that make PDG! :)
 		PINIRewriter pini = new PINIRewriter(pdg.getPDG());
-        PSNIRewriter psni = new PSNIRewriter(pini);
+        psni = new PSNIRewriter(pini);
 		}
 		
 	};

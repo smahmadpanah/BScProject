@@ -9,7 +9,28 @@
     }
 	"
 	and save it.
-6) Now, you can run the YYParser.java correctly.
+6) Open "YYParser.java" and put the following piece of code in near line 236:
+	private PSNIRewriter psni;
+
+	"
+    /**
+     * Instantiates the Bison-generated parser.
+     *
+     * @param yylexer The scanner that will supply tokens to the parser.
+     */
+    public YYParser(Lexer yylexer) {
+        this.yylexer = yylexer;
+
+    }
+	
+	// a new constructor for PSNI
+    public YYParser(Lexer yylexer, PSNIRewriter p) {
+        this.yylexer = yylexer;
+        psni = p;
+    }
+	"
+	
+7) Now, you can run the YYParser.java correctly.
 8) After run the program, enter your source code file path as the input. It will make three .png file for Control Dependence Graph, Data Dependence Graph and at last, Program Dependence Graph.
 9) Check out filename-PINI.wl, the rewrited source code of the input file.
 

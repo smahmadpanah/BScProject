@@ -376,7 +376,7 @@ public class PSNIRewriter {
 
         loopEntire = loopEntire.replace("\n", "\r\n");
 
-        System.out.println("\n\n\n\n****\n" + loopEntire + "\n\n\n\n#####");
+//        System.out.println("\n\n\n\n****\n" + loopEntire + "\n\n\n\n#####");
         AProvE ape = new AProvE(loopEntire);
 
         if (ape.isTerminated) {

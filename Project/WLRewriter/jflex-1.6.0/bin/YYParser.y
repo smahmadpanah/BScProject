@@ -121,7 +121,9 @@ program : PROGRAM_KW ';' clist
 	
 		$$ = new eval();
 		((eval)$$).stmt += "program; " + ((eval)$3).stmt;
-		((eval)$$).cSourceCode += "#include<stdio.h> \n \n int main() { " + ((eval)$3).cSourceCode + "return 0;}"; 
+		((eval)$$).cSourceCode += "#include <stdio.h> \n \n#define TRUE 1 \n#define true 1 \n" 
+									+ "#define FALSE 0 \n#define false 0 \n\n\n" 
+									+"int main() { " + ((eval)$3).cSourceCode + "return 0;}"; 
 		//System.out.print(((eval)$$).cSourceCode);
 		
 		cSourceCodeForPSNI = ((eval)$$).cSourceCode;
@@ -168,9 +170,7 @@ program : PROGRAM_KW ';' clist
 		if(controlFlag==2){
 		try{
 			PrintStream writer3 = new PrintStream(new File(sourceCodeFileName+"-PSNI.c"));
-			String tempcSourceCodeOfInput = cSourceCodeOfInput;
-			tempcSourceCodeOfInput = tempcSourceCodeOfInput.replace
-			writer3.print(tempcSourceCodeOfInput);
+			writer3.print(cSourceCodeOfInput);
 		}
 		catch (Exception e){
 			System.out.println("ERROR in FILE.");
@@ -477,7 +477,11 @@ c : NOP_KW
 		writer.print("\t c -> INL_KW varlist \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "inL "+((eval)$2).stmt;	
-		((eval)$$).cSourceCode += "int "+((eval)$2).cSourceCode;
+		//((eval)$$).cSourceCode += "int "+((eval)$2).cSourceCode;
+		for(String alpha : ((eval)$2).variables){
+			((eval)$$).cSourceCode += "int " + alpha + ";  //type: low \n";
+			((eval)$$).cSourceCode += "scanf(\"%d\", &" + alpha + ");\n";
+		}
 		writer.print(((eval)$$).stmt+ "\n");	
 		
 		((eval)$$).variables.addAll(((eval)$2).variables);
@@ -518,7 +522,11 @@ c : NOP_KW
 		writer.print("\t c -> INH_KW varlist \n") ;
 		$$=new eval();
 		((eval)$$).stmt += "inH "+((eval)$2).stmt;
-		((eval)$$).cSourceCode += "int "+((eval)$2).cSourceCode;
+		//((eval)$$).cSourceCode += "int "+((eval)$2).cSourceCode;
+		for(String alpha : ((eval)$2).variables){
+			((eval)$$).cSourceCode += "int " + alpha + ";  //type: high \n";
+			((eval)$$).cSourceCode += "scanf(\"%d\", &" + alpha + ");\n";
+		}
 		writer.print(((eval)$$).stmt+ "\n");
 		
 		((eval)$$).variables.addAll(((eval)$2).variables);

@@ -21,6 +21,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -28,6 +29,8 @@ import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.fife.ui.rtextarea.*;
+import org.fife.ui.rsyntaxtextarea.*;
 
 /**
  *
@@ -42,7 +45,7 @@ public class GUI extends JFrame {
     private JScrollPane scroll, terminalScroll;
     private JRadioButton pini, pdg, psni;
     private ButtonGroup group;
-//    private JLabel label;
+    private JLabel label;
 //    private JPanel p1, p2, p3, p4, p5;
 
     public GUI() {
@@ -62,16 +65,18 @@ public class GUI extends JFrame {
          * Dimension(100, 40)); psni = new JButton("PSNI");
          * psni.setPreferredSize(new Dimension(100, 40));
          */
-        pdg = new JRadioButton("PDG");
+        pdg = new JRadioButton("Make Program Dependence Graph");
         pdg.setActionCommand("PDG");
+        pdg.setForeground(new Color(13, 145, 22));
         pdg.setSelected(true);
 
-        pini = new JRadioButton("PINI");
+        pini = new JRadioButton("Rewrite in Progress Insensitive mode");
         pini.setActionCommand("PINI");
+        pini.setForeground(new Color(44, 94, 232));
 
-        psni = new JRadioButton("PSNI");
+        psni = new JRadioButton("Rewrite in Progress Sensitive mode");
         psni.setActionCommand("PSNI");
-
+        psni.setForeground(new Color(123, 61, 229));
         //Group the radio buttons.
         group = new ButtonGroup();
         group.add(pdg);
@@ -79,7 +84,11 @@ public class GUI extends JFrame {
         group.add(psni);
 
         execute = new JButton("Execute");
+        execute.setForeground(new Color(145,0,15));
         add(execute);
+
+        label = new JLabel("Current File Name: sourceCode.wl");
+        add(label);
 
 //        p1 = new JPanel();
 //        p2 = new JPanel();
@@ -95,6 +104,7 @@ public class GUI extends JFrame {
 
 //        p4 = new JPanel();
         clear = new JButton("Clear");
+        clear.setForeground(Color.red);
 //        panel.setLayout(new GridLayout(5, 1, 0, 5));
 //        panel.add(pdg);
 //        panel.add(pini);
@@ -104,8 +114,11 @@ public class GUI extends JFrame {
 //        panel.add(help);
 //        panel.setPreferredSize(new Dimension(100, 50));
         sourceCodeTextArea = new JTextArea(14, 40);
+        sourceCodeTextArea.setText("//type your source code here...\n");
         Font font = new Font("Courier New", Font.PLAIN, 18);
         sourceCodeTextArea.setFont(font);
+        sourceCodeTextArea.setBackground(new Color(203, 217, 247));
+        sourceCodeTextArea.setForeground(Color.black);
         scroll = new JScrollPane(sourceCodeTextArea);
         this.addWindowListener(new WindowAdapter() {
             public void windowOpened(WindowEvent e) {
@@ -115,6 +128,7 @@ public class GUI extends JFrame {
 //        scroll.setPreferredSize(new Dimension(800, 300));
         add(scroll);
         browse = new JButton("Browse File");
+        browse.setForeground(Color.BLUE);
 //        label = new JLabel("Select an input file...");
 //        add(label);
         add(browse);
@@ -127,13 +141,16 @@ public class GUI extends JFrame {
 //        JPanel p2 = new JPanel();
 //        p2.add(label);
 //        p2.add(browse);
-        terminal = new JTextArea(11, 15);
+        terminal = new JTextArea(11, 20);
         Font font1 = new Font("Times New Roman", Font.PLAIN, 14);
         terminal.setFont(font1);
-        terminal.setForeground(Color.GREEN);
+        terminal.setForeground(new Color(203, 217, 247));
         terminal.setBackground(Color.BLACK);
         terminal.setEditable(false);
-        terminal.setText("Log:\n");
+        terminal.setText("Log:\nthe CFG is created.\n"
+                         + "Control Dependence Graph is ready.\n"
+                         + "Data Dependence Graph is ready.\n"
+                         + "Program Dependence Graph is ready.\n");
         terminalScroll = new JScrollPane(terminal);
         add(terminalScroll);
 
@@ -216,6 +233,12 @@ public class GUI extends JFrame {
         layout.putConstraint(SpringLayout.SOUTH, terminalScroll,
                              -40,
                              SpringLayout.SOUTH, contentPane);
+        layout.putConstraint(SpringLayout.NORTH, label,
+                             -15,
+                             SpringLayout.NORTH, scroll);
+        layout.putConstraint(SpringLayout.WEST, label,
+                             0,
+                             SpringLayout.WEST, scroll);
 
 //        add(p3, BorderLayout.CENTER);
 //        add(p1, BorderLayout.WEST);
@@ -319,9 +342,12 @@ public class GUI extends JFrame {
                 JOptionPane.showMessageDialog(null, "Help me! :)");
             }
             if (e.getSource() == clear) {
+                JOptionPane.showMessageDialog(null, "A deprecated call", "Warning",
+                                              JOptionPane.WARNING_MESSAGE);
                 System.out.println("clear");
                 fileName = "";
                 sourceCodeTextArea.setText("");
+                label.setText("Current File Name: " + "sourceCode.wl");
             }
             if (e.getSource() == browse) {
                 System.out.println("browse");
@@ -348,6 +374,7 @@ public class GUI extends JFrame {
                         System.out.println("Selected file can not be read");
                     }
                 }
+                label.setText("Current File Name: " + fileName);
             }
         }
 

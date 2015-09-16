@@ -1,59 +1,136 @@
 	 x -> IDENTIFIER 
+l1
+	 x -> IDENTIFIER 
+l2
+	 varlist -> x 
+l2
+	 varlist -> x , varlist 
+l1, l2
+	 c -> INL_KW varlist 
+inL l1, l2
+	 clist -> c 
+inL l1, l2
+	 x -> IDENTIFIER 
 h1
 	 varlist -> x 
 h1
 	 c -> INH_KW varlist 
 inH h1
-	 clist -> c 
-inH h1
-	 x -> IDENTIFIER 
-l1
-	 varlist -> x 
-l1
-	 c -> INL_KW varlist 
-inL l1
 	 clist -> clist ; M c 
-inH h1; inL l1
-	 x -> IDENTIFIER 
-h1
-	 exp -> x 
-h1
+inL l1, l2; inH h1
 	 x -> IDENTIFIER 
 l1
 	 exp -> x 
 l1
-	 exp -> exp LT_KW exp 
-h1 < l1
+	 n -> INTEGER_NUMBER 
+0
+	 exp -> n 
+0
+	 exp -> exp EQ_KW exp 
+l1 == 0
+	 x -> IDENTIFIER 
+l2
+	 x -> IDENTIFIER 
+h1
+	 exp -> x 
+h1
+	 c -> x ASSIGN_KW exp 
+l2 = h1
+	 clist -> c 
+l2 = h1
 	 c -> NOP_KW 
 NOP
 	 clist -> c 
 NOP
-	 x -> IDENTIFIER 
-h1
-	 x -> IDENTIFIER 
-h1
-	 exp -> x 
-h1
-	 x -> IDENTIFIER 
-l1
-	 exp -> x 
-l1
-	 exp -> exp MINUS_KW exp 
-h1 - l1
-	 c -> x ASSIGN_KW exp 
-h1 = h1 - l1
+	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
+ if l1 == 0 then l2 = h1 else NOP endif 
 	 clist -> clist ; M c 
-NOP; h1 = h1 - l1
-	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
-while h1 < l1 do NOP; h1 = h1 - l1 done 
-	 clist -> clist ; M c 
-inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done 
+inL l1, l2; inH h1;  if l1 == 0 then l2 = h1 else NOP endif 
 	 x -> IDENTIFIER 
-l1
+l2
 	 c -> OUTL_KW x 
-outL l1
+outL l2
 	 clist -> clist ; M c 
-inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done ; outL l1
+inL l1, l2; inH h1;  if l1 == 0 then l2 = h1 else NOP endif ; outL l2
 	 program -> PROGRAM_KW ';' clist 
 ###Hooray! - Your program is syntactically correct### 
-program; inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done ; outL l1
+program; inL l1, l2; inH h1;  if l1 == 0 then l2 = h1 else NOP endif ; outL l2
+	 x -> IDENTIFIER 
+l1
+	 x -> IDENTIFIER 
+l2
+	 varlist -> x 
+l2
+	 varlist -> x , varlist 
+l1, l2
+	 c -> INL_KW varlist 
+inL l1, l2
+	 clist -> c 
+inL l1, l2
+	 x -> IDENTIFIER 
+h1
+	 varlist -> x 
+h1
+	 c -> INH_KW varlist 
+inH h1
+	 clist -> clist ; M c 
+inL l1, l2; inH h1
+	 x -> IDENTIFIER 
+l1
+	 exp -> x 
+l1
+	 n -> INTEGER_NUMBER 
+0
+	 exp -> n 
+0
+	 exp -> exp EQ_KW exp 
+l1 == 0
+	 x -> IDENTIFIER 
+l2
+	 x -> IDENTIFIER 
+h1
+	 exp -> x 
+h1
+	 c -> x ASSIGN_KW exp 
+l2 = h1
+	 clist -> c 
+l2 = h1
+	 c -> NOP_KW 
+NOP
+	 clist -> c 
+NOP
+	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
+ if l1 == 0 then l2 = h1 else NOP endif 
+	 clist -> clist ; M c 
+inL l1, l2; inH h1;  if l1 == 0 then l2 = h1 else NOP endif 
+	 x -> IDENTIFIER 
+l1
+	 exp -> x 
+l1
+	 n -> INTEGER_NUMBER 
+0
+	 exp -> n 
+0
+	 exp -> exp EQ_KW exp 
+l1 == 0
+	 exp -> LPAR_KW exp RPAR_KW 
+(l1 == 0)
+	 exp -> LPAR_KW exp RPAR_KW 
+((l1 == 0))
+	 c -> OUTL_KW BOT_KW 
+outL BOT
+	 clist -> c 
+outL BOT
+	 x -> IDENTIFIER 
+l2
+	 c -> OUTL_KW x 
+outL l2
+	 clist -> c 
+outL l2
+	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
+ if ((l1 == 0)) then outL BOT else outL l2 endif 
+	 clist -> clist ; M c 
+inL l1, l2; inH h1;  if l1 == 0 then l2 = h1 else NOP endif ;  if ((l1 == 0)) then outL BOT else outL l2 endif 
+	 program -> PROGRAM_KW ';' clist 
+###Hooray! - Your program is syntactically correct### 
+program; inL l1, l2; inH h1;  if l1 == 0 then l2 = h1 else NOP endif ;  if ((l1 == 0)) then outL BOT else outL l2 endif 

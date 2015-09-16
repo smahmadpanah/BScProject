@@ -17,6 +17,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.Scanner;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -34,11 +35,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class GUI extends JFrame {
 
-    private JButton pdg, pini, psni, help, browse, clear;
+//    private JButton pdg, pini, psni;
+    private JButton help, browse, clear, execute;
     private JFileChooser inputFileBrowser;
     private JTextArea sourceCodeTextArea, terminal;
     private JScrollPane scroll, terminalScroll;
-    private JRadioButton radioButton;
+    private JRadioButton pini, pdg, psni;
+    private ButtonGroup group;
 //    private JLabel label;
 //    private JPanel p1, p2, p3, p4, p5;
 
@@ -48,17 +51,35 @@ public class GUI extends JFrame {
 //        panel = new JPanel();
 //        try {
 //            pdg = new JButton(new ImageIcon(ImageIO.read(getClass().getResource("icon.png"))));
-        pdg = new JButton("PDG");
-        pdg.setPreferredSize(new Dimension(100, 40));
-
 //        } catch (IOException ex) {
 //            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //        pdg.setPreferredSize(new Dimension(30, 50));
-        pini = new JButton("PINI");
-        pini.setPreferredSize(new Dimension(100, 40));
-        psni = new JButton("PSNI");
-        psni.setPreferredSize(new Dimension(100, 40));
+        /**
+         * ************************************************************************
+         * pdg = new JButton("PDG"); pdg.setPreferredSize(new Dimension(100,
+         * 40)); pini = new JButton("PINI"); pini.setPreferredSize(new
+         * Dimension(100, 40)); psni = new JButton("PSNI");
+         * psni.setPreferredSize(new Dimension(100, 40));
+         */
+        pdg = new JRadioButton("PDG");
+        pdg.setActionCommand("PDG");
+        pdg.setSelected(true);
+
+        pini = new JRadioButton("PINI");
+        pini.setActionCommand("PINI");
+
+        psni = new JRadioButton("PSNI");
+        psni.setActionCommand("PSNI");
+
+        //Group the radio buttons.
+        group = new ButtonGroup();
+        group.add(pdg);
+        group.add(pini);
+        group.add(psni);
+
+        execute = new JButton("Execute");
+        add(execute);
 
 //        p1 = new JPanel();
 //        p2 = new JPanel();
@@ -106,7 +127,7 @@ public class GUI extends JFrame {
 //        JPanel p2 = new JPanel();
 //        p2.add(label);
 //        p2.add(browse);
-        terminal = new JTextArea(11, 20);
+        terminal = new JTextArea(11, 15);
         Font font1 = new Font("Times New Roman", Font.PLAIN, 14);
         terminal.setFont(font1);
         terminal.setForeground(Color.GREEN);
@@ -121,40 +142,46 @@ public class GUI extends JFrame {
         contentPane.setLayout(layout);
 
         layout.putConstraint(SpringLayout.WEST, pdg,
-                             90,
+                             15,
                              SpringLayout.WEST, contentPane);
         layout.putConstraint(SpringLayout.NORTH, pdg,
                              35,
                              SpringLayout.NORTH, contentPane);
 
-        layout.putConstraint(SpringLayout.EAST, pini,
-                             45,
+        layout.putConstraint(SpringLayout.WEST, pini,
+                             0,
                              SpringLayout.WEST, pdg);
         layout.putConstraint(SpringLayout.NORTH, pini,
                              5,
                              SpringLayout.SOUTH, pdg);
 
         layout.putConstraint(SpringLayout.WEST, psni,
-                             -45,
-                             SpringLayout.EAST, pdg);
+                             0,
+                             SpringLayout.WEST, pini);
         layout.putConstraint(SpringLayout.NORTH, psni,
                              5,
-                             SpringLayout.SOUTH, pdg);
+                             SpringLayout.SOUTH, pini);
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, execute,
+                             0,///////
+                             SpringLayout.HORIZONTAL_CENTER, terminalScroll);
+        layout.putConstraint(SpringLayout.NORTH, execute,
+                             5,
+                             SpringLayout.SOUTH, psni);
         layout.putConstraint(SpringLayout.WEST, scroll,
-                             45,
-                             SpringLayout.EAST, psni);
+                             10,
+                             SpringLayout.EAST, terminalScroll);
         layout.putConstraint(SpringLayout.NORTH, scroll,
                              35,
                              SpringLayout.NORTH, contentPane);
         layout.putConstraint(SpringLayout.WEST, terminalScroll,
-                             5,
+                             15,
                              SpringLayout.WEST, contentPane);
-        layout.putConstraint(SpringLayout.EAST, terminalScroll,
-                             -15,
-                             SpringLayout.WEST, scroll);
+//        layout.putConstraint(SpringLayout.EAST, terminalScroll,
+//                             0,
+//                             SpringLayout.WEST, scroll);
         layout.putConstraint(SpringLayout.NORTH, terminalScroll,
                              20,
-                             SpringLayout.SOUTH, pini);
+                             SpringLayout.SOUTH, execute);
 //        int m = (int) scroll.getLocation().getX();
         layout.putConstraint(SpringLayout.EAST, browse,
                              0,
@@ -206,6 +233,7 @@ public class GUI extends JFrame {
         help.addActionListener(handler);
         browse.addActionListener(handler);
         clear.addActionListener(handler);
+        execute.addActionListener(handler);
 
     }
 
@@ -219,8 +247,10 @@ public class GUI extends JFrame {
         }
         GUI gui = new GUI();
         gui.setLocation(10, 10);
-        gui.setSize(1000, 500);
+//        gui.setSize(1000, 500);
+        gui.setMinimumSize(new Dimension(800, 500));
 //        gui.pack();
+        gui.setLocationRelativeTo(null);
         gui.setResizable(true);
         gui.setIconImage(Toolkit.getDefaultToolkit().getImage(GUI.class.getResource("icon.png")));
         gui.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -248,21 +278,42 @@ public class GUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == pdg) {
-                System.out.println("pdg");
-                makeSourceCodeFile();
-                YYParser.mainMethod(fileName, 0);
+            if (e.getSource() == execute) {
+                if (pdg.isSelected()) {
+                    System.out.println("pdg");
+                    makeSourceCodeFile();
+                    YYParser.mainMethod(fileName, 0);
+                }
+                else {
+                    if (pini.isSelected()) {
+                        System.out.println("pini");
+                        makeSourceCodeFile();
+                        YYParser.mainMethod(fileName, 1);
+                    }
+                    else {
+                        if (psni.isSelected()) {
+                            System.out.println("psni");
+                            makeSourceCodeFile();
+                            YYParser.mainMethod(fileName, 2);
+                        }
+                    }
+                }
             }
-            if (e.getSource() == pini) {
-                System.out.println("pini");
-                makeSourceCodeFile();
-                YYParser.mainMethod(fileName, 1);
-            }
-            if (e.getSource() == psni) {
-                System.out.println("psni");
-                makeSourceCodeFile();
-                YYParser.mainMethod(fileName, 2);
-            }
+//            if (e.getSource() == pdg) {
+//                System.out.println("pdg");
+//                makeSourceCodeFile();
+//                YYParser.mainMethod(fileName, 0);
+//            }
+//            if (e.getSource() == pini) {
+//                System.out.println("pini");
+//                makeSourceCodeFile();
+//                YYParser.mainMethod(fileName, 1);
+//            }
+//            if (e.getSource() == psni) {
+//                System.out.println("psni");
+//                makeSourceCodeFile();
+//                YYParser.mainMethod(fileName, 2);
+//            }
             if (e.getSource() == help) {
                 System.out.println("help");
                 JOptionPane.showMessageDialog(null, "Help me! :)");

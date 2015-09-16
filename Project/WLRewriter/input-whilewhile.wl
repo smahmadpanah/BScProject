@@ -7,7 +7,7 @@ done;
 while k>0 do 
 	while r>9 and l1<=3 do
 		r = 2 + k;
-		outH k;
+		outH r;
 		outL l1
 	done;
 	k = k - r;

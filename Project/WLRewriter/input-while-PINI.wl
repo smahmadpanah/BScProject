@@ -7,7 +7,7 @@ while true do
 h = h + 1 done ; 
 while FALSE do 
 l1 = h done  done ; 
-while m > 0 do 
+while (m > 0) do 
 l1 = l2 + 2; 
 l2 = 1; 
 l3 = 5; 

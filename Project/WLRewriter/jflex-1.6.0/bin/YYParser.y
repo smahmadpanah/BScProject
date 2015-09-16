@@ -31,22 +31,31 @@ static PrintStream writer;
 	
 	public int controlFlag = 0;
 	
+	public static int selectorPDGorPINIorPSNI; //0: pdg | 1: pini | 2:psni
+	
 	
 	public ArrayList<Variable> symbolTableOfVariables = new ArrayList<Variable>(); //static bood ghablan
     
     
-    public static void main(String args[]) throws IOException, FileNotFoundException {
+   // public static void main(String args[]) throws IOException, FileNotFoundException {
+		public static void mainMethod(String sFileName, int selector) {
         YYParser yyparser;
         final Yylex lexer;
 
+		selectorPDGorPINIorPSNI = selector;
 		
-		System.out.println("Enter the source code file path:");
-        Scanner sc = new Scanner(System.in);
-        sourceCodeFileName = sc.next();
+//        System.out.println("Enter the source code file path:");
+//        Scanner sc = new Scanner(System.in);
+//        sourceCodeFileName = sc.next();
+        sourceCodeFileName = sFileName;
 //        String sourceCodeFileName = "input-while.wl";
 
-        writer = new PrintStream(new File("reduction.txt"));
-
+        try {
+            writer = new PrintStream(new File("reduction.txt"));
+        } catch (FileNotFoundException ex) {
+            System.out.println("File reduction not found.");
+        }
+		
         Yylex yylexTemp = null;
         try{
            yylexTemp = new Yylex(new InputStreamReader(new FileInputStream(sourceCodeFileName)));
@@ -85,7 +94,11 @@ static PrintStream writer;
             }
 
         });
-        yyparser.parse();
+		try {
+            yyparser.parse();
+        } catch (IOException ex) {
+            System.out.println("parse method is wrong.");
+        }
         writer.close();
     }
     
@@ -196,8 +209,13 @@ program : PROGRAM_KW ';' clist
 			System.out.println("ERROR in FILE.");
 		}
 		PDGBuilder pdg = new PDGBuilder(((eval)$$).list); //the CFG is input to build the Forward Dominance Tree and after that, CFG and DDG that make PDG! :)
-		PINIRewriter pini = new PINIRewriter(pdg.getPDG());
+		PINIRewriter pini = null;
+		if(selectorPDGorPINIorPSNI != 0){ // faghat namayeshe pdg ro nemikhad, ya pini ya psni
+		pini = new PINIRewriter(pdg.getPDG());
+		}
+		if(selectorPDGorPINIorPSNI == 2){
         psni = new PSNIRewriter(pini);
+		}
 		}
 		
 	};

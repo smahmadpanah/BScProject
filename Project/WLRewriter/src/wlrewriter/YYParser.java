@@ -431,6 +431,7 @@ class YYParser {
                     writer.print("###Hooray! - Your program is syntactically correct### \n");
                     System.out.println("###Hooray! - Your program is syntactically correct###");
                     GUI.terminal.append("Your program is syntactically correct");
+                    GUI.isSyntacticallyCorrect = true;
 
                     yyval = new eval();
                     ((eval) yyval).stmt += "program; " + ((eval) ((eval) (yystack.valueAt(3 - (3))))).stmt;
@@ -2025,7 +2026,7 @@ class YYParser {
                 System.err.println("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
                 GUI.terminal.append("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **", Color.orange);
                 writer.print("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
-
+                GUI.isSyntacticallyCorrect = false;
             }
 
             @Override

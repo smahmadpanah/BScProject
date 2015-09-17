@@ -6,7 +6,7 @@ l1 = l1 + 1 done ;
 while k > 0 do 
 if r > 9 and l1 <= 3 then 
 r = 2 + k; 
-outH k; 
+outH r; 
  if TRUE then 
 NOP else 
 outL l1 endif  

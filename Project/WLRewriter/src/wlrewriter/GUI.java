@@ -6,6 +6,7 @@
 package wlrewriter;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -25,7 +26,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.SpringLayout;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -41,11 +41,13 @@ public class GUI extends JFrame {
 //    private JButton pdg, pini, psni;
     private JButton help, browse, clear, execute;
     private JFileChooser inputFileBrowser;
-    private JTextArea sourceCodeTextArea, terminal;
-    private JScrollPane scroll, terminalScroll;
+    public static ColorPane /*sourceCodeTextArea,*/ terminal;
+    private JScrollPane /*scroll,*/ terminalScroll;
     private JRadioButton pini, pdg, psni;
     private ButtonGroup group;
     private JLabel label;
+    private RSyntaxTextArea sourceCodeTextArea;
+    private RTextScrollPane scroll;
 //    private JPanel p1, p2, p3, p4, p5;
 
     public GUI() {
@@ -84,7 +86,7 @@ public class GUI extends JFrame {
         group.add(psni);
 
         execute = new JButton("Execute");
-        execute.setForeground(new Color(145,0,15));
+        execute.setForeground(new Color(145, 0, 15));
         add(execute);
 
         label = new JLabel("Current File Name: sourceCode.wl");
@@ -113,13 +115,28 @@ public class GUI extends JFrame {
 //        panel.add(clear);
 //        panel.add(help);
 //        panel.setPreferredSize(new Dimension(100, 50));
-        sourceCodeTextArea = new JTextArea(14, 40);
-        sourceCodeTextArea.setText("//type your source code here...\n");
-        Font font = new Font("Courier New", Font.PLAIN, 18);
-        sourceCodeTextArea.setFont(font);
-        sourceCodeTextArea.setBackground(new Color(203, 217, 247));
-        sourceCodeTextArea.setForeground(Color.black);
-        scroll = new JScrollPane(sourceCodeTextArea);
+
+        sourceCodeTextArea = new RSyntaxTextArea(14, 40);
+//        sourceCodeTextArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+        sourceCodeTextArea.setCodeFoldingEnabled(true);
+        sourceCodeTextArea.setFont(new Font("Courier New", Font.PLAIN, 18));
+//        sourceCodeTextArea.setBackground(new Color(203, 217, 247));
+        sourceCodeTextArea.setBackground(new Color(240, 248, 255));
+        sourceCodeTextArea.setCurrentLineHighlightColor(new Color(220, 220, 220));
+        sourceCodeTextArea.setSelectionColor(new Color(192, 192, 192));
+        SyntaxScheme ss = sourceCodeTextArea.getSyntaxScheme();
+        AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance();
+        atmf.putMapping("text/WL", "wlrewriter.SyntaxMaker");
+        sourceCodeTextArea.setSyntaxEditingStyle("text/WL");
+        scroll = new RTextScrollPane(sourceCodeTextArea);
+
+        /*sourceCodeTextArea = new JTextArea(14, 40);
+         sourceCodeTextArea.setText("//type your source code here...\n");
+         Font font = new Font("Courier New", Font.PLAIN, 18);
+         sourceCodeTextArea.setFont(font);
+         sourceCodeTextArea.setBackground(new Color(203, 217, 247));
+         sourceCodeTextArea.setForeground(Color.black);
+         scroll = new JScrollPane(sourceCodeTextArea);*/
         this.addWindowListener(new WindowAdapter() {
             public void windowOpened(WindowEvent e) {
                 sourceCodeTextArea.requestFocus();
@@ -127,6 +144,7 @@ public class GUI extends JFrame {
         });
 //        scroll.setPreferredSize(new Dimension(800, 300));
         add(scroll);
+
         browse = new JButton("Browse File");
         browse.setForeground(Color.BLUE);
 //        label = new JLabel("Select an input file...");
@@ -141,16 +159,19 @@ public class GUI extends JFrame {
 //        JPanel p2 = new JPanel();
 //        p2.add(label);
 //        p2.add(browse);
-        terminal = new JTextArea(11, 20);
-        Font font1 = new Font("Times New Roman", Font.PLAIN, 14);
+//        terminalPanel = new JPanel();
+        terminal = new ColorPane();
+//        terminalPanel.add(terminal);
+        terminal.setPreferredSize(new Dimension(200, 50));
+        Font font1 = new Font("Consolas", Font.PLAIN, 12);
         terminal.setFont(font1);
         terminal.setForeground(new Color(203, 217, 247));
         terminal.setBackground(Color.BLACK);
-        terminal.setEditable(false);
-        terminal.setText("Log:\nthe CFG is created.\n"
-                         + "Control Dependence Graph is ready.\n"
-                         + "Data Dependence Graph is ready.\n"
-                         + "Program Dependence Graph is ready.\n");
+//        terminal.setEditable(false);
+//        terminal.setText("adsf");
+//        terminal.setText(terminal.getText()+"ggg");
+        terminal.setText("Log:\n");
+
         terminalScroll = new JScrollPane(terminal);
         add(terminalScroll);
 
@@ -267,6 +288,7 @@ public class GUI extends JFrame {
 //            UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
+            terminal.appendError(ex.getMessage());
         }
         GUI gui = new GUI();
         gui.setLocation(10, 10);
@@ -296,6 +318,7 @@ public class GUI extends JFrame {
                 writer.close();
             } catch (Exception ex) {
                 System.out.println("Error in creating file.");
+                terminal.appendError("Error in creating file.");
             }
         }
 
@@ -339,15 +362,17 @@ public class GUI extends JFrame {
 //            }
             if (e.getSource() == help) {
                 System.out.println("help");
-                JOptionPane.showMessageDialog(null, "Help me! :)");
+                JOptionPane.showMessageDialog(null, "Email: smahmadpanah@aut.ac.ir :)");
             }
             if (e.getSource() == clear) {
-                JOptionPane.showMessageDialog(null, "A deprecated call", "Warning",
-                                              JOptionPane.WARNING_MESSAGE);
-                System.out.println("clear");
-                fileName = "";
-                sourceCodeTextArea.setText("");
-                label.setText("Current File Name: " + "sourceCode.wl");
+                int result = JOptionPane.showConfirmDialog((Component) null, "Are you sure?", "Alert!", JOptionPane.YES_NO_OPTION);
+                if (result == 0) {//YES clicked
+                    System.out.println("clear");
+
+                    fileName = "";
+                    sourceCodeTextArea.setText("");
+                    label.setText("Current File Name: " + "sourceCode.wl");
+                }
             }
             if (e.getSource() == browse) {
                 System.out.println("browse");
@@ -372,6 +397,7 @@ public class GUI extends JFrame {
                     } catch (Exception ex) {
 //                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                         System.out.println("Selected file can not be read");
+                        terminal.appendError("Selected file can not be read");
                     }
                 }
                 label.setText("Current File Name: " + fileName);

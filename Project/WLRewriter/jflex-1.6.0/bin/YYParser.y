@@ -54,6 +54,7 @@ static PrintStream writer;
             writer = new PrintStream(new File("reduction.txt"));
         } catch (FileNotFoundException ex) {
             System.out.println("File reduction not found.");
+			GUI.terminal.appendError("File reduction not found.");
         }
 		
         Yylex yylexTemp = null;
@@ -61,7 +62,9 @@ static PrintStream writer;
            yylexTemp = new Yylex(new InputStreamReader(new FileInputStream(sourceCodeFileName)));
         } catch (Exception ex) {
             System.err.println("Source code file not found!");
-            System.exit(0);
+			GUI.terminal.appendError("Source code file not found!");
+            //System.exit(0);
+			return;
         }
 
          lexer = yylexTemp;
@@ -76,6 +79,7 @@ static PrintStream writer;
                     yyl_return = lexer.yylex();
                 } catch (IOException e) {
                     System.err.println("IO error : " + e);
+					GUI.terminal.appendError("IO error : " + e);
                 }
                 return yyl_return;
             }
@@ -84,7 +88,8 @@ static PrintStream writer;
             public void yyerror(String error) {
                 //System.err.println ("Error : " + error);
                 System.err.println("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
-                writer.print("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
+                GUI.terminal.append("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **", Color.orange);
+				writer.print("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
 
             }
 
@@ -98,6 +103,7 @@ static PrintStream writer;
             yyparser.parse();
         } catch (IOException ex) {
             System.out.println("parse method is wrong.");
+			GUI.terminal.appendError("parse method is wrong.");
         }
         writer.close();
     }
@@ -131,6 +137,7 @@ program : PROGRAM_KW ';' clist
 		writer.print("\t program -> PROGRAM_KW ';' clist \n") ;
 		writer.print("###Hooray! - Your program is syntactically correct### \n");
 		System.out.println("###Hooray! - Your program is syntactically correct###");
+		GUI.terminal.append("Your program is syntactically correct");
 	
 		$$ = new eval();
 		((eval)$$).stmt += "program; " + ((eval)$3).stmt;
@@ -187,6 +194,7 @@ program : PROGRAM_KW ';' clist
 		}
 		catch (Exception e){
 			System.out.println("ERROR in FILE.");
+			GUI.terminal.appendError("ERROR in FILE.");
 		}
 		}
 		if(controlFlag==1){
@@ -197,16 +205,19 @@ program : PROGRAM_KW ';' clist
 		}
 		catch (Exception e){
 			System.out.println("ERROR in FILE.");
+			GUI.terminal.appendError("ERROR in FILE.");
 		}
 		}
 		if(controlFlag==0){
-		System.out.println("the CFG is created.");
+		System.out.println("Control Flow Graph is created.");
+		GUI.terminal.append("Control Flow Graph is created.");
 		try{
 			PrintStream writer2 = new PrintStream(new File(sourceCodeFileName+".c"));
 			writer2.print(cSourceCodeOfInput);
 		}
 		catch (Exception e){
 			System.out.println("ERROR in FILE.");
+			GUI.terminal.appendError("ERROR in FILE.");
 		}
 		PDGBuilder pdg = new PDGBuilder(((eval)$$).list); //the CFG is input to build the Forward Dominance Tree and after that, CFG and DDG that make PDG! :)
 		PINIRewriter pini = null;
@@ -293,8 +304,10 @@ exp : b
 		
 		if(!check){
 			System.err.println("undefined variable!");
+			GUI.terminal.append("undefined variable!\n\t"+((eval)$$).stmt, Color.orange);
 			System.err.println("\t"+((eval)$$).stmt);
-			System.exit(0);
+			//System.exit(0);
+			return;
 		}
 	};
 	| exp EQ_KW exp
@@ -483,8 +496,10 @@ c : NOP_KW
 		
 		if(!check){
 			System.err.println("undefined variable can not be assigned:");
+			GUI.terminal.append("undefined variable can not be assigned:\n\t"+((eval)$$).stmt, Color.orange);
 			System.err.println("\t"+((eval)$$).stmt);
-			System.exit(0);
+			//System.exit(0);
+			return;
 		}
 		
 		((eval)$$).variables.add(((eval)$1).stmt); //not necessary
@@ -615,8 +630,10 @@ c : NOP_KW
 		
 		if(!check){
 			System.err.println("undefined variable!");
+			GUI.terminal.append("undefined variable!\n\t"+((eval)$$).stmt, Color.orange);
 			System.err.println("\t"+((eval)$$).stmt);
-			System.exit(0);
+			//System.exit(0);
+			return;
 		}
 		
 		
@@ -658,7 +675,9 @@ c : NOP_KW
 		if(!check){
 			System.err.println("undefined variable!");
 			System.err.println("\t"+((eval)$$).stmt);
-			System.exit(0);
+			GUI.terminal.append("undefined variable!\n\t"+((eval)$$).stmt, Color.orange);
+			//System.exit(0);
+			return;
 		}
 		
 
@@ -834,7 +853,9 @@ varlist : x
 		}
 		else{
 			System.err.println("The variable " + ((eval)$1).stmt + " is already declared!");
-			System.exit(0);
+			GUI.terminal.append("The variable " + ((eval)$1).stmt + " is already declared!", Color.orange);
+			//System.exit(0);
+			return;
 		}
 	};
 	| x ',' varlist
@@ -864,6 +885,7 @@ varlist : x
 		}
 		else{
 			System.err.println("The variable " + ((eval)$1).stmt + " is already declared!");
+			GUI.terminal.append("The variable " + ((eval)$1).stmt + " is already declared!", Color.orange);
 		}
 	};
 	

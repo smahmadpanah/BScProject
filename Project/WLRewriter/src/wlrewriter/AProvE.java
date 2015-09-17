@@ -5,18 +5,10 @@ package wlrewriter;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.net.URL;
-import javax.net.ssl.SSLSocket;
 
 /**
  *
@@ -111,6 +103,7 @@ public class AProvE {
 
             if (HttpURLConnection.HTTP_OK == hConnection.getResponseCode()) {
                 System.out.println("Connection started.");
+                GUI.terminal.append("Connection started.");
                 InputStream is = hConnection.getInputStream();
 //                OutputStream os = new FileOutputStream("output.html");
                 String os = "";
@@ -143,6 +136,7 @@ public class AProvE {
         } catch (Exception ex) {
             ex.printStackTrace();
             System.err.println("Connection Failed.");
+            GUI.terminal.appendError("Connection Failed.");
         }
     }
 }

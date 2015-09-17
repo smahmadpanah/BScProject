@@ -62,8 +62,10 @@ public class PINIRewriter {
             writer.print(rewritedSourceCode);
             writer.close();
             System.out.println("$$$PINI REWRITER --> Check out: " + fileName + "-PINI.wl");
+            GUI.terminal.append("PINI REWRITER is completed --> Check out: " + fileName + "-PINI.wl");
         } catch (FileNotFoundException e) {
             System.err.println("File Not Found!");
+            GUI.terminal.appendError("File Not Found!");
         }
     }
     

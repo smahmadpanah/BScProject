@@ -360,6 +360,7 @@ public class PDGBuilder {
         gd.draw(fileName + "_CDG.", CDgraph);
 
         System.out.println("Control Dependence Graph is ready.");
+        GUI.terminal.append("Control Dependence Graph is ready.");
     }
 
     private void computeDataDep() {
@@ -436,7 +437,7 @@ public class PDGBuilder {
         gd.draw(fileName + "_DDG.", DDgraph);
 
         System.out.println("Data Dependence Graph is ready.");
-
+        GUI.terminal.append("Data Dependence Graph is ready.");
     }
 
     private void computePDG() {
@@ -515,7 +516,7 @@ public class PDGBuilder {
         gd.draw(fileName + "_PDG.", PDgraph);
 
         System.out.println("Program Dependence Graph is ready.");
-
+        GUI.terminal.append("Program Dependence Graph is ready.");
     }
 
     public MyLinkedList getPDG() {

@@ -8,6 +8,7 @@ public class ColorPane extends JTextPane {
 
 
     public void append(String s, Color c) { // better implementation--uses StyleContext
+        s = "> " + s + "\n";
         this.setEditable(true);
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY,

@@ -5,6 +5,7 @@
  */
 package wlrewriter;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -48,7 +49,9 @@ public class PSNIRewriter {
             yylexTemp = new Yylex(new InputStreamReader(new FileInputStream(pini.getFileName() + "-PINI.wl")));
         } catch (Exception ex) {
             System.err.println("Source code file not found!");
-            System.exit(0);
+            GUI.terminal.appendError("Source code file not found!");
+            //System.exit(0);
+            return;
         }
 
         lexer = yylexTemp;
@@ -62,6 +65,7 @@ public class PSNIRewriter {
                     yyl_return = lexer.yylex();
                 } catch (IOException e) {
                     System.err.println("IO error : " + e);
+                    GUI.terminal.appendError("IO error : " + e);
                 }
                 return yyl_return;
             }
@@ -71,6 +75,7 @@ public class PSNIRewriter {
                 //System.err.println ("Error : " + error);
                 System.err.println("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
                 writer.print("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
+                GUI.terminal.append("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **", Color.orange);
 
             }
 
@@ -88,6 +93,8 @@ public class PSNIRewriter {
 
         } catch (IOException ex) {
             Logger.getLogger(PSNIRewriter.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+
         }
         writer.close();
 
@@ -108,8 +115,10 @@ public class PSNIRewriter {
             writer.print(rewritedSourceCode);
             writer.close();
             System.out.println("$$$PSNI REWRITER --> Check out: " + fileName + "-PSNI.wl");
+            GUI.terminal.append("PSNI REWRITER is completed --> Check out: " + fileName + "-PSNI.wl");
         } catch (FileNotFoundException e) {
             System.err.println("File Not Found!");
+            GUI.terminal.appendError("File Not Found!");
         }
 
         new PSNItoC(pini);
@@ -419,7 +428,9 @@ public class PSNIRewriter {
                 yylexTemp = new Yylex(new InputStreamReader(new FileInputStream(pini.getFileName() + "-PSNI.wl")));
             } catch (Exception ex) {
                 System.err.println("Source code file not found!");
-                System.exit(0);
+                GUI.terminal.appendError("Source code file not found!");
+                //System.exit(0);
+                return;
             }
 
             lexer = yylexTemp;
@@ -433,6 +444,7 @@ public class PSNIRewriter {
                         yyl_return = lexer.yylex();
                     } catch (IOException e) {
                         System.err.println("IO error : " + e);
+                        GUI.terminal.appendError("IO error : " + e);
                     }
                     return yyl_return;
                 }
@@ -442,6 +454,7 @@ public class PSNIRewriter {
                     //System.err.println ("Error : " + error);
                     System.err.println("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
                     writer.print("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **");
+                    GUI.terminal.append("**Error: Line " + lexer.getYyline() + " near token '" + lexer.yytext() + "' --> Message: " + error + " **", Color.orange);
 
                 }
 
@@ -459,6 +472,8 @@ public class PSNIRewriter {
 
             } catch (IOException ex) {
                 Logger.getLogger(PSNIRewriter.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception e) {
+
             }
         }
 

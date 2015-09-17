@@ -4,6 +4,7 @@ package wlrewriter;
   import java.io.*;
   import java.lang.*;
   import java.util.*; 
+  import java.awt.Color;
   import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,8 +64,7 @@ static PrintStream writer;
         } catch (Exception ex) {
             System.err.println("Source code file not found!");
 			GUI.terminal.appendError("Source code file not found!");
-            //System.exit(0);
-			return;
+            System.exit(0);
         }
 
          lexer = yylexTemp;
@@ -307,7 +307,7 @@ exp : b
 			GUI.terminal.append("undefined variable!\n\t"+((eval)$$).stmt, Color.orange);
 			System.err.println("\t"+((eval)$$).stmt);
 			//System.exit(0);
-			return;
+			return -1;
 		}
 	};
 	| exp EQ_KW exp
@@ -499,7 +499,7 @@ c : NOP_KW
 			GUI.terminal.append("undefined variable can not be assigned:\n\t"+((eval)$$).stmt, Color.orange);
 			System.err.println("\t"+((eval)$$).stmt);
 			//System.exit(0);
-			return;
+			return -1;
 		}
 		
 		((eval)$$).variables.add(((eval)$1).stmt); //not necessary
@@ -633,7 +633,7 @@ c : NOP_KW
 			GUI.terminal.append("undefined variable!\n\t"+((eval)$$).stmt, Color.orange);
 			System.err.println("\t"+((eval)$$).stmt);
 			//System.exit(0);
-			return;
+			return -1;
 		}
 		
 		
@@ -677,7 +677,7 @@ c : NOP_KW
 			System.err.println("\t"+((eval)$$).stmt);
 			GUI.terminal.append("undefined variable!\n\t"+((eval)$$).stmt, Color.orange);
 			//System.exit(0);
-			return;
+			return -1;
 		}
 		
 
@@ -855,7 +855,7 @@ varlist : x
 			System.err.println("The variable " + ((eval)$1).stmt + " is already declared!");
 			GUI.terminal.append("The variable " + ((eval)$1).stmt + " is already declared!", Color.orange);
 			//System.exit(0);
-			return;
+			return -1;
 		}
 	};
 	| x ',' varlist

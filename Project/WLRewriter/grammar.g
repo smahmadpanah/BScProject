@@ -1,4 +1,4 @@
-program ::= PROGRAM IDENTIFIER ';' clist
+program ::= PROGRAM ';' clist
 clist ::= c | clist ; c
 exp ::= b | n | x | exp == exp | exp < exp | exp <= exp | exp >= exp | exp > exp
 		| exp + exp | exp - exp | exp or exp | exp and exp | ! exp

@@ -1,0 +1,24 @@
+program;
+inL l1 , l2;
+inH h1 , h2;
+if !(h1 == 0) then 
+	l1 = 2 + 4 + l1;
+	outL l1;
+	if l1 > 6 then
+		l1 = 6;
+		outL l1;
+		outH h1
+	endif
+else
+	if h2 > 3 then
+		l1 = l1 + 1;
+		outL l1;
+		outH h2
+	else
+		l2 = 2;
+		outL l2;
+		outL l1
+	endif
+endif;
+outL l1;
+outL l2

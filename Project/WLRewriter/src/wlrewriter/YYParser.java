@@ -935,7 +935,7 @@ class YYParser {
                     writer.print("\t c -> OUTL_KW x \n");
                     yyval = new eval();
                     ((eval) yyval).stmt += "outL " + ((eval) ((eval) (yystack.valueAt(2 - (2))))).stmt;
-                    ((eval) yyval).cSourceCode += "printf(\"%d\\n\"," + ((eval) ((eval) (yystack.valueAt(2 - (2))))).cSourceCode + ")";
+                    ((eval) yyval).cSourceCode += "printf(\"%d\\n\"," + ((eval) ((eval) (yystack.valueAt(2 - (2))))).cSourceCode + "); // type: low\n";
                     writer.print(((eval) yyval).stmt + "\n");
 
                     ((eval) yyval).variables.add(((eval) ((eval) (yystack.valueAt(2 - (2))))).stmt);
@@ -980,7 +980,7 @@ class YYParser {
                     writer.print("\t c -> OUTH_KW x \n");
                     yyval = new eval();
                     ((eval) yyval).stmt += "outH " + ((eval) ((eval) (yystack.valueAt(2 - (2))))).stmt;
-                    ((eval) yyval).cSourceCode += "printf(\"%d\\n\"," + ((eval) ((eval) (yystack.valueAt(2 - (2))))).cSourceCode + ")";
+                    ((eval) yyval).cSourceCode += "printf(\"%d\\n\"," + ((eval) ((eval) (yystack.valueAt(2 - (2))))).cSourceCode + "); // type: high\n";
                     writer.print(((eval) yyval).stmt + "\n");
 
                     ((eval) yyval).variables.add(((eval) ((eval) (yystack.valueAt(2 - (2))))).stmt);
@@ -1025,7 +1025,7 @@ class YYParser {
                     writer.print("\t c -> OUTL_KW BOT_KW \n");
                     yyval = new eval();
                     ((eval) yyval).stmt += "outL BOT";
-                    ((eval) yyval).cSourceCode += "printf(\"BOT\\n\")";
+                    ((eval) yyval).cSourceCode += "printf(\"BOT\\n\"); // type: low\n";
                     writer.print(((eval) yyval).stmt + "\n");
                     ((eval) yyval).node = new Node(nodeCounter++, ((eval) yyval).stmt);
                     ((eval) yyval).nodeIdAndStmt += "#" + ((eval) yyval).node.getNodeID() + ":" + ((eval) yyval).stmt;
@@ -1042,7 +1042,7 @@ class YYParser {
                     writer.print("\t c -> OUTH_KW BOT_KW \n");
                     yyval = new eval();
                     ((eval) yyval).stmt += "outH BOT";
-                    ((eval) yyval).cSourceCode += "printf(\"BOT\\n\")";
+                    ((eval) yyval).cSourceCode += "printf(\"BOT\\n\"); // type: high\n";
                     writer.print(((eval) yyval).stmt + "\n");
                     ((eval) yyval).node = new Node(nodeCounter++, ((eval) yyval).stmt);
                     ((eval) yyval).nodeIdAndStmt += "#" + ((eval) yyval).node.getNodeID() + ":" + ((eval) yyval).stmt;

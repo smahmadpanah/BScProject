@@ -216,6 +216,18 @@ public class GUI extends JFrame {
 
         terminalScroll = new JScrollPane(terminal);
         add(terminalScroll);
+        
+        help.setFocusPainted(false);
+        pdg.setFocusPainted(false);
+        pini.setFocusPainted(false);
+        psni.setFocusPainted(false);
+        execute.setFocusPainted(false);
+        clearLog.setFocusPainted(false);
+        clear.setFocusPainted(false);
+        browse.setFocusPainted(false);
+        
+        
+        
 
         SpringLayout layout = new SpringLayout();
         Container contentPane = this.getContentPane();
@@ -409,7 +421,8 @@ public class GUI extends JFrame {
                                     Ccontent += Cscan.nextLine() + "\n";
                                 }
 
-                                JTextArea CArea = new JTextArea(Ccontent);
+                                RSyntaxTextArea CArea = new RSyntaxTextArea(Ccontent);
+                                CArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
                                 CArea.setFont(new Font("Courier New", Font.PLAIN, 18));
                                 CArea.setEditable(false);
                                 JScrollPane scrollC = new JScrollPane(CArea);
@@ -465,7 +478,8 @@ public class GUI extends JFrame {
                                             Ccontent += Cscan.nextLine() + "\n";
                                         }
 
-                                        JTextArea CArea = new JTextArea(Ccontent);
+                                        RSyntaxTextArea CArea = new RSyntaxTextArea(Ccontent);
+                                        CArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
                                         CArea.setFont(new Font("Courier New", Font.PLAIN, 18));
                                         CArea.setEditable(false);
 //                                        CFrame.add(CArea);
@@ -477,8 +491,9 @@ public class GUI extends JFrame {
                                         CFrame.setLocationRelativeTo(null);
                                         CFrame.setVisible(true);
                                     } catch (FileNotFoundException ex) {
-                                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-                                        terminal.appendError("File Not Found");
+//                                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+//                                        terminal.appendError("File Not Found");
+                                        System.err.println("file pini not found");
                                     }
 
                                 }
@@ -527,7 +542,8 @@ public class GUI extends JFrame {
                                                 Ccontent += Cscan.nextLine() + "\n";
                                             }
 
-                                            JTextArea CArea = new JTextArea(Ccontent);
+                                            RSyntaxTextArea CArea = new RSyntaxTextArea(Ccontent);
+                                            CArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
                                             CArea.setFont(new Font("Courier New", Font.PLAIN, 18));
                                             CArea.setEditable(false);
                                             JScrollPane scrollC = new JScrollPane(CArea);
@@ -554,7 +570,8 @@ public class GUI extends JFrame {
                                                 Ccontent1 += Cscan1.nextLine() + "\n";
                                             }
 
-                                            JTextArea CArea1 = new JTextArea(Ccontent1);
+                                            RSyntaxTextArea CArea1 = new RSyntaxTextArea(Ccontent1);
+                                            CArea1.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_C);
                                             CArea1.setFont(new Font("Courier New", Font.PLAIN, 18));
                                             CArea1.setEditable(false);
 //                                            CFrame1.add(CArea1);

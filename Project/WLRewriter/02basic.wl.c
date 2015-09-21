@@ -8,6 +8,9 @@
 
 int main() { int l1;  //type: low 
 scanf("%d", &l1);
-; l1 = l1 + 2 + 4
-; printf("%d\n",l1)
+; int h1;  //type: high 
+scanf("%d", &h1);
+
+; printf("%d\n",l1);
+; printf("%d\n",h1);
 return 0;}

@@ -16,7 +16,7 @@ import java.net.URL;
  */
 public class AProvE {
 
-    public boolean isTerminated = false;
+    public int isTerminated = 0;
 
     public AProvE(String loop) {
         try {
@@ -116,19 +116,20 @@ public class AProvE {
 //                System.out.println(os);
                 if (os.contains("Termination</b> of the given <i>C Problem</i> could be <font color=\"#00cc00\">proven")) {
                     System.out.println("PROVEN");
-                    isTerminated = true;
+                    isTerminated = 1;
                 }
 
                 else {
                     if (os.contains("Termination</b> of the given <i>C Problem</i> could be <font color=\"#cc0000\">disproven")) {
                         System.out.println("DISPROVEN");
+                        isTerminated = 0;
                     }
 
                     else {
                         System.out.println("MAYBE");
+                        isTerminated = 2;
                     }
 
-                    isTerminated = false;
                 }
 
                 hConnection.disconnect();

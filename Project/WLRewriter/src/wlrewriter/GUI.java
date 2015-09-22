@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,7 +51,7 @@ import org.fife.ui.rtextarea.*;
 public class GUI extends JFrame {
 
 //    private JButton pdg, pini, psni;
-    private JButton help, browse, clear, execute, clearLog;
+    private JButton help, browse, clear, execute, clearLog, newFile;
     private JFileChooser inputFileBrowser;
     public static ColorPane /*sourceCodeTextArea,*/ terminal;
     private JScrollPane /*scroll,*/ terminalScroll;
@@ -141,6 +142,12 @@ public class GUI extends JFrame {
         clear.setToolTipText("Alt + Q");
         clear.setForeground(new Color(153, 0, 0));
 
+        newFile = new JButton("New File");
+        newFile.setMnemonic(KeyEvent.VK_N);
+        newFile.setToolTipText("Alt + N");
+        newFile.setForeground(new Color(0, 70, 0));
+        add(newFile);
+
         clearLog = new JButton("Clear Log");
         clearLog.setMnemonic(KeyEvent.VK_R);
         clearLog.setToolTipText("Alt + R");
@@ -216,7 +223,7 @@ public class GUI extends JFrame {
 
         terminalScroll = new JScrollPane(terminal);
         add(terminalScroll);
-        
+
         help.setFocusPainted(false);
         pdg.setFocusPainted(false);
         pini.setFocusPainted(false);
@@ -225,9 +232,7 @@ public class GUI extends JFrame {
         clearLog.setFocusPainted(false);
         clear.setFocusPainted(false);
         browse.setFocusPainted(false);
-        
-        
-        
+        newFile.setFocusPainted(false);
 
         SpringLayout layout = new SpringLayout();
         Container contentPane = this.getContentPane();
@@ -275,7 +280,7 @@ public class GUI extends JFrame {
                              20,
                              SpringLayout.SOUTH, execute);
 //        int m = (int) scroll.getLocation().getX();
-        layout.putConstraint(SpringLayout.EAST, browse,
+        layout.putConstraint(SpringLayout.HORIZONTAL_CENTER, browse,
                              0,
                              SpringLayout.HORIZONTAL_CENTER, scroll);
         layout.putConstraint(SpringLayout.NORTH, browse,
@@ -285,6 +290,12 @@ public class GUI extends JFrame {
                              5,
                              SpringLayout.EAST, browse);
         layout.putConstraint(SpringLayout.NORTH, clear,
+                             0,
+                             SpringLayout.NORTH, browse);
+        layout.putConstraint(SpringLayout.EAST, newFile,
+                             -5,
+                             SpringLayout.WEST, browse);
+        layout.putConstraint(SpringLayout.NORTH, newFile,
                              0,
                              SpringLayout.NORTH, browse);
 //        layout.putConstraint(SpringLayout.EAST, label,
@@ -339,6 +350,7 @@ public class GUI extends JFrame {
         clear.addActionListener(handler);
         execute.addActionListener(handler);
         clearLog.addActionListener(handler);
+        newFile.addActionListener(handler);
 
     }
 
@@ -405,11 +417,12 @@ public class GUI extends JFrame {
                                 terminal.appendError("PDG File Error");
                             }
                             JLabel label = new JLabel(new ImageIcon(image));
-                            pdgFrame.add(label);
+                            JScrollPane sp = new JScrollPane(label);
+                            pdgFrame.add(sp);
                             pdgFrame.pack();
 //                            pdgFrame.setResizable(false);
                             pdgFrame.setLocationRelativeTo(null);
-                            pdgFrame.setVisible(true);
+
                             /////////////////////////////////////////
                             JFrame CFrame = new JFrame("C Source Code - " + fileName);
                             String CfileNameTemp = fileName + ".c";
@@ -435,6 +448,7 @@ public class GUI extends JFrame {
                                 Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                                 terminal.appendError("File Not Found");
                             }
+                            pdgFrame.setVisible(true);
                         }
                     }
                     else {
@@ -466,7 +480,7 @@ public class GUI extends JFrame {
                                     piniFrame.add(PINIscroll);
                                     piniFrame.setSize(sourceCodeTextArea.getSize());
                                     piniFrame.setLocationRelativeTo(null);
-                                    piniFrame.setVisible(true);
+
                                     /////////////////////////////////////////
                                     JFrame CFrame = new JFrame("C Source Code - PINI - " + fileName);
                                     String CfileNameTemp = fileName + "-PINI.c";
@@ -495,6 +509,7 @@ public class GUI extends JFrame {
 //                                        terminal.appendError("File Not Found");
                                         System.err.println("file pini not found");
                                     }
+                                    piniFrame.setVisible(true);
 
                                 }
                             } catch (FileNotFoundException ex) {
@@ -530,7 +545,7 @@ public class GUI extends JFrame {
                                         psniFrame.add(PSNIscroll);
                                         psniFrame.setSize(sourceCodeTextArea.getSize());
                                         psniFrame.setLocationRelativeTo(null);
-                                        psniFrame.setVisible(true);
+
                                         /////////////////////////////////////////
                                         JFrame CFrame = new JFrame("C Source Code - PINI - " + fileName);
                                         String CfileNameTemp = fileName + "-PINI.c";
@@ -586,10 +601,12 @@ public class GUI extends JFrame {
                                             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
                                             terminal.appendError("File Not Found");
                                         }
+                                        psniFrame.setVisible(true);
                                     }
                                 } catch (FileNotFoundException ex) {
                                     terminal.appendError("Error in reading file");
                                 }
+
                             }
                         }
                     }
@@ -653,6 +670,33 @@ public class GUI extends JFrame {
             if (e.getSource() == clearLog) {
                 System.out.println("Clear Log");
                 terminal.clear();
+
+            }
+
+            if (e.getSource() == newFile) {
+                String name = JOptionPane.showInputDialog("New file name: (type it without .wl)", null);
+                name += ".wl";
+                File folder = new File("./");
+                File[] listOfFiles = folder.listFiles();
+                boolean isAlreadyExisted = false;
+                for (int x = 0; x < listOfFiles.length - 1; x++) {
+                    if (listOfFiles[x].getName().equals(name)) {
+                        isAlreadyExisted = true;
+                        terminal.appendError("The file is already exist.");
+                        break;
+                    }
+                }
+                if (!name.equals("null.wl") && !name.equals(".wl")) {
+                    if (!isAlreadyExisted) {
+                        File file = new File(name);
+                        fileName = name;
+                        label.setText("Current File Name: " + fileName);
+                    }
+                }
+                else {
+                    fileName = "sourceCode.wl";
+                    label.setText("Current File Name: " + fileName);
+                }
 
             }
 

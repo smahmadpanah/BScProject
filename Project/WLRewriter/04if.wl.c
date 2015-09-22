@@ -13,7 +13,7 @@ scanf("%d", &h1);
 int h2;  //type: high 
 scanf("%d", &h2);
 
-;  if (h1 > 0) { l1 = l1 + 1; printf("%d\n",h2); // type: high
+;  if (l1 > 0) { l1 = l1 + 1; printf("%d\n",h2); // type: high
 
 ;}
 ; printf("%d\n",l1); // type: low

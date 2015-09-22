@@ -1,15 +1,10 @@
 program; 
 inL l1; 
 inH h1, h2; 
- if h1 > 0 then 
+ if l1 > 0 then 
 l1 = l1 + 1; 
 outH h2 endif; 
-if TRUE then 
-	 NOP 
- else 
-	 outL l1 
-endif;
- 
+outL l1; 
 l1 = h2 - 2; 
 if TRUE then 
 	 outL BOT 

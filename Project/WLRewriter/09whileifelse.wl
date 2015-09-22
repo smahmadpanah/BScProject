@@ -14,5 +14,5 @@ while l1 > l2 do
 		done
 	endif;
 	outL l1;
-	outL l2;
+	outL l2
 done

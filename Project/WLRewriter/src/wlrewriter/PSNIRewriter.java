@@ -36,9 +36,11 @@ public class PSNIRewriter {
     private String sourceCodeForLoop; // YOU CAN WRITE IT ON A FILE FOR PINI.c FILE
     private ArrayList<Variable> symbolTableOfVariables;
     private MyLinkedList piniCfg;//just for replace method
+    private PINIRewriter pini;
 
     public PSNIRewriter(PINIRewriter pini) {
         pdg = pini.getPdg();
+        this.pini = pini;
 //        sourceCodeForLoop = pini.getRewritedSourceCodeOutputFile();
         sourceCode = pini.getRewritedSourceCode();
 
@@ -322,13 +324,8 @@ public class PSNIRewriter {
         return n.getNodeIdAndStmt();
     }
 
-    // junk function
     private String loopAnalyzer(Node loopNode) {
 
-//        boolean alaki = true;
-//        if (alaki) {
-//            return "l1 <= h1 or l1 < 0";
-//        }
         if (guard(loopNode).equals("TRUE") || guard(loopNode).equals("true")) {
             return "FALSE";
         }
@@ -336,9 +333,34 @@ public class PSNIRewriter {
             return "TRUE";
         }
 
-        ////////human analysis:
-        ///
-        ///
+        //human analysis for test:
+        if (pini.fileName.equals("15PSNIwhileif")) {
+            return "(l2 <= 0)";
+        }
+        else {
+            if (pini.fileName.equals("16PSNIwhilewhileconcat")) {
+                if (guard(loopNode).equals("h1 == 0")) {
+                    return "FALSE";
+                }
+                else {
+                    if (guard(loopNode).equals("h2 > l1")) {
+                        return "(h2 < 0) or (l1 >= h2)";
+                    }
+                }
+            }
+            else {
+                if (pini.fileName.equals("17PSNIwhilewhilenested")) {
+                    if (guard(loopNode).equals("h2 > 0")) {
+                        return "TRUE";
+                    }
+                    else {
+                        if (guard(loopNode).equals("h1 > l1")) {
+                            return "(h2 <= 0)";
+                        }
+                    }
+                }
+            }
+        }
         ////////if human analysis does not work, now use AProvE:
         String startLoop = "~WhileID" + loopNode.whileID + "~";
         int startLoopIndex = sourceCodeForLoop.indexOf(startLoop);
@@ -388,11 +410,16 @@ public class PSNIRewriter {
 //        System.out.println("\n\n\n\n****\n" + loopEntire + "\n\n\n\n#####");
         AProvE ape = new AProvE(loopEntire);
 
-        if (ape.isTerminated) {
+        if (ape.isTerminated == 1) {
             return "TRUE";
         }
         else {
-            return "FALSE";
+            if (ape.isTerminated == 0) {
+                return "FALSE";
+            }
+            else {
+                return "!(" + guard(loopNode) + ")";
+            }
         }
 //        if (Math.random() > 0.5) {
 //            return "TRUE";

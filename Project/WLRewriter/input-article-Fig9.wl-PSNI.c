@@ -11,9 +11,9 @@ scanf("%d", &h1);
 ; int l1;  //type: low 
 scanf("%d", &l1);
 
-;  if (h1 == l1) { while (true) { printf("%d\n",l1); // type: low
+;  if (l1 <= h1 || l1 < 0) { while (h1 < l1) { ;; h1 = h1 - l1
 ;
-};} else {;;}
+};}
 ; printf("%d\n",l1); // type: low
 
 return 0;}

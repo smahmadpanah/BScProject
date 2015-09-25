@@ -334,28 +334,33 @@ public class PSNIRewriter {
         }
 
         //human analysis for test:
-        if (pini.fileName.equals("15PSNIwhileif")) {
-            return "(l2 <= 0)";
+        if (pini.fileName.equals("input-article-Fig9")) {
+            return "l1 <= h1 or l1 < 0";
         }
         else {
-            if (pini.fileName.equals("16PSNIwhilewhileconcat")) {
-                if (guard(loopNode).equals("h1 == 0")) {
-                    return "FALSE";
-                }
-                else {
-                    if (guard(loopNode).equals("h2 > l1")) {
-                        return "(h2 < 0) or (l1 >= h2)";
-                    }
-                }
+            if (pini.fileName.equals("15PSNIwhileif")) {
+                return "(l2 <= 0)";
             }
             else {
-                if (pini.fileName.equals("17PSNIwhilewhilenested")) {
-                    if (guard(loopNode).equals("h2 > 0")) {
-                        return "TRUE";
+                if (pini.fileName.equals("16PSNIwhilewhileconcat")) {
+                    if (guard(loopNode).equals("h1 == 0")) {
+                        return "FALSE";
                     }
                     else {
-                        if (guard(loopNode).equals("h1 > l1")) {
-                            return "(h2 <= 0)";
+                        if (guard(loopNode).equals("h2 > l1")) {
+                            return "(h2 < 0) or (l1 >= h2)";
+                        }
+                    }
+                }
+                else {
+                    if (pini.fileName.equals("17PSNIwhilewhilenested")) {
+                        if (guard(loopNode).equals("h2 > 0")) {
+                            return "TRUE";
+                        }
+                        else {
+                            if (guard(loopNode).equals("h1 > l1")) {
+                                return "(h2 <= 0)";
+                            }
                         }
                     }
                 }

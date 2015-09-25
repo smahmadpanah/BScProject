@@ -1,15 +1,11 @@
 	 x -> IDENTIFIER 
 h1
-	 x -> IDENTIFIER 
-h2
 	 varlist -> x 
-h2
-	 varlist -> x , varlist 
-h1, h2
+h1
 	 c -> INH_KW varlist 
-inH h1, h2
+inH h1
 	 clist -> c 
-inH h1, h2
+inH h1
 	 x -> IDENTIFIER 
 l1
 	 varlist -> x 
@@ -17,7 +13,7 @@ l1
 	 c -> INL_KW varlist 
 inL l1
 	 clist -> clist ; M c 
-inH h1, h2; inL l1
+inH h1; inL l1
 	 x -> IDENTIFIER 
 h1
 	 exp -> x 
@@ -26,185 +22,97 @@ h1
 l1
 	 exp -> x 
 l1
-	 exp -> exp GT_KW exp 
-h1 > l1
-	 x -> IDENTIFIER 
-l1
-	 x -> IDENTIFIER 
-l1
-	 exp -> x 
-l1
-	 n -> INTEGER_NUMBER 
-1
-	 exp -> n 
-1
-	 exp -> exp PLUS_KW exp 
-l1 + 1
-	 c -> x ASSIGN_KW exp 
-l1 = l1 + 1
-	 clist -> c 
-l1 = l1 + 1
-	 x -> IDENTIFIER 
-h2
-	 exp -> x 
-h2
-	 n -> INTEGER_NUMBER 
-0
-	 exp -> n 
-0
-	 exp -> exp GT_KW exp 
-h2 > 0
-	 x -> IDENTIFIER 
-h2
-	 x -> IDENTIFIER 
-h2
-	 exp -> x 
-h2
-	 n -> INTEGER_NUMBER 
-1
-	 exp -> n 
-1
-	 exp -> exp MINUS_KW exp 
-h2 - 1
-	 c -> x ASSIGN_KW exp 
-h2 = h2 - 1
-	 clist -> c 
-h2 = h2 - 1
-	 x -> IDENTIFIER 
-l1
-	 x -> IDENTIFIER 
-h2
-	 exp -> x 
-h2
-	 c -> x ASSIGN_KW exp 
-l1 = h2
-	 clist -> clist ; M c 
-h2 = h2 - 1; l1 = h2
-	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
-while h2 > 0 do h2 = h2 - 1; l1 = h2 done 
-	 clist -> clist ; M c 
-l1 = l1 + 1; while h2 > 0 do h2 = h2 - 1; l1 = h2 done 
-	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
-while h1 > l1 do l1 = l1 + 1; while h2 > 0 do h2 = h2 - 1; l1 = h2 done  done 
-	 clist -> clist ; M c 
-inH h1, h2; inL l1; while h1 > l1 do l1 = l1 + 1; while h2 > 0 do h2 = h2 - 1; l1 = h2 done  done 
-	 x -> IDENTIFIER 
-l1
-	 c -> OUTL_KW x 
-outL l1
-	 clist -> clist ; M c 
-inH h1, h2; inL l1; while h1 > l1 do l1 = l1 + 1; while h2 > 0 do h2 = h2 - 1; l1 = h2 done  done ; outL l1
-	 program -> PROGRAM_KW ';' clist 
-###Hooray! - Your program is syntactically correct### 
-program; inH h1, h2; inL l1; while h1 > l1 do l1 = l1 + 1; while h2 > 0 do h2 = h2 - 1; l1 = h2 done  done ; outL l1
-	 x -> IDENTIFIER 
-h1
-	 x -> IDENTIFIER 
-h2
-	 varlist -> x 
-h2
-	 varlist -> x , varlist 
-h1, h2
-	 c -> INH_KW varlist 
-inH h1, h2
-	 clist -> c 
-inH h1, h2
-	 x -> IDENTIFIER 
-l1
-	 varlist -> x 
-l1
-	 c -> INL_KW varlist 
-inL l1
-	 clist -> clist ; M c 
-inH h1, h2; inL l1
-	 x -> IDENTIFIER 
-h1
-	 exp -> x 
-h1
-	 x -> IDENTIFIER 
-l1
-	 exp -> x 
-l1
-	 exp -> exp GT_KW exp 
-h1 > l1
-	 x -> IDENTIFIER 
-l1
-	 x -> IDENTIFIER 
-l1
-	 exp -> x 
-l1
-	 n -> INTEGER_NUMBER 
-1
-	 exp -> n 
-1
-	 exp -> exp PLUS_KW exp 
-l1 + 1
-	 c -> x ASSIGN_KW exp 
-l1 = l1 + 1
-	 clist -> c 
-l1 = l1 + 1
-	 x -> IDENTIFIER 
-h2
-	 exp -> x 
-h2
-	 n -> INTEGER_NUMBER 
-0
-	 exp -> n 
-0
-	 exp -> exp GT_KW exp 
-h2 > 0
-	 x -> IDENTIFIER 
-h2
-	 x -> IDENTIFIER 
-h2
-	 exp -> x 
-h2
-	 n -> INTEGER_NUMBER 
-1
-	 exp -> n 
-1
-	 exp -> exp MINUS_KW exp 
-h2 - 1
-	 c -> x ASSIGN_KW exp 
-h2 = h2 - 1
-	 clist -> c 
-h2 = h2 - 1
-	 x -> IDENTIFIER 
-l1
-	 x -> IDENTIFIER 
-h2
-	 exp -> x 
-h2
-	 c -> x ASSIGN_KW exp 
-l1 = h2
-	 clist -> clist ; M c 
-h2 = h2 - 1; l1 = h2
-	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
-while h2 > 0 do h2 = h2 - 1; l1 = h2 done 
-	 clist -> clist ; M c 
-l1 = l1 + 1; while h2 > 0 do h2 = h2 - 1; l1 = h2 done 
-	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
-while h1 > l1 do l1 = l1 + 1; while h2 > 0 do h2 = h2 - 1; l1 = h2 done  done 
-	 clist -> clist ; M c 
-inH h1, h2; inL l1; while h1 > l1 do l1 = l1 + 1; while h2 > 0 do h2 = h2 - 1; l1 = h2 done  done 
-	 b -> BOOL_CONSTANT 
-TRUE
-	 exp -> b 
-TRUE
+	 exp -> exp LT_KW exp 
+h1 < l1
 	 c -> NOP_KW 
 NOP
 	 clist -> c 
 NOP
 	 x -> IDENTIFIER 
+h1
+	 x -> IDENTIFIER 
+h1
+	 exp -> x 
+h1
+	 x -> IDENTIFIER 
+l1
+	 exp -> x 
+l1
+	 exp -> exp MINUS_KW exp 
+h1 - l1
+	 c -> x ASSIGN_KW exp 
+h1 = h1 - l1
+	 clist -> clist ; M c 
+NOP; h1 = h1 - l1
+	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
+while h1 < l1 do NOP; h1 = h1 - l1 done 
+	 clist -> clist ; M c 
+inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done 
+	 x -> IDENTIFIER 
 l1
 	 c -> OUTL_KW x 
 outL l1
-	 clist -> c 
-outL l1
-	 c -> IF_KW exp THEN_KW M clist ELSE_KW N M clist ENDIF_KW 
- if TRUE then NOP else outL l1 endif 
 	 clist -> clist ; M c 
-inH h1, h2; inL l1; while h1 > l1 do l1 = l1 + 1; while h2 > 0 do h2 = h2 - 1; l1 = h2 done  done ;  if TRUE then NOP else outL l1 endif 
+inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done ; outL l1
 	 program -> PROGRAM_KW ';' clist 
 ###Hooray! - Your program is syntactically correct### 
-program; inH h1, h2; inL l1; while h1 > l1 do l1 = l1 + 1; while h2 > 0 do h2 = h2 - 1; l1 = h2 done  done ;  if TRUE then NOP else outL l1 endif 
+program; inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done ; outL l1
+	 x -> IDENTIFIER 
+h1
+	 varlist -> x 
+h1
+	 c -> INH_KW varlist 
+inH h1
+	 clist -> c 
+inH h1
+	 x -> IDENTIFIER 
+l1
+	 varlist -> x 
+l1
+	 c -> INL_KW varlist 
+inL l1
+	 clist -> clist ; M c 
+inH h1; inL l1
+	 x -> IDENTIFIER 
+h1
+	 exp -> x 
+h1
+	 x -> IDENTIFIER 
+l1
+	 exp -> x 
+l1
+	 exp -> exp LT_KW exp 
+h1 < l1
+	 c -> NOP_KW 
+NOP
+	 clist -> c 
+NOP
+	 x -> IDENTIFIER 
+h1
+	 x -> IDENTIFIER 
+h1
+	 exp -> x 
+h1
+	 x -> IDENTIFIER 
+l1
+	 exp -> x 
+l1
+	 exp -> exp MINUS_KW exp 
+h1 - l1
+	 c -> x ASSIGN_KW exp 
+h1 = h1 - l1
+	 clist -> clist ; M c 
+NOP; h1 = h1 - l1
+	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
+while h1 < l1 do NOP; h1 = h1 - l1 done 
+	 clist -> clist ; M c 
+inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done 
+	 x -> IDENTIFIER 
+l1
+	 c -> OUTL_KW x 
+outL l1
+	 clist -> clist ; M c 
+inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done ; outL l1
+	 program -> PROGRAM_KW ';' clist 
+###Hooray! - Your program is syntactically correct### 
+program; inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done ; outL l1

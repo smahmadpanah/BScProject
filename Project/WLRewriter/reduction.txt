@@ -1,118 +1,41 @@
 	 x -> IDENTIFIER 
-h1
-	 varlist -> x 
-h1
-	 c -> INH_KW varlist 
-inH h1
-	 clist -> c 
-inH h1
-	 x -> IDENTIFIER 
 l1
 	 varlist -> x 
 l1
 	 c -> INL_KW varlist 
 inL l1
-	 clist -> clist ; M c 
-inH h1; inL l1
-	 x -> IDENTIFIER 
-h1
-	 exp -> x 
-h1
-	 x -> IDENTIFIER 
-l1
-	 exp -> x 
-l1
-	 exp -> exp LT_KW exp 
-h1 < l1
-	 c -> NOP_KW 
-NOP
 	 clist -> c 
-NOP
-	 x -> IDENTIFIER 
-h1
-	 x -> IDENTIFIER 
-h1
-	 exp -> x 
-h1
-	 x -> IDENTIFIER 
-l1
-	 exp -> x 
-l1
-	 exp -> exp MINUS_KW exp 
-h1 - l1
-	 c -> x ASSIGN_KW exp 
-h1 = h1 - l1
-	 clist -> clist ; M c 
-NOP; h1 = h1 - l1
-	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
-while h1 < l1 do NOP; h1 = h1 - l1 done 
-	 clist -> clist ; M c 
-inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done 
-	 x -> IDENTIFIER 
-l1
-	 c -> OUTL_KW x 
-outL l1
-	 clist -> clist ; M c 
-inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done ; outL l1
-	 program -> PROGRAM_KW ';' clist 
-###Hooray! - Your program is syntactically correct### 
-program; inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done ; outL l1
+inL l1
 	 x -> IDENTIFIER 
 h1
 	 varlist -> x 
 h1
 	 c -> INH_KW varlist 
 inH h1
-	 clist -> c 
-inH h1
-	 x -> IDENTIFIER 
-l1
-	 varlist -> x 
-l1
-	 c -> INL_KW varlist 
-inL l1
 	 clist -> clist ; M c 
-inH h1; inL l1
+inL l1; inH h1
+	 x -> IDENTIFIER 
+l1
 	 x -> IDENTIFIER 
 h1
 	 exp -> x 
 h1
-	 x -> IDENTIFIER 
-l1
-	 exp -> x 
-l1
-	 exp -> exp LT_KW exp 
-h1 < l1
-	 c -> NOP_KW 
-NOP
-	 clist -> c 
-NOP
-	 x -> IDENTIFIER 
-h1
-	 x -> IDENTIFIER 
-h1
-	 exp -> x 
-h1
-	 x -> IDENTIFIER 
-l1
-	 exp -> x 
-l1
-	 exp -> exp MINUS_KW exp 
-h1 - l1
 	 c -> x ASSIGN_KW exp 
-h1 = h1 - l1
+l1 = h1
 	 clist -> clist ; M c 
-NOP; h1 = h1 - l1
-	 c -> WHILE_KW exp DO_KW M clist DONE_KW 
-while h1 < l1 do NOP; h1 = h1 - l1 done 
-	 clist -> clist ; M c 
-inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done 
+inL l1; inH h1; l1 = h1
 	 x -> IDENTIFIER 
 l1
 	 c -> OUTL_KW x 
 outL l1
 	 clist -> clist ; M c 
-inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done ; outL l1
+inL l1; inH h1; l1 = h1; outL l1
+	 x -> IDENTIFIER 
+h1
+	 c -> OUTH_KW x 
+outH h1
+	 clist -> clist ; M c 
+inL l1; inH h1; l1 = h1; outL l1; outH h1
 	 program -> PROGRAM_KW ';' clist 
 ###Hooray! - Your program is syntactically correct### 
-program; inH h1; inL l1; while h1 < l1 do NOP; h1 = h1 - l1 done ; outL l1
+program; inL l1; inH h1; l1 = h1; outL l1; outH h1

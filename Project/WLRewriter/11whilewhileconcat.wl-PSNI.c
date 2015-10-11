@@ -6,25 +6,20 @@
 #define false 0 
 
 
-int main() { int h1;  //type: high 
+int main() { int l1;  //type: low 
+scanf("%d", &l1);
+; int h1;  //type: high 
 scanf("%d", &h1);
 int h2;  //type: high 
 scanf("%d", &h2);
-; int l1;  //type: low 
-scanf("%d", &l1);
-int l2;  //type: low 
-scanf("%d", &l2);
 
-; while (l1 > 0) { h1 = h2 + 2; printf("%d\n",l1); // type: low
-
-;
-}
-; while (0 <= l1) { while (h1 > l1) { l1 = l1 + 3;  if (((0 <= l1)) || ((l1 > 0) && (0 <= l1)) || ((l1 > 0) && (0 <= l1)) || ((0 <= l1))) { ;;} else {printf("%d\n",l1); // type: low
+;  if (h2 < 0) { while (l1 > 0) { l1 = h2 + l1;
+};}
+; while (h1 > l1) { l1 = l1 + 3;  if (TRUE) { ;;} else {printf("%d\n",l1); // type: low
 ;}
 ;
-};
 }
-;  if (((l1 > 0) && (0 <= l1)) || ((0 <= l1))) { ;;} else {printf("%d\n",l1); // type: low
+;  if (TRUE) { ;;} else {printf("%d\n",l1); // type: low
 ;}
 ; printf("%d\n",h1); // type: high
 

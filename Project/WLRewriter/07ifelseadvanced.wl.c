@@ -15,24 +15,24 @@ scanf("%d", &h1);
 int h2;  //type: high 
 scanf("%d", &h2);
 
-;  if (!((h1 == 0))) { l1 = 2 + 4 + l1; printf("%d\n",l1); // type: low
+;  if (!((l1 == 0))) { l1 = 2 + 4 + l1; printf("%dl11\n",l1); // type: low
 
-;  if (l1 > 6) { l1 = 6; printf("%d\n",l1); // type: low
+;  if (h1 > 6) { l1 = 6; printf("%dl12\n",l1); // type: low
 
-; printf("%d\n",h1); // type: high
+; printf("%dh11\n",h1); // type: high
 
 ;}
-;} else { if (h2 > 3) { l1 = l1 + 1; printf("%d\n",l1); // type: low
+;} else { if (l2 > 3) { l1 = l1 + 1; printf("%dl13\n",l1); // type: low
 
-; printf("%d\n",h2); // type: high
+; printf("%dh21\n",h2); // type: high
 
-;} else {l2 = 2; printf("%d\n",l2); // type: low
+;} else {l2 = 2 + h2; printf("%dl21\n",l2); // type: low
 
-; printf("%d\n",l1); // type: low
+; printf("%dl14\n",l1); // type: low
 
 ;};}
-; printf("%d\n",l1); // type: low
+; printf("%dl15\n",l1); // type: low
 
-; printf("%d\n",l2); // type: low
+; printf("%dl22\n",l2); // type: low
 
 return 0;}

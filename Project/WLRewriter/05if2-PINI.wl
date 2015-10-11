@@ -5,18 +5,18 @@ inL l1, l2;
 l1 = l1 - 1; 
  if l2 == 10 then 
  if h2 > 9 then 
-l1 = l1 + 2 else 
-l2 = 2 endif  else 
-l2 = h1 endif ; 
-if ( (l2 == 10) and (l1 > 0) )  then 
+l1 = l1 + 2; 
+if ( (l2 == 10) and (l1 > 0)  and  (h2 > 9) and (l2 == 10) and (l1 > 0) ) or ( (l2 == 10) and (l1 > 0) )  then 
 	 NOP 
  else 
 	 outL l1 
 endif
- endif; 
+ else 
+l2 = 2 endif  else 
+l2 = h1 endif  endif; 
 l1 = 2; 
 outL l1; 
-if ( !(l2 == 10) and (l1 > 0) ) or ( (l2 == 10) and (l1 > 0) )  then 
+if ( (l2 == 10) and (l1 > 0) ) or ( !(l2 == 10) and (l1 > 0) )  then 
 	 NOP 
  else 
 	 outL l2 

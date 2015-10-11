@@ -1,13 +1,18 @@
 program; 
 inH h1, h2; 
 inL l1; 
-if (h2 <= 0) then 
 while h1 > l1 do 
 l1 = l1 + 1; 
-while h2 > 0 do 
+ if TRUE then 
+NOP else 
+outL l1 endif ; 
+if h2 < 0 then 
 h2 = h2 - 1; 
-l1 = h2 done  done 
-endif; 
+ if TRUE then 
+NOP else 
+outL l1 endif ; 
+l1 = h2 
+endif done ; 
  if TRUE then 
 NOP else 
 outL l1 endif 

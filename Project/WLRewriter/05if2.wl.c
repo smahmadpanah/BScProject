@@ -15,13 +15,13 @@ scanf("%d", &l1);
 int l2;  //type: low 
 scanf("%d", &l2);
 
-;  if (l1 > 0) { l1 = l1 - 1;  if (l2 == 10) {  if (h2 > 9) { l1 = l1 + 2;} else {l2 = 2;};} else {l2 = h1;}
-; printf("%d\n",l1); // type: low
+;  if (l1 > 0) { l1 = l1 - 1;  if (l2 == 10) {  if (h2 > 9) { l1 = l1 + 2; printf("%dl11\n",l1); // type: low
 
+;} else {l2 = 2;};} else {l2 = h1;}
 ;}
 ; l1 = 2
-; printf("%d\n",l1); // type: low
+; printf("%dl12\n",l1); // type: low
 
-; printf("%d\n",l2); // type: low
+; printf("%dl2\n",l2); // type: low
 
 return 0;}

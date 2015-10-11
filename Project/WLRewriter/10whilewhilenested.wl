@@ -10,6 +10,7 @@ while l1 < 4 do
 		h2 = h2 + l2;
 		l2 = l2 + 1
 	done
+	l1 = h1;
 done;
 outL l1
 		

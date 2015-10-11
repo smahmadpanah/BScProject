@@ -13,11 +13,15 @@ scanf("%d", &h2);
 ; int l1;  //type: low 
 scanf("%d", &l1);
 
-; while (h1 > l1) { l1 = l1 + 1; while (h2 > 0) { h2 = h2 - 1; l1 = h2
+; while (h1 > l1) { l1 = l1 + 1; printf("%d:6\n",l1); // type: low
+
+; while (h2 < 0) { h2 = h2 - 1; printf("%d:9\n",l1); // type: low
+
+; l1 = h2
 ;
 }
 ;
 }
-; printf("%d\n",l1); // type: low
+; printf("%d:13\n",l1); // type: low
 
 return 0;}

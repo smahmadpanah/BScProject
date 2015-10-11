@@ -333,7 +333,7 @@ public class PSNIRewriter {
             return "TRUE";
         }
 
-        //human analysis for test:
+        //human analysis for testing:
         if (pini.fileName.equals("input-article-Fig9")) {
             return "l1 <= h1 or l1 < 0";
         }
@@ -354,12 +354,24 @@ public class PSNIRewriter {
                 }
                 else {
                     if (pini.fileName.equals("17PSNIwhilewhilenested")) {
-                        if (guard(loopNode).equals("h2 > 0")) {
-                            return "TRUE";
+                        if (guard(loopNode).equals("h2 < 0")) {
+                            return "FALSE";
                         }
                         else {
                             if (guard(loopNode).equals("h1 > l1")) {
-                                return "(h2 <= 0)";
+                                return "(h2 >= 0)";
+                            }
+                        }
+                    }
+                    else {
+                        if (pini.fileName.equals("11whilewhileconcat")) {
+                            if (guard(loopNode).equals("l1 > 0")) {
+                                return "h2 < 0";
+                            }
+                            else {
+                                if (guard(loopNode).equals("h1 > l1")) {
+                                    return "TRUE";
+                                }
                             }
                         }
                     }

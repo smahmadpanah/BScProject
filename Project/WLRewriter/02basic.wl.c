@@ -11,6 +11,9 @@ scanf("%d", &l1);
 ; int h1;  //type: high 
 scanf("%d", &h1);
 
-; printf("%d\n",l1);
-; printf("%d\n",h1);
+; printf("%d\n",l1); // type: low
+
+; l1 = h1 + 2
+; printf("%d\n",h1); // type: high
+
 return 0;}

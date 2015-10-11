@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * @author Mohammad
  */
 public class PINIRewriter {
-    
+
     private MyLinkedList pdg; // pdg = G
     private String sourceCode, CopyOfSourceCode, rewritedSourceCode, sourceCodeForPSNI; // sourceCode = M | CopyOfSourceCode = M' | rewritedSourceCode = result
     private HashSet<LinkedList<Node>> F; // the set of paths
@@ -29,23 +29,22 @@ public class PINIRewriter {
     private HashMap<LinkedList<Node>, ArrayList<String>> executionConditions; // execution conditions for nodes N satisfying... 
     private HashMap<LinkedList<Node>, String> pathConditions; // conjunction of executionConditions for each path
     private Node sourceNode, destinationNode;
-    
+
     private ArrayList<Node> lowOutputs;
-    
+
     public String fileName;
-    
-    
+
     public PINIRewriter(MyLinkedList pdg) {
-        
+
         this.pdg = pdg;
         sourceCode = pdg.getFirst().getNodeIdAndStmt();
 //        System.out.println(sourceCode);
-        
+
         F = new HashSet<>(); // paths
         typeOfPaths = new HashMap<>();
         executionConditions = new HashMap<>();
         pathConditions = new HashMap<>();
-        
+
         initializeF(); //initializing paths
 
         rewritedSourceCode = reWrite(); //algorithm method
@@ -55,7 +54,7 @@ public class PINIRewriter {
         Pattern r = Pattern.compile(pattern);
         Matcher m = r.matcher(rewritedSourceCode);
         rewritedSourceCode = m.replaceAll("");
-        
+
         try {
             fileName = YYParser.getSourceCodeFileName().replace(".wl", "");
             PrintStream writer = new PrintStream(new File(fileName + "-PINI.wl"));
@@ -68,22 +67,22 @@ public class PINIRewriter {
             GUI.terminal.appendError("File Not Found!");
         }
     }
-    
+
     private void initializeF() {
         lowOutputs = new ArrayList<>();
-        
+
         for (Node node : pdg.getNodeSet()) {
             node.isVisited = false;
             if (node.getStatement().startsWith("outL ")) {
                 lowOutputs.add(node);
             }
         }
-        
+
         if (!pdg.getFirst().getContolDep().isEmpty()) {
             ArrayList<Node> highInputs = new ArrayList<>();
-            
+
             for (Node n : pdg.getFirst().getContolDep()) {
-                
+
                 for (Node temp : pdg.getNodeSet()) {
                     if (temp.getNodeID() == n.getNodeID()) {
                         n.setAssignedVariable(temp.getAssignedVariable());
@@ -93,20 +92,20 @@ public class PINIRewriter {
                         break;
                     }
                 }
-                
+
                 if (n.getAssignedVariable() != null) {
                     if (n.getAssignedVariable().type.equals("high") && n.getVariablesOfNode().isEmpty()) { //the node is high input
                         highInputs.add(n);
                     }
                 }
             }
-            
+
             for (Node q : highInputs) {
                 sourceNode = q;
-                
+
                 for (Node w : lowOutputs) {
                     destinationNode = w;
-                    
+
                     LinkedList<Node> visited = new LinkedList<>();
                     visited.add(sourceNode);
                     breadthFirst(visited);
@@ -130,22 +129,22 @@ public class PINIRewriter {
                 for (int i = 0; i < path.size() - 1; i++) {
                     Node n = path.get(i);
                     Node q = path.get(i + 1);
-                    
+
                     if (n.getContolDep().contains(q)) { // ba node ba'di ya control dep dare ya data dep, nemishe joftesh bashe
                         isExplicitFlow = false;
                         break;
                     }
                 }
                 path.add(0, pdg.getFirst());
-                
+
                 typeOfPaths.put(path, isExplicitFlow);
 
-//                printPath(path);
+                printPath(path);
             }
         }
-        
+
     }
-    
+
     private String reWrite() {
         if (F.isEmpty()) { // if there is no path, finished!
             return sourceCode;
@@ -155,14 +154,18 @@ public class PINIRewriter {
 
             for (LinkedList<Node> path : F) {
                 ArrayList<String> executionConditionsForThisPath = new ArrayList<>();
-                for (int i = 0; i < path.size() - 2; i++) { //Start ~~> X -data-> N ~~>P'
+                for (int i = 0; i < path.size() - 2; i++) { //Start ~~> X -data-> N ~~>P'  (-2 ro -1 kardam)
                     Node X = path.get(i);
                     Node N = path.get(i + 1);
                     if (X.getDataDepsForThisNode().contains(N)) {
                         String strCondition = findExecutionCondition(N);
+//                        String strConditionX = findExecutionCondition(X);
                         if (!executionConditionsForThisPath.contains(strCondition)) { //baraye shart tekrari and nashavad
                             executionConditionsForThisPath.add(strCondition);
                         }
+//                        if (!executionConditionsForThisPath.contains(strConditionX)) { //baraye shart tekrari and nashavad
+//                            executionConditionsForThisPath.add(strConditionX);
+//                        }
                     }
                 }
 //                executionConditions.put(path, executionConditionsForThisPath);
@@ -174,11 +177,11 @@ public class PINIRewriter {
                         executionConditionsForThisPath.remove(executionConditionsForThisPath.get(j));
                     }
                 }
-                
+
                 if (executionConditionsForThisPath.isEmpty()) {
                     executionConditionsForThisPath.add("TRUE");
                 }
-                
+
                 executionConditions.put(path, executionConditionsForThisPath);
 //                System.out.println(executionConditionsForThisPath);
 
@@ -198,7 +201,7 @@ public class PINIRewriter {
                     }
 //               
                 }
-                    pathConditions.put(path, pathCond);
+                pathConditions.put(path, pathCond);
 //                System.out.println(pathCond);
 
             }
@@ -206,7 +209,7 @@ public class PINIRewriter {
             // felan bar asase NODE ID hast, na NODE STATEMENT
             for (Node n : lowOutputs) {
                 int currentNodeId = n.getNodeID();
-                
+
                 boolean isExistedAPathForThisNode = false;
                 for (LinkedList<Node> tempPath : pathConditions.keySet()) {
                     if (tempPath.getLast().getNodeID() == currentNodeId) {
@@ -214,7 +217,7 @@ public class PINIRewriter {
                         break;
                     }
                 }
-                
+
                 if (isExistedAPathForThisNode) { //for example : basic.wl test case
 
                     boolean isAllExplicit = true;
@@ -223,11 +226,11 @@ public class PINIRewriter {
                     for (LinkedList<Node> currentPath : pathConditions.keySet()) {
                         if (currentPath.getLast().getNodeID() == currentNodeId) {
                             String condTemp = pathConditions.get(currentPath);
-                            
+
                             if (!typeOfPaths.get(currentPath)) { //is not explicit
                                 isAllExplicit = false;
                             }
-                            
+
                             if (condTemp.equals("TRUE")) { // agar dar condition ha, TRUE bashad; or kardan nadare dige
                                 c = "TRUE";
                                 flag = true;
@@ -237,7 +240,7 @@ public class PINIRewriter {
                                     c += "(" + condTemp + ") or ";
                                 }
                             }
-                            
+
                         }
                     }
                     c += "END";
@@ -255,9 +258,9 @@ public class PINIRewriter {
                         // replace OutL l with the statement "if c then NOP else OutL l endif"
                         CopyOfSourceCode = CopyOfSourceCode.replace(n.getNodeIdAndStmt() + ";", "if " + c + " then \n\t NOP \n else \n\t outL " + n.getVariablesOfNode().iterator().next().name + " \nendif;\n");
                         CopyOfSourceCode = CopyOfSourceCode.replace(n.getNodeIdAndStmt(), "if " + c + " then \n\t NOP \n else \n\t outL " + n.getVariablesOfNode().iterator().next().name + " \nendif\n");
-                        
+
                     }
-                    
+
                 }
             }
 
@@ -266,18 +269,18 @@ public class PINIRewriter {
             return CopyOfSourceCode;
         }
     }
-    
+
     public void breadthFirst(LinkedList<Node> visited) {
-        
+
         HashSet<Node> allDeps = new HashSet<>(visited.getLast().getContolDep());
         allDeps.addAll(new HashSet<>(visited.getLast().getDataDepsForThisNode()));
-        
+
         LinkedList<Node> nodes = new LinkedList<>();
-        
+
         for (Node n : allDeps) {
             nodes.add(n);
         }
-        
+
         for (Node node : nodes) {
             if (visited.contains(node)) {
                 continue;
@@ -294,20 +297,20 @@ public class PINIRewriter {
             if (visited.contains(node) || node.equals(destinationNode)) {
                 continue;
             }
-            
+
             visited.addLast(node);
             breadthFirst(visited);
-            
+
             visited.removeLast();
         }
-        
+
     }
-    
+
     private void printPath(LinkedList<Node> path) {
         if (typeOfPaths.get(path)) {
             System.out.print("*EXPLICIT ==> ");
         }
-        
+
         for (Node node : path) {
             System.out.print("#" + node.getNodeID() + " " + node.getStatement());
             if (path.indexOf(node) != path.size() - 1) {
@@ -315,9 +318,9 @@ public class PINIRewriter {
             }
         }
         System.out.println();
-        
+
     }
-    
+
     private String findExecutionCondition(Node node) {
         Node parent = null;
         for (Node alpha : node.getParentOfControlDep()) {
@@ -326,28 +329,28 @@ public class PINIRewriter {
             }
         }
         String executionCondition = "";
-        
+
         while (!parent.getStatement().equals("START")) {
             boolean found = false;
             for (Node n : pdg.getNodeSet()) {
                 n.isVisited = false;
                 n.isComeFromTrue = null;
             }
-            
+
             MyQueue queue = new MyQueue();
             if (parent.getNextPointer1() != null) {
                 Node temp = parent.getNextPointer1(); //agar sharte bargharar Bood
                 temp.isComeFromTrue = true;
                 queue.add(temp);
-                
+
             }
             if (parent.getNextPointer2() != null) {
-                
+
                 Node temp = parent.getNextPointer2(); //agar sharte bargharar Nabood
                 temp.isComeFromTrue = false;
                 queue.add(temp);
             }
-            
+
             while (!queue.isEmpty() && !found) {
                 Node nodeTemp = queue.peek();
                 nodeTemp.isVisited = true;
@@ -374,7 +377,7 @@ public class PINIRewriter {
                     }
                 }
             }
-            
+
             Node maybeParent = null;
             for (Node beta : parent.getParentOfControlDep()) {
                 if (beta.getNodeID() != parent.getNodeID()) {
@@ -384,31 +387,28 @@ public class PINIRewriter {
             parent = maybeParent;
         }
         executionCondition += "TRUE";
-        
+
         if (executionCondition.endsWith("andTRUE")) {
             executionCondition = executionCondition.replace("andTRUE", "");
         }
-        
+
         return executionCondition;
     }
 
     public String getRewritedSourceCode() {
         return sourceCodeForPSNI;
     }
-    
-    public String getRewritedSourceCodeOutputFile(){
+
+    public String getRewritedSourceCodeOutputFile() {
         return rewritedSourceCode;
     }
 
     public MyLinkedList getPdg() {
         return pdg;
     }
-    
-    public String getFileName(){
+
+    public String getFileName() {
         return fileName;
     }
-    
-    
-    
-    
+
 }

@@ -1,7 +1,17 @@
 # BScProject
 > My BSc. Project (Proposal+Article+Thesis+Implementation)
 
+A Tool for Rewriting-Based Enforcement of Noninterference in While Programs
 
+- "WLRewriter" is the folder of the implementation. To run the project, go to "dist" folder. There is a .jar file. To use the source code and compile and run it, you should follow exactly the content of "README-GuideToRun.txt".
+
+Any feedback would be greatly appreciated. (mailto: smahmadpanah@aut.ac.ir)
+
+Thanks,
+Mohammad
+
+
+Timeline:
 - اولین نسخه پروپزال در تاریخ 12 اردیبهشت برای تعیین داور به دکتر رزازی داده شد
 - پس از اشکالاتی که دکتر پوروطن گرفت، کار به مدت یک ماه خوابیده شد
 - سپس در هفته دوم خرداد ماه، امضای دکتر فلاح و پوروطن گرفته شد
